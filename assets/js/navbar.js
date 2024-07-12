@@ -6,7 +6,7 @@ function generateSidebar() {
             <nav>
                 <ul>
                     <li><a href="#intro">Welcome</a></li>
-                    <li><a href="#one">Biography</a></li>
+                    <li><a href="#one">Profile</a></li>
                     <li><a href="#one">Newpage</a></li>
 
                     <!-- This will come later -->
