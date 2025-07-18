@@ -1,0 +1,193 @@
+3:I[5613,[],""]
+5:I[1778,[],""]
+6:I[8706,["250","static/chunks/250-3ff579dfdf201ea8.js","185","static/chunks/app/layout-ac9f8a1291523899.js"],""]
+4:["slug","hello-world/hello-world","c"]
+0:["Ypk4ss6R7Tri470jzpRVU",[[["",{"children":["blog",{"children":[["slug","hello-world/hello-world","c"],{"children":["__PAGE__?{\"slug\":[\"hello-world\",\"hello-world\"]}",{}]}]}]},"$undefined","$undefined",true],["",{"children":["blog",{"children":[["slug","hello-world/hello-world","c"],{"children":["__PAGE__",{},["$L1","$L2",null]]},["$","$L3",null,{"parallelRouterKey":"children","segmentPath":["children","blog","children","$4","children"],"loading":"$undefined","loadingStyles":"$undefined","loadingScripts":"$undefined","hasLoading":false,"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","notFoundStyles":"$undefined","styles":null}]]},["$","$L3",null,{"parallelRouterKey":"children","segmentPath":["children","blog","children"],"loading":"$undefined","loadingStyles":"$undefined","loadingScripts":"$undefined","hasLoading":false,"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","notFoundStyles":"$undefined","styles":null}]]},[null,["$","html",null,{"lang":"en","children":["$","body",null,{"className":"__className_e8ce0c","children":[["$","$L6",null,{}],["$","main",null,{"className":"min-h-screen pt-16","children":["$","$L3",null,{"parallelRouterKey":"children","segmentPath":["children"],"loading":"$undefined","loadingStyles":"$undefined","loadingScripts":"$undefined","hasLoading":false,"error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":"404"}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]],"notFoundStyles":[],"styles":null}]}]]}]}],null]],[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/5f2e2801517a0eff.css","precedence":"next","crossOrigin":""}]],"$L7"]]]]
+8:I[5250,["250","static/chunks/250-3ff579dfdf201ea8.js","797","static/chunks/app/blog/%5B...slug%5D/page-88a508d55e036683.js"],""]
+9:T1382,<p>This is my first post on my new fake blog! How exciting!</p>
+<p>I'm sure I'll write a lot more interesting things in the future.</p>
+<p>Oh, and here's a great quote from this Wikipedia on
+<a href="https://en.wikipedia.org/wiki/Salted_duck_egg">salted duck eggs</a>.</p>
+<blockquote>
+<p>A salted duck egg is a Chinese preserved food product made by soaking duck
+eggs in brine, or packing each egg in damp, salted charcoal. In Asian
+supermarkets, these eggs are sometimes sold covered in a thick layer of salted
+charcoal paste. The eggs may also be sold with the salted paste removed,
+wrapped in plastic, and vacuum packed. From the salt curing process, the
+salted duck eggs have a briny aroma, a gelatin-like egg white and a
+firm-textured, round yolk that is bright orange-red in color.</p>
+</blockquote>
+<p><img src="./salty_egg.jpg" alt="Chinese Salty Egg"></p>
+<p>You can also write code blocks here!</p>
+<pre><code class="language-js">const saltyDuckEgg = "chinese preserved food product"
+</code></pre>
+<p>| Number | Title                                    | Year |
+| :----- | :--------------------------------------- | ---: |
+| 1      | Harry Potter and the Philosopher’s Stone | 2001 |
+| 2      | Harry Potter and the Chamber of Secrets  | 2002 |
+| 3      | Harry Potter and the Prisoner of Azkaban | 2004 |</p>
+<p><a href="https://raw.github.com/adamschwartz/github-markdown-kitchen-sink/master/README.md">View raw (TEST.md)</a></p>
+<p>This is a paragraph.</p>
+<pre><code>This is a paragraph.
+</code></pre>
+<h1>Header 1</h1>
+<h2>Header 2</h2>
+<pre><code>Header 1
+========
+
+Header 2
+--------
+</code></pre>
+<h1>Header 1</h1>
+<h2>Header 2</h2>
+<h3>Header 3</h3>
+<h4>Header 4</h4>
+<h5>Header 5</h5>
+<h6>Header 6</h6>
+<pre><code># Header 1
+## Header 2
+### Header 3
+#### Header 4
+##### Header 5
+###### Header 6
+</code></pre>
+<h1>Header 1</h1>
+<h2>Header 2</h2>
+<h3>Header 3</h3>
+<h4>Header 4</h4>
+<h5>Header 5</h5>
+<h6>Header 6</h6>
+<pre><code># Header 1 #
+## Header 2 ##
+### Header 3 ###
+#### Header 4 ####
+##### Header 5 #####
+###### Header 6 ######
+</code></pre>
+<blockquote>
+<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aliquam hendrerit mi posuere lectus. Vestibulum enim wisi, viverra nec, fringilla in, laoreet vitae, risus.</p>
+</blockquote>
+<pre><code>> Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aliquam hendrerit mi posuere lectus. Vestibulum enim wisi, viverra nec, fringilla in, laoreet vitae, risus.
+</code></pre>
+<blockquote>
+<h2>This is a header.</h2>
+<ol>
+<li>This is the first list item.</li>
+<li>This is the second list item.</li>
+</ol>
+<p>Here's some example code:</p>
+<pre><code>Markdown.generate();
+</code></pre>
+</blockquote>
+<pre><code>> ## This is a header.
+> 1. This is the first list item.
+> 2. This is the second list item.
+>
+> Here's some example code:
+>
+>     Markdown.generate();
+</code></pre>
+<ul>
+<li>Red</li>
+<li>Green</li>
+<li>Blue</li>
+</ul>
+<ul>
+<li>Red</li>
+<li>Green</li>
+<li>Blue</li>
+</ul>
+<ul>
+<li>Red</li>
+<li>Green</li>
+<li>Blue</li>
+</ul>
+<pre><code class="language-markdown">- Red
+- Green
+- Blue
+
+* Red
+* Green
+* Blue
+
+- Red
+- Green
+- Blue
+</code></pre>
+<ul>
+<li><code>code goes</code> here in this line</li>
+<li><strong>bold</strong> goes here</li>
+</ul>
+<pre><code class="language-markdown">- `code goes` here in this line
+- **bold** goes here
+</code></pre>
+<ol>
+<li>Buy flour and salt</li>
+<li>Mix together with water</li>
+<li>Bake</li>
+</ol>
+<pre><code class="language-markdown">1. Buy flour and salt
+1. Mix together with water
+1. Bake
+</code></pre>
+<ol>
+<li><code>code goes</code> here in this line</li>
+<li><strong>bold</strong> goes here</li>
+</ol>
+<pre><code class="language-markdown">1. `code goes` here in this line
+1. **bold** goes here
+</code></pre>
+<p>Paragraph:</p>
+<pre><code>Code
+</code></pre>
+<pre><code>Paragraph:
+
+    Code
+</code></pre>
+<hr>
+<hr>
+<hr>
+<hr>
+<hr>
+<pre><code>* * *
+
+***
+
+*****
+
+- - -
+
+---------------------------------------
+</code></pre>
+<p>This is <a href="http://example.com" title="Example">an example</a> link.</p>
+<p><a href="http://example.com">This link</a> has no title attr.</p>
+<p>This is <a href="http://example.com" title="Optional Title">an example</a> reference-style link.</p>
+<pre><code>This is [an example](http://example.com "Example") link.
+
+[This link](http://example.com) has no title attr.
+
+This is [an example] [id] reference-style link.
+
+[id]: http://example.com "Optional Title"
+</code></pre>
+<p><em>single asterisks</em></p>
+<p><em>single underscores</em></p>
+<p><strong>double asterisks</strong></p>
+<p><strong>double underscores</strong></p>
+<pre><code>*single asterisks*
+
+_single underscores_
+
+**double asterisks**
+
+__double underscores__
+</code></pre>
+<p>This paragraph has some <code>code</code> in it.</p>
+<pre><code>This paragraph has some `code` in it.
+</code></pre>
+<p><img src="https://via.placeholder.com/200x50" alt="Alt Text" title="Image Title"></p>
+<pre><code>![Alt Text](https://via.placeholder.com/200x50 "Image Title")
+</code></pre>
+2:["$","div",null,{"className":"min-h-screen bg-white","children":["$","article",null,{"className":"max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16","children":[["$","$L8",null,{"href":"/blog","className":"inline-flex items-center text-primary-600 hover:text-primary-700 mb-8 font-medium","children":[["$","svg",null,{"xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-arrow-left h-4 w-4 mr-2","children":[["$","path","1l729n",{"d":"m12 19-7-7 7-7"}],["$","path","x3x0zl",{"d":"M19 12H5"}],"$undefined"]}],"Back to Blog"]}],["$","header",null,{"className":"mb-12","children":[["$","h1",null,{"className":"text-4xl sm:text-5xl font-bold text-gray-900 mb-6 leading-tight","children":"Hello World"}],["$","div",null,{"className":"flex flex-wrap items-center text-gray-500 space-x-6","children":[["$","div",null,{"className":"flex items-center","children":[["$","svg",null,{"xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-calendar h-4 w-4 mr-2","children":[["$","rect","eu3xkr",{"width":"18","height":"18","x":"3","y":"4","rx":"2","ry":"2"}],["$","line","m3sa8f",{"x1":"16","x2":"16","y1":"2","y2":"6"}],["$","line","18kwsl",{"x1":"8","x2":"8","y1":"2","y2":"6"}],["$","line","xt86sb",{"x1":"3","x2":"21","y1":"10","y2":"10"}],"$undefined"]}],["$","time",null,{"dateTime":"2015-05-01T22:12:03.284Z","children":"May 1, 2015"}]]}],""]}]]}],["$","div",null,{"className":"prose prose-lg max-w-none prose-gray prose-headings:text-gray-900 prose-headings:font-bold prose-a:text-primary-600 prose-a:no-underline hover:prose-a:underline prose-strong:text-gray-900 prose-code:text-primary-600 prose-code:bg-gray-100 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-pre:bg-gray-900 prose-pre:text-gray-100","dangerouslySetInnerHTML":{"__html":"$9"}}],["$","footer",null,{"className":"mt-16 pt-8 border-t border-gray-200","children":["$","$L8",null,{"href":"/blog","className":"inline-flex items-center text-primary-600 hover:text-primary-700 font-medium","children":[["$","svg",null,{"xmlns":"http://www.w3.org/2000/svg","width":24,"height":24,"viewBox":"0 0 24 24","fill":"none","stroke":"currentColor","strokeWidth":2,"strokeLinecap":"round","strokeLinejoin":"round","className":"lucide lucide-arrow-left h-4 w-4 mr-2","children":[["$","path","1l729n",{"d":"m12 19-7-7 7-7"}],["$","path","x3x0zl",{"d":"M19 12H5"}],"$undefined"]}],"Back to all posts"]}]}]]}]}]
+7:[["$","meta","0",{"name":"viewport","content":"width=device-width, initial-scale=1"}],["$","meta","1",{"charSet":"utf-8"}],["$","title","2",{"children":"Orlando Timmerman"}],["$","meta","3",{"name":"description","content":"My personal and academic website"}],["$","meta","4",{"name":"next-size-adjust"}]]
+1:null
