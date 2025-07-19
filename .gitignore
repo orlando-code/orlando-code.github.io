@@ -10,7 +10,6 @@ out/
 .env.production.local
 
 # ignore large image directories
-assets/
 images/
 # keep essential small, site-wide images
-!assets/favicon*
+# Note: assets/ directory is now tracked for favicon files
