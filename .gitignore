@@ -8,3 +8,9 @@ out/
 .env.development.local
 .env.test.local
 .env.production.local
+
+# ignore large image directories
+assets/
+images/
+# keep essential small, site-wide images
+!assets/favicon.png
