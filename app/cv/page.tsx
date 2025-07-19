@@ -99,6 +99,17 @@ export default function CVPage() {
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
               <h2 className="text-2xl font-bold text-gray-900 mb-6">Professional Experience</h2>
               <div className="space-y-8">
+                  <div className="border-l-4 border-primary-200 pl-6">
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-2">
+                    <h3 className="text-xl font-semibold text-gray-900">AAUS Scientific Diver</h3>
+                    <span className="text-gray-500 text-sm mt-1 sm:mt-0">Summer 2024</span>
+                  </div>
+                  <p className="text-primary-600 font-medium mb-3">Bermuda Institute of Ocean Sciences</p>
+                  <ul className="text-gray-700 space-y-2">
+                    <li>• Fully-qualified American Academy of Underwater Sciences (AAUS) <a href="https://www.aaus.org/AAUS/AAUS/Certification_Program.aspx" className="text-primary-600 hover:underline">Scientific Diver</a></li>
+                  </ul>
+                </div>
+
                 <div className="border-l-4 border-primary-200 pl-6">
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-2">
                     <h3 className="text-xl font-semibold text-gray-900">Research Internship</h3>
@@ -247,7 +258,7 @@ export default function CVPage() {
                     "Persistence of coral reef structures into the 21st century"
                   </h3>
                   <p className="text-gray-600 text-sm mb-1">C. Cornwall, O. Timmerman et al. (2025)</p>
-                  <p className="text-gray-500 text-xs mb-1">Review paper and quantitative meta-analysis, in review, Nature Reviews Earth & Environment</p>
+                  <p className="text-gray-500 text-xs mb-1"><b>In review:</b> Review paper and quantitative meta-analysis, Nature Reviews Earth & Environment</p>
                 </div>
 
                 <div className="border-l-4 border-primary-200 pl-4">
@@ -255,7 +266,7 @@ export default function CVPage() {
                     "Exploring Multimodal AI beyond vision and language"
                   </h3>
                   <p className="text-gray-600 text-sm mb-1">Journal article co-authorship (2024)</p>
-                  <p className="text-gray-500 text-xs">In review, Nature Machine Intelligence</p>
+                  <p className="text-gray-500 text-xs"><b>In review:</b> Review and horizon scan, Nature Machine Intelligence</p>
                 </div>
 
                 <div className="border-l-4 border-primary-200 pl-4">
