@@ -50,7 +50,7 @@ export default function Navigation() {
         <div className="grid grid-cols-3 items-center h-16">
           {/* Logo (left) */}
           <div className="justify-self-start">
-            <Link href="/" className="text-xl font-bold text-primary-600">
+            <Link href="/" className="text-xl font-bold text-primary-600 hidden sm:block">
               Orlando Timmerman
             </Link>
           </div>
