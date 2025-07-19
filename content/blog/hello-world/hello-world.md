@@ -5,9 +5,6 @@ description: "Hello World"
 draft: false
 ---
 
-
-# THIS IS ME MAKING A CHANGE TO TEST BUILD
-
 This is my first post on my new fake blog! How exciting!
 
 I'm sure I'll write a lot more interesting things in the future.
