@@ -31,7 +31,10 @@ export default function CVPage() {
             </div>
             <Link href="/contact" className="btn-primary flex items-center mt-4 lg:mt-0">
               <Mail className="h-4 w-4 mr-2" />
-              Contact me for a relevant version of this CV
+              <span className="text-center">
+                Contact me<br />
+                for a relevant version of this CV
+              </span>
             </Link>
           </div>
         </div>
