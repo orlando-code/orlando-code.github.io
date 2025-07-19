@@ -1,4 +1,5 @@
-import { Calendar, Download, ExternalLink, Mail, MapPin } from 'lucide-react'
+import { Calendar, ExternalLink, Mail, MapPin } from 'lucide-react'
+import Link from 'next/link'
 
 export default function CVPage() {
   return (
@@ -28,10 +29,10 @@ export default function CVPage() {
                 </div>
               </div>
             </div>
-            <button className="btn-primary flex items-center mt-4 lg:mt-0">
-              <Download className="h-4 w-4 mr-2" />
-              Download PDF
-            </button>
+            <Link href="/contact" className="btn-primary flex items-center mt-4 lg:mt-0">
+              <Mail className="h-4 w-4 mr-2" />
+              Contact me for a relevant version of this CV
+            </Link>
           </div>
         </div>
 
