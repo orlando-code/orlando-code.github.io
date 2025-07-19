@@ -38,43 +38,43 @@ export default function HomePage() {
             Explore My Work
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <Link href="/blog" className="card hover:shadow-md transition-shadow duration-200">
+            <Link href="/blog" className="card hover:shadow-md transition-shadow duration-200 flex flex-col h-full">
               <div className="flex items-center mb-4">
                 <FileText className="h-8 w-8 text-primary-600 mr-3" />
                 <h3 className="text-xl font-semibold text-gray-900">Blog</h3>
               </div>
-              <p className="text-gray-600 mb-4">
+              <p className="text-gray-600 mb-4 flex-grow">
                 Unsolicited ruminations on climate, policy, and research. And pretty maps.
               </p>
-              <span className="text-primary-600 font-medium flex items-center">
+              <span className="text-primary-600 font-medium flex items-center mt-auto">
                 Read Articles
                 <ArrowRight className="ml-2 h-4 w-4" />
               </span>
             </Link>
 
-            <Link href="/cv" className="card hover:shadow-md transition-shadow duration-200">
+            <Link href="/cv" className="card hover:shadow-md transition-shadow duration-200 flex flex-col h-full">
               <div className="flex items-center mb-4">
                 <User className="h-8 w-8 text-primary-600 mr-3" />
                 <h3 className="text-xl font-semibold text-gray-900">CV</h3>
               </div>
-              <p className="text-gray-600 mb-4">
+              <p className="text-gray-600 mb-4 flex-grow">
                 Academic, work, and other activities.
               </p>
-              <span className="text-primary-600 font-medium flex items-center">
+              <span className="text-primary-600 font-medium flex items-center mt-auto">
                 View CV
                 <ArrowRight className="ml-2 h-4 w-4" />
               </span>
             </Link>
 
-            <Link href="/contact" className="card hover:shadow-md transition-shadow duration-200">
+            <Link href="/contact" className="card hover:shadow-md transition-shadow duration-200 flex flex-col h-full">
               <div className="flex items-center mb-4">
                 <Mail className="h-8 w-8 text-primary-600 mr-3" />
                 <h3 className="text-xl font-semibold text-gray-900">Contact</h3>
               </div>
-              <p className="text-gray-600 mb-4">
+              <p className="text-gray-600 mb-4 flex-grow">
                 Get in touch for collaborations or questions.
               </p>
-              <span className="text-primary-600 font-medium flex items-center">
+              <span className="text-primary-600 font-medium flex items-center mt-auto">
                 Contact Me
                 <ArrowRight className="ml-2 h-4 w-4" />
               </span>
