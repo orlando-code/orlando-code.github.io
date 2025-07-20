@@ -1,13 +1,30 @@
 import { ArrowRight, FileText, Mail, User } from 'lucide-react'
+import Image from 'next/image'
 import Link from 'next/link'
+
 
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-50 to-white">
+
+
       {/* Hero Section */}
-      <section className="pt-20 pb-16 sm:pt-24 sm:pb-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
+      <section className="pt-20 pb-16 sm:pt-24 sm:pb-20 relative overflow-hidden">
+        {/* Background favicon */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <div className="relative w-96 h-96 opacity-20">
+            <Image
+              src="/favicon.png"
+              alt=""
+              fill
+              className="object-contain"
+              priority
+            />
+          </div>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div className="text-center">
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 mb-6">
               Hello, I'm{' '}
               <span className="text-primary-600">Orlando</span>
