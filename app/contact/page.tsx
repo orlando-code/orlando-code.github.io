@@ -1,6 +1,6 @@
 'use client'
 
-import { Github, Linkedin, Mail, MapPin, Send } from 'lucide-react'
+import { Github, Linkedin, Mail, MapPin } from 'lucide-react'
 import { useState } from 'react'
 
 export default function ContactPage() {
@@ -45,132 +45,26 @@ export default function ContactPage() {
             Get in Touch
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Questions, feedback, comments and collaborations all welcome! Just submit this form or email me directly.
+            Questions, feedback, comments and collaborations all welcome! Get in touch via the most relevant platform, or just email me directly.
           </p>
         </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Contact Form */}
-          <div className="card">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Send a Message</h2>
-            
-            {isSubmitted ? (
-              <div className="text-center py-8">
-                <div className="text-green-600 text-6xl mb-4">✓</div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">Message Sent!</h3>
-                <p className="text-gray-600 mb-4">Thank you for your message. I'll get back to you soon.</p>
-                <button
-                  onClick={() => setIsSubmitted(false)}
-                  className="btn-primary"
-                >
-                  Send Another Message
-                </button>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  <div>
-                    <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-2">
-                      First Name
-                    </label>
-                    <input
-                      type="text"
-                      id="firstName"
-                      name="firstName"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-2">
-                      Last Name
-                    </label>
-                    <input
-                      type="text"
-                      id="lastName"
-                      name="lastName"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                    Email Address
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
-                    Subject
-                  </label>
-                  <input
-                    type="text"
-                    id="subject"
-                    name="subject"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
-                    Message
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    rows={6}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-                    required
-                  ></textarea>
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="btn-primary w-full flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                      Sending...
-                    </>
-                  ) : (
-                    <>
-                      <Send className="h-4 w-4 mr-2" />
-                      Send Message
-                    </>
-                  )}
-                </button>
-              </form>
-            )}
-          </div>
 
           {/* Contact Information */}
           <div className="space-y-8">
             {/* Contact Details */}
-            <div className="card">
+            <div className="card text-center">
               <h2 className="text-2xl font-bold text-gray-900 mb-6">Contact Information</h2>
               <div className="space-y-6">
-                <div className="flex items-start">
-                  <Mail className="h-6 w-6 text-primary-600 mt-1 mr-4 flex-shrink-0" />
+                <div className="flex flex-col items-center">
+                  <Mail className="h-6 w-6 text-primary-600 mb-2 flex-shrink-0" />
                   <div>
                     <h3 className="font-semibold text-gray-900 mb-1">Email</h3>
-                    rt582 . at . cam.ac.uk
+                    <span>rt582 . at . cam.ac.uk</span>
                   </div>
                 </div>
 
-                <div className="flex items-start">
-                  <MapPin className="h-6 w-6 text-primary-600 mt-1 mr-4 flex-shrink-0" />
+                <div className="flex flex-col items-center">
+                  <MapPin className="h-6 w-6 text-primary-600 mb-2 flex-shrink-0" />
                   <div>
                     <h3 className="font-semibold text-gray-900 mb-1">Location</h3>
                     <p className="text-gray-600">
@@ -249,6 +143,5 @@ export default function ContactPage() {
           </div>
         </div>
       </div>
-    </div>
   )
 } 
