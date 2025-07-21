@@ -31,6 +31,7 @@ export default function RootLayout({
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
         <link rel="apple-touch-icon" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="alternate" type="application/atom+xml" title="Orlando's Blog" href="https://orlando-code.github.io/atom.xml" />
       </head>
       <body className={inter.className}>
         <Navigation />
