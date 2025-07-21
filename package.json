@@ -9,7 +9,8 @@
     "lint": "next lint",
     "export": "next export",
     "deploy": "bash deploy.sh",
-    "generate-rss": "node scripts/generate-rss.mjs"
+    "generate-rss": "node scripts/generate-rss.mjs",
+    "preview": "npx serve out"
   },
   "dependencies": {
     "feed": "^5.1.0",

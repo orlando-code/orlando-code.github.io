@@ -35,7 +35,7 @@ export const categoryColors: Record<string, { bg: string; text: string; border: 
     text: 'text-[#0097c3]',
     border: 'border-[#0097c3]'
   },
-  'policy': {
+  'long read': {
     bg: 'bg-[#0097c3]',
     text: 'text-white',
     border: 'border-[#0097c3]'
