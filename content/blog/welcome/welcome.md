@@ -3,6 +3,7 @@ title: Welcome!
 date: "2025-07-19T08:00:00.000Z"
 description: "My first, introductory, blog"
 excerpt: "Welcome to my first blog post, answering the question: how did this get here?"
+category: "personal"
 # time: "3 minute read"
 draft: false
 ---

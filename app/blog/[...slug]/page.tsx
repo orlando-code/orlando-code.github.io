@@ -1,6 +1,6 @@
 import { ArrowLeft, Calendar, Clock } from 'lucide-react'
 import Link from 'next/link'
-import { getAllPostSlugs, getPostBySlug } from '../../../lib/blog'
+import { getAllPostSlugs, getCategoryStyle, getPostBySlug } from '../../../lib/blog'
 
 interface BlogPostPageProps {
   params: {
@@ -19,6 +19,11 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const slug = Array.isArray(params.slug) ? params.slug.join('/') : params.slug
   const post = await getPostBySlug(slug)
 
+  if (!post) {
+    return <div>Post not found</div>
+  }
+
+  const categoryStyle = getCategoryStyle(post.category);
 
   return (
     <div className="min-h-screen bg-white">
@@ -34,6 +39,15 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
         {/* Post header */}
         <header className="mb-12">
+          {/* Category label */}
+          {post.category && (
+            <div className="mb-6">
+              <span className={`inline-block px-4 py-2 rounded-full text-sm font-semibold uppercase tracking-wider ${categoryStyle.bg} ${categoryStyle.text} border ${categoryStyle.border}`}>
+                {post.category}
+              </span>
+            </div>
+          )}
+          
           <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-6 leading-tight">
             {post.title}
           </h1>

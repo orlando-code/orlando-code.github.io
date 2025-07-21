@@ -13,6 +13,7 @@ export interface BlogPost {
   excerpt: string
   content: string
   description: string
+  category?: string
   readTime?: string
 }
 
@@ -22,8 +23,43 @@ export interface BlogPostMeta {
   date: string
   excerpt: string
   description: string
+  category?: string
   readTime?: string
   draft?: boolean
+}
+
+// Category color mapping
+export const categoryColors: Record<string, { bg: string; text: string; border: string }> = {
+  'research': {
+    bg: 'bg-[#9be3f9]',
+    text: 'text-[#0097c3]',
+    border: 'border-[#0097c3]'
+  },
+  'policy': {
+    bg: 'bg-[#0097c3]',
+    text: 'text-white',
+    border: 'border-[#0097c3]'
+  },
+  'personal': {
+    bg: 'bg-[#f24f26]',
+    text: 'text-white',
+    border: 'border-[#f24f26]'
+  },
+  'tech': {
+    bg: 'bg-[#ffef55]',
+    text: 'text-gray-900',
+    border: 'border-[#ffef55]'
+  },
+  'general': {
+    bg: 'bg-[#e1c5a3]',
+    text: 'text-gray-900',
+    border: 'border-[#e1c5a3]'
+  }
+}
+
+export function getCategoryStyle(category?: string) {
+  if (!category) return categoryColors['general']
+  return categoryColors[category.toLowerCase()] || categoryColors['general']
 }
 
 // Recursively find all .md files in a directory
@@ -59,6 +95,7 @@ export function getAllPosts(): BlogPostMeta[] {
       date: matterResult.data.date || '1970-01-01',
       excerpt: matterResult.data.excerpt || '',
       description: matterResult.data.description || '',
+      category: matterResult.data.category || '',
       readTime: matterResult.data.readTime || '',
       draft: matterResult.data.draft ?? false,
     }
@@ -86,6 +123,7 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
       excerpt: matterResult.data.excerpt || '',
       content: contentHtml,
       description: matterResult.data.description || '',
+      category: matterResult.data.category || '',
       readTime: matterResult.data.readTime || '',
     }
   } catch (error) {

@@ -1,6 +1,6 @@
 import { Calendar, Clock } from 'lucide-react';
 import Link from 'next/link';
-import { BlogPostMeta, getAllPosts } from '../../lib/blog';
+import { BlogPostMeta, getAllPosts, getCategoryStyle } from '../../lib/blog';
 
 export default function BlogPage() {
   const posts = getAllPosts().filter(post => !post.draft);
@@ -27,45 +27,57 @@ export default function BlogPage() {
           </div>
         ) : (
           <div className="space-y-8">
-            {posts.map((post: BlogPostMeta) => (
-              <article key={post.slug} className="card hover:shadow-md transition-shadow duration-200">
-                <Link href={`/blog/${encodeURI(post.slug)}`}>
-                  <h2 className="text-2xl font-bold text-gray-900 mb-3 hover:text-primary-600 transition-colors duration-200">
-                    {post.title}
-                  </h2>
-                </Link>
-                
-                <div className="flex items-center text-sm text-gray-500 mb-4 space-x-4">
-                  <div className="flex items-center">
-                    <Calendar className="h-4 w-4 mr-1" />
-                    {new Date(post.date).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                    })}
-                  </div>
-                  {post.readTime && (
-                    <div className="flex items-center">
-                      <Clock className="h-4 w-4 mr-1" />
-                      {post.readTime}
+            {posts.map((post: BlogPostMeta) => {
+              const categoryStyle = getCategoryStyle(post.category);
+              return (
+                <article key={post.slug} className="card hover:shadow-md transition-shadow duration-200">
+                  {/* Category label */}
+                  {post.category && (
+                    <div className="mb-4">
+                      <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider ${categoryStyle.bg} ${categoryStyle.text} border ${categoryStyle.border}`}>
+                        {post.category}
+                      </span>
                     </div>
                   )}
-                </div>
+                  
+                  <Link href={`/blog/${encodeURI(post.slug)}`}>
+                    <h2 className="text-2xl font-bold text-gray-900 mb-3 hover:text-primary-600 transition-colors duration-200">
+                      {post.title}
+                    </h2>
+                  </Link>
+                  
+                  <div className="flex items-center text-sm text-gray-500 mb-4 space-x-4">
+                    <div className="flex items-center">
+                      <Calendar className="h-4 w-4 mr-1" />
+                      {new Date(post.date).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                      })}
+                    </div>
+                    {post.readTime && (
+                      <div className="flex items-center">
+                        <Clock className="h-4 w-4 mr-1" />
+                        {post.readTime}
+                      </div>
+                    )}
+                  </div>
 
-                {post.excerpt && (
-                  <p className="text-gray-600 mb-4 leading-relaxed">
-                    {post.excerpt}
-                  </p>
-                )}
+                  {post.excerpt && (
+                    <p className="text-gray-600 mb-4 leading-relaxed">
+                      {post.excerpt}
+                    </p>
+                  )}
 
-                <Link 
-                  href={`/blog/${encodeURI(post.slug)}`}
-                  className="text-primary-600 hover:text-primary-700 font-medium inline-flex items-center"
-                >
-                  Read more →
-                </Link>
-              </article>
-            ))}
+                  <Link 
+                    href={`/blog/${encodeURI(post.slug)}`}
+                    className="text-primary-600 hover:text-primary-700 font-medium inline-flex items-center"
+                  >
+                    Read more →
+                  </Link>
+                </article>
+              );
+            })}
           </div>
         )}
       </div>
