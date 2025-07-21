@@ -12,6 +12,7 @@ export interface BlogPost {
   date: string
   excerpt: string
   content: string
+  description: string
   readTime?: string
 }
 
@@ -20,6 +21,7 @@ export interface BlogPostMeta {
   title: string
   date: string
   excerpt: string
+  description: string
   readTime?: string
   draft?: boolean
 }
@@ -56,6 +58,7 @@ export function getAllPosts(): BlogPostMeta[] {
       title: matterResult.data.title || slug,
       date: matterResult.data.date || '1970-01-01',
       excerpt: matterResult.data.excerpt || '',
+      description: matterResult.data.description || '',
       readTime: matterResult.data.readTime || '',
       draft: matterResult.data.draft ?? false,
     }
@@ -82,6 +85,7 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
       date: matterResult.data.date || '1970-01-01',
       excerpt: matterResult.data.excerpt || '',
       content: contentHtml,
+      description: matterResult.data.description || '',
       readTime: matterResult.data.readTime || '',
     }
   } catch (error) {

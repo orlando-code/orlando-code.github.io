@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
-  // output: "npx serve@latest out",
+  // output: 'export',
+  output: "standalone",
   trailingSlash: true,
   images: {
     unoptimized: true,
