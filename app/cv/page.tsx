@@ -1,4 +1,4 @@
-import { Calendar, ExternalLink, Mail, MapPin } from 'lucide-react'
+import { Calendar } from 'lucide-react'
 import Link from 'next/link'
 
 export default function CVPage() {
@@ -12,12 +12,12 @@ export default function CVPage() {
               <h1 className="text-4xl font-bold text-gray-900 mb-2">Orlando Timmerman</h1>
               <p className="text-xl text-gray-600 mb-4">PhD Researcher</p>
               <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-6 space-y-2 sm:space-y-0 text-gray-600">
-                <div className="flex items-center">
+                {/* <div className="flex items-center">
                   <Mail className="h-4 w-4 mr-2" />
                     rt582 . at . cam.ac.uk
                   
-                </div>
-                <div className="flex items-center">
+                </div> */}
+                {/* <div className="flex items-center">
                   <MapPin className="h-4 w-4 mr-2" />
                   <span>Cambridge, UK</span>
                 </div>
@@ -26,16 +26,15 @@ export default function CVPage() {
                   <a href="https://github.com/orlando-code" className="hover:text-primary-600">
                     GitHub
                   </a>
-                </div>
-              </div>
-            </div>
-            <Link href="/contact" className="btn-primary flex items-center mt-4 lg:mt-0">
-              <Mail className="h-4 w-4 mr-2" />
-              <span className="text-right">
-                Contact me<br />
-                for a relevant version of this CV
+                </div> */}
+            <Link href="/contact" className="btn-primary flex items-center mt-4 lg:mt-0 ">
+              {/* <Mail className="h-6 w- mr-2" /> */}
+              <span className="text-left">
+                Contact me for a customised version of this CV
               </span>
             </Link>
+              </div>
+            </div>
           </div>
         </div>
 

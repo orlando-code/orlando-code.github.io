@@ -52,21 +52,24 @@ export default function ContactPage() {
           {/* Contact Information */}
           <div className="space-y-8">
             {/* Contact Details */}
-            <div className="card text-center">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Contact Information</h2>
-              <div className="space-y-6">
-                <div className="flex flex-col items-center">
-                  <Mail className="h-6 w-6 text-primary-600 mb-2 flex-shrink-0" />
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-1">Email</h3>
+            <div className="card">
+              <h2 className="text-2xl text-center font-bold text-gray-900 mb-6">Contact Information</h2>
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-8">
+                <div className="flex flex-col items-center flex-1">
+                  <div className="text-center">
+                    <div className="flex items-center justify-center mb-1">
+                      <Mail className="h-6 w-6 text-primary-600 mr-2 flex-shrink-0" />
+                      <h3 className="font-semibold text-gray-900">Email</h3>
+                    </div>
                     <span>rt582 . at . cam.ac.uk</span>
                   </div>
                 </div>
-
-                <div className="flex flex-col items-center">
-                  <MapPin className="h-6 w-6 text-primary-600 mb-2 flex-shrink-0" />
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-1">Location</h3>
+                <div className="flex flex-col items-center flex-1">
+                  <div className="text-center">
+                    <div className="flex items-center justify-center mb-1">
+                      <MapPin className="h-6 w-6 text-primary-600 mr-2 flex-shrink-0" />
+                      <h3 className="font-semibold text-gray-900">Location</h3>
+                    </div>
                     <p className="text-gray-600">
                       Cambridge, UK
                     </p>
@@ -77,7 +80,7 @@ export default function ContactPage() {
 
             {/* Social Links */}
             <div className="card">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Connect with Me</h2>
+              <h2 className="text-2xl text-center font-bold text-gray-900 mb-6">Connect with Me</h2>
               <div className="grid grid-cols-2 gap-4">
                 <a
                   href="https://github.com/orlando-code"
