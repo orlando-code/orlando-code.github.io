@@ -131,14 +131,14 @@ export default function ContactPage() {
                   rel="noopener noreferrer"
                   className="flex items-center p-4 border border-gray-200 rounded-lg hover:border-primary-300 hover:bg-primary-50 transition-colors duration-200"
                 >
-                  <div className="h-6 w-6 text-gray-600 mr-3 flex items-center justify-center">
+                  <div className="h-6 w-6 text-gray-600 mr-3 flex items-center justify-center flex-shrink-0">
                     <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M19.586 0H4.414C1.974 0 0 1.974 0 4.414v15.172C0 22.026 1.974 24 4.414 24h15.172C22.026 24 24 22.026 24 19.586V4.414C24 1.974 22.026 0 19.586 0zM8.064 18.953c-2.055 0-3.718-1.663-3.718-3.718s1.663-3.718 3.718-3.718 3.718 1.663 3.718 3.718-1.663 3.718-3.718 3.718zm7.781-7.781c-1.329 0-2.406-1.077-2.406-2.406s1.077-2.406 2.406-2.406 2.406 1.077 2.406 2.406-1.077 2.406-2.406 2.406z"/>
                     </svg>
                   </div>
-                  <div>
+                  <div className="min-w-0 flex-1">
                     <h3 className="font-semibold text-gray-900 text-sm">Bluesky</h3>
-                    <p className="text-gray-600 text-sm">@orlandotimm.bsky.social</p>
+                    <p className="text-gray-600 text-sm break-words">@orlandotimm.bsky.social</p>
                   </div>
                 </a>
               </div>
@@ -147,4 +147,4 @@ export default function ContactPage() {
         </div>
       </div>
   )
-} 
+}
