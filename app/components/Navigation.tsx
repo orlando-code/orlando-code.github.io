@@ -35,6 +35,7 @@ const socialLinks = [
 const navItems = [
   { name: 'Home', href: '/' },
   { name: 'Blog', href: '/blog' },
+  { name: 'Services', href: '/services' },
   { name: 'CV', href: '/cv' },
   { name: 'Contact', href: '/contact' },
 ]
