@@ -32,26 +32,26 @@ export default function MapsForPresentsPage() {
         <div className="mb-16">
           <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Example Gifts</h2>
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-gray-100 rounded-lg p-4 text-center">
-              <div className="w-full h-100 bg-gray-200 rounded mb-2 flex items-center justify-center">
+            <div className="bg-gray-100 rounded-lg p-4 text-center group">
+              <div className="w-full h-100 bg-gray-200 rounded mb-2 flex items-center justify-center overflow-visible">
                 <img
                   src="/pembroke.png"
                   alt="A circular map centred on Pembroke College, Cambridge"
-                  className="object-contain h-full w-full rounded"
+                  className="object-contain h-full w-full rounded transition-transform duration-300 md:group-hover:scale-150 md:group-hover:z-10 relative"
                   style={{ maxHeight: '100%', maxWidth: '100%' }}
                 />
               </div>
               <p className="text-sm text-gray-600">Cambridge can feel like its own complete world</p>
             </div>
-            <div className="bg-gray-100 rounded-lg p-4 text-center">
+            <div className="bg-gray-100 rounded-lg p-4 text-center group">
               <div 
-                className="w-full aspect-[3/3] bg-gray-200 rounded mb-2 overflow-hidden"
+                className="w-full aspect-[3/3] bg-gray-200 rounded mb-2 overflow-visible"
                 style={{ position: 'relative' }}
               >
                 <img
                   src="/lausanne.png"
                   alt="A slice of Lausanne showing a ferry port on the lake a large train station"
-                  className="absolute top-0 left-0 w-full h-full object-cover"
+                  className="absolute top-0 left-0 w-full h-full object-cover transition-transform duration-300 md:group-hover:scale-150 md:group-hover:z-10"
                   style={{ objectPosition: 'left' }}
                 />
               </div>
@@ -59,23 +59,23 @@ export default function MapsForPresentsPage() {
             </div>
 
             
-            <div className="bg-gray-100 rounded-lg p-4 text-center">
-              <div className="w-full h-100 bg-gray-200 rounded mb-2 flex items-center justify-center">
+            <div className="bg-gray-100 rounded-lg p-4 text-center group">
+              <div className="w-full h-100 bg-gray-200 rounded mb-2 flex items-center justify-center overflow-visible">
                 <img
                   src="/bristol.png"
                   alt="A busy map of Bristol showing the city centre and the surrounding area"
-                  className="object-contain h-full w-full rounded"
+                  className="object-contain h-full w-full rounded transition-transform duration-300 md:group-hover:scale-150 md:group-hover:z-10 relative"
                   style={{ maxHeight: '100%', maxWidth: '100%' }}
                 />
               </div>
               <p className="text-sm text-gray-600">Bristol: great from the ground; beautiful from above</p>
             </div>
-            <div className="bg-gray-100 rounded-lg p-4 text-center">
-              <div className="w-full h-100 bg-gray-200 rounded mb-2 flex items-center justify-center">
+            <div className="bg-gray-100 rounded-lg p-4 text-center group">
+              <div className="w-full h-100 bg-gray-200 rounded mb-2 flex items-center justify-center overflow-visible">
                 <img
                   src="/london.png"
                   alt="A map of London featuring part of Regent's canal and and railway tracks"
-                  className="object-contain h-full w-full rounded"
+                  className="object-contain h-full w-full rounded transition-transform duration-300 md:group-hover:scale-150 md:group-hover:z-10 relative"
                   style={{ maxHeight: '100%', maxWidth: '100%' }}
                 />
               </div>
