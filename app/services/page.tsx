@@ -85,8 +85,8 @@ export default function ServicesPage() {
                     STEM Tutoring
                   </h2>
                   <p className="text-lg text-gray-600 leading-relaxed">
-                    One-on-one and small group tutoring in Science, Technology, Engineering, and Mathematics. 
-                    Specializing in physics, mathematics, and programming with a focus on building strong foundational understanding.
+                    One-on-one and small group tutoring in Science, Maths, and Computer Science. 
+                    Specializing in physics with a focus on building strong foundational understanding and inspiring interest.
                   </p>
                   <div className="flex items-center text-[#ffc50e] font-medium group-hover:text-[#fbc30c] transition-colors duration-200">
                     Learn more
