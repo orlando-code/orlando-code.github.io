@@ -4,11 +4,18 @@
         <title>Orlando Timmerman's Blog</title>
         <link>https://orlando-code.github.io/</link>
         <description>Updates and posts</description>
-        <lastBuildDate>Mon, 21 Jul 2025 20:00:04 GMT</lastBuildDate>
+        <lastBuildDate>Thu, 31 Jul 2025 14:24:23 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>Next.js + feed</generator>
         <language>en</language>
         <copyright>All rights reserved 2025, Orlando Timmerman</copyright>
+        <item>
+            <title><![CDATA[Weeknotes: 28 July 2025]]></title>
+            <link>https://orlando-code.github.io//blog/weeknote0/welcome</link>
+            <guid isPermaLink="false">https://orlando-code.github.io//blog/weeknote0/welcome</guid>
+            <pubDate>Invalid Date</pubDate>
+            <description><![CDATA[Intent and first attempt]]></description>
+        </item>
         <item>
             <title><![CDATA[Welcome!]]></title>
             <link>https://orlando-code.github.io//blog/welcome/welcome</link>
