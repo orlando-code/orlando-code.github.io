@@ -1,6 +1,7 @@
 node_modules/
 .next/
 _next/
+# ignore static directory
 out/
 .DS_Store
 *.log
