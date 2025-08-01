@@ -57,7 +57,7 @@ export default function Navigation() {
           </div>
           
           {/* Nav links (center) - hidden on mobile */}
-          <div className="hidden md:flex space-x-6">
+          <div className="hidden md:flex items-center space-x-6 justify-center absolute left-1/2 top-0 transform -translate-x-1/2 h-16">
             {navItems.map((item) => (
               <Link
                 key={item.name}
