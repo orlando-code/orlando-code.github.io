@@ -97,6 +97,33 @@ export default function HomePage() {
               </span>
             </Link>
           </div>
+          {/* Services square below, full width and same height as the above grid items */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
+            <div className="col-span-1 md:col-span-3">
+              <Link
+                href="/services"
+                className="card hover:shadow-md transition-shadow duration-200 flex flex-col items-center h-full w-full"
+                style={{ minHeight: '100%' }}
+              >
+                <div className="flex items-center mb-4 mt-2">
+                  <span className="inline-flex items-center justify-center rounded-full bg-primary-50 p-2 mr-3">
+                    <span className="sr-only">Services</span>
+                    <svg className="h-8 w-8 text-primary-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M16 7V5a3 3 0 00-6 0v2M5 9h14a2 2 0 012 2v7a2 2 0 01-2 2H5a2 2 0 01-2-2v-7a2 2 0 012-2z" />
+                    </svg>
+                  </span>
+                  <h3 className="text-xl font-semibold text-gray-900">Services</h3>
+                </div>
+                <p className="text-gray-600 mb-4 text-center">
+                  Data analysis, visualization, and tutoring.
+                </p>
+                <span className="text-primary-600 font-medium flex items-center mt-auto mb-2">
+                  Learn More
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </span>
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
 
