@@ -10,6 +10,7 @@ jobs:
     env:
       ICRS_EXPLORER_SRC: icrs-explorer
       CORAL_COVER_SRC: coral-cover-economics
+      CENTRE_OF_MASS_SRC: centre-of-mass
     
     steps:
     - uses: actions/checkout@v4
@@ -26,6 +27,13 @@ jobs:
       with:
         repository: orlando-code/coral-cover-economics
         path: coral-cover-economics
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Checkout centre of mass
+      uses: actions/checkout@v4
+      with:
+        repository: orlando-code/centre-of-mass
+        path: centre-of-mass
         token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Setup Node.js

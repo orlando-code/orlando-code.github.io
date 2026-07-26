@@ -21,6 +21,7 @@ content/blog/**/images/.DS_Store
 # ignore synced subprojects (rebuilt on each deploy)
 public/explore-icrs-2026/
 public/coral-cover-economics/
+public/centre-of-mass/
 .cache/
 
 .vscode/

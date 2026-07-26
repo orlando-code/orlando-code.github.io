@@ -28,7 +28,7 @@ function resolveCentreSrc() {
       ['clone', '--depth', '1', 'https://github.com/orlando-code/centre-of-mass.git', cacheDir],
       { stdio: 'inherit' }
     );
-    if (result.status !== 0) return null;
+    if (result.status !== 0) process.exit(result.status ?? 1);
   }
   return cacheDir;
 }
@@ -71,14 +71,5 @@ copyDir(resolveCoralSrc(), path.join(SITE_ROOT, 'public', 'coral-cover-economics
 });
 console.log('Synced coral-cover-economics -> public/coral-cover-economics/');
 
-const centreSrc = resolveCentreSrc();
-const centreTarget = path.join(SITE_ROOT, 'public', 'centre-of-mass');
-if (centreSrc) {
-  copyCentreOfMass(centreSrc);
-  console.log('Synced centre-of-mass -> public/centre-of-mass/');
-} else if (fs.existsSync(path.join(centreTarget, 'index.html'))) {
-  console.log('Using committed centre-of-mass bundle in public/centre-of-mass/');
-} else {
-  console.error('Missing centre-of-mass source and no committed bundle in public/centre-of-mass/');
-  process.exit(1);
-}
+copyCentreOfMass(resolveCentreSrc());
+console.log('Synced centre-of-mass -> public/centre-of-mass/');
