@@ -115,15 +115,42 @@ function parsePostDate(value: unknown): string {
 }
 
 /** Resolve cover image for static export (run copy-blog-assets before build). */
+function getPostDir(slug: string): string {
+  return slug.includes('/') ? slug.slice(0, slug.lastIndexOf('/')) : slug
+}
+
+const COVER_IMAGE_EXT = new Set(['.jpg', '.jpeg', '.png', '.webp', '.gif', '.svg', '.avif'])
+
+function discoverCoverImage(slug: string): string | undefined {
+  const postDir = getPostDir(slug)
+  const dirPath = path.join(postsDirectory, postDir)
+  if (!fs.existsSync(dirPath)) return undefined
+
+  const matches = fs.readdirSync(dirPath)
+    .filter((name) => {
+      const ext = path.extname(name).toLowerCase()
+      if (!COVER_IMAGE_EXT.has(ext)) return false
+      const base = path.basename(name, ext).toLowerCase()
+      return base.includes('cover')
+    })
+    .sort()
+
+  if (matches.length === 0) return undefined
+  return `/blog/${postDir}/${matches[0]}`
+}
+
 export function resolveCoverImage(slug: string, cover?: string): string | undefined {
-  if (!cover || typeof cover !== 'string') return undefined
-  const trimmed = cover.trim()
-  if (!trimmed) return undefined
-  if (trimmed.startsWith('http://') || trimmed.startsWith('https://') || trimmed.startsWith('/')) {
-    return trimmed
+  if (cover && typeof cover === 'string') {
+    const trimmed = cover.trim()
+    if (trimmed) {
+      if (trimmed.startsWith('http://') || trimmed.startsWith('https://') || trimmed.startsWith('/')) {
+        return trimmed
+      }
+      const postDir = getPostDir(slug)
+      return `/blog/${postDir}/${trimmed.replace(/^\.\//, '')}`
+    }
   }
-  const postDir = slug.includes('/') ? slug.slice(0, slug.lastIndexOf('/')) : slug
-  return `/blog/${postDir}/${trimmed.replace(/^\.\//, '')}`
+  return discoverCoverImage(slug)
 }
 
 const categoryCoverGradients: Record<string, string> = {
