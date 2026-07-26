@@ -1,8 +1,10 @@
 import fs from 'fs'
 import matter from 'gray-matter'
 import path from 'path'
+import rehypeRaw from 'rehype-raw'
+import rehypeStringify from 'rehype-stringify'
 import { remark } from 'remark'
-import html from 'remark-html'
+import remarkRehype from 'remark-rehype'
 
 const postsDirectory = path.join(process.cwd(), 'content/blog')
 
@@ -17,6 +19,7 @@ export interface BlogPost {
   readTime?: string
   cover?: string
   coverAlt?: string
+  externalUrl?: string
 }
 
 export interface BlogPostMeta {
@@ -30,6 +33,21 @@ export interface BlogPostMeta {
   draft?: boolean
   cover?: string
   coverAlt?: string
+  externalUrl?: string
+}
+
+async function markdownToHtml(content: string): Promise<string> {
+  const result = await remark()
+    .use(remarkRehype, { allowDangerousHtml: true })
+    .use(rehypeRaw)
+    .use(rehypeStringify)
+    .process(content)
+  return result.toString()
+}
+
+function parseExternalUrl(value: unknown): string | undefined {
+  if (typeof value !== 'string' || !value.trim()) return undefined
+  return value.trim()
 }
 
 // Category color mapping
@@ -54,6 +72,16 @@ export const categoryColors: Record<string, { bg: string; text: string; border: 
     text: 'text-gray-900',
     border: 'border-[#ffef55]'
   },
+  'paper': {
+    bg: 'bg-[#0077b6]',
+    text: 'text-white',
+    border: 'border-[#0077b6]'
+  },
+  'package': {
+    bg: 'bg-[#495057]',
+    text: 'text-white',
+    border: 'border-[#495057]'
+  },
   'general': {
     bg: 'bg-[#e1c5a3]',
     text: 'text-gray-900',
@@ -69,6 +97,11 @@ export const categoryColors: Record<string, { bg: string; text: string; border: 
 export function getCategoryStyle(category?: string) {
   if (!category) return categoryColors['general']
   return categoryColors[category.toLowerCase()] || categoryColors['general']
+}
+
+export function formatCategoryLabel(category?: string): string {
+  if (!category) return ''
+  return category.charAt(0).toUpperCase() + category.slice(1).toLowerCase()
 }
 
 function isDraft(value: unknown): boolean {
@@ -96,6 +129,8 @@ export function resolveCoverImage(slug: string, cover?: string): string | undefi
 const categoryCoverGradients: Record<string, string> = {
   research: 'from-[#0097c3] via-[#48cae4] to-[#90e0ef]',
   tech: 'from-[#495057] via-[#6c757d] to-[#ffef55]',
+  paper: 'from-[#0077b6] via-[#0096c7] to-[#48cae4]',
+  package: 'from-[#343a40] via-[#495057] to-[#6c757d]',
   personal: 'from-[#f24f26] via-[#ff6b4a] to-[#ffb4a2]',
   general: 'from-[#a68a64] via-[#e1c5a3] to-[#f5ebe0]',
   weeknote: 'from-[#5c677d] via-[#7d8597] to-[#bdc3c7]',
@@ -146,6 +181,7 @@ export function getAllPosts(): BlogPostMeta[] {
         readTime: matterResult.data.readTime || '',
         cover: typeof matterResult.data.cover === 'string' ? matterResult.data.cover : undefined,
         coverAlt: typeof matterResult.data.coverAlt === 'string' ? matterResult.data.coverAlt : undefined,
+        externalUrl: parseExternalUrl(matterResult.data.externalUrl),
         draft: false,
       }]
     } catch {
@@ -166,8 +202,7 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
     if (!match) return null
     const fileContents = fs.readFileSync(match, 'utf8')
     const matterResult = matter(fileContents)
-    const processedContent = await remark().use(html).process(matterResult.content)
-    const contentHtml = processedContent.toString()
+    const contentHtml = await markdownToHtml(matterResult.content)
     if (isDraft(matterResult.data.draft)) return null
 
     return {
@@ -181,6 +216,7 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
       readTime: matterResult.data.readTime || '',
       cover: typeof matterResult.data.cover === 'string' ? matterResult.data.cover : undefined,
       coverAlt: typeof matterResult.data.coverAlt === 'string' ? matterResult.data.coverAlt : undefined,
+      externalUrl: parseExternalUrl(matterResult.data.externalUrl),
     }
   } catch (error) {
     return null

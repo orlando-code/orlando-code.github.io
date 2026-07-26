@@ -3,7 +3,7 @@ title: "esgpull-plus"
 date: "2025-10-10T13:52:18.000Z"
 description: "ESGF download tooling with a YAML API, regridding, and surface/seafloor extraction."
 excerpt: "Extensions to esgf-download: programmatic search/download, CDO regridding, and more."
-category: "tech"
+category: "package"
 cover: "/featured/esgpull-plus.svg"
 coverAlt: "Climate data pipeline illustration"
 draft: false

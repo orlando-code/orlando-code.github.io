@@ -12,7 +12,7 @@ const SITE_ROOT = path.resolve(__dirname, '..');
 const SOURCE_DIR = path.join(SITE_ROOT, 'content', 'blog');
 const TARGET_DIR = path.join(SITE_ROOT, 'public', 'blog');
 
-const IMAGE_EXT = new Set(['.jpg', '.jpeg', '.png', '.webp', '.gif', '.svg', '.avif']);
+const IMAGE_EXT = new Set(['.jpg', '.jpeg', '.png', '.webp', '.gif', '.svg', '.avif', '.ipynb']);
 
 function walk(dir) {
   if (!fs.existsSync(dir)) return;

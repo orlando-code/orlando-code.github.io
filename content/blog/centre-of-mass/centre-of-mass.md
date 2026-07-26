@@ -3,13 +3,25 @@ title: "Centre of mass"
 date: "2026-07-12T07:33:39.000Z"
 description: "Where in the world are you most centred?"
 excerpt: "A time-weighted geographic centre-of-mass calculator — built on a long-haul flight."
-category: "tech"
+category: "general"
 draft: false
 ---
 
 **Centre of mass** takes places you've lived and calculates your time-weighted geographic centre — plus a spread metric showing how dispersed your life has been.
 
-- **Site:** [orlando-code.github.io/centre-of-mass](https://orlando-code.github.io/centre-of-mass/)
+- **Site:** [/centre-of-mass/](/centre-of-mass/)
 - **Code:** [github.com/orlando-code/centre-of-mass](https://github.com/orlando-code/centre-of-mass)
 
-*More to come.*
+<div class="blog-site-embed">
+  <a class="blog-site-embed-banner" href="/centre-of-mass/" target="_blank" rel="noopener noreferrer">
+    <span class="blog-site-embed-banner-label">Open site</span>
+    <span class="blog-site-embed-banner-url">orlando-codes.com/centre-of-mass</span>
+    <span class="blog-site-embed-banner-arrow" aria-hidden="true">↗</span>
+  </a>
+  <iframe
+    title="Centre of mass calculator"
+    src="/centre-of-mass/"
+    loading="lazy"
+    height="820"
+  ></iframe>
+</div>

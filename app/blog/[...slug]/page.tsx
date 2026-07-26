@@ -1,7 +1,7 @@
 import { ArrowLeft, Calendar, Clock } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { getAllPostSlugs, getCategoryStyle, getPostBySlug, resolveCoverImage } from '../../../lib/blog'
+import { getAllPostSlugs, getCategoryStyle, formatCategoryLabel, getPostBySlug, resolveCoverImage } from '../../../lib/blog'
 
 interface BlogPostPageProps {
   params: {
@@ -28,7 +28,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const coverSrc = resolveCoverImage(post.slug, post.cover);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white overflow-x-clip">
       <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <Link 
           href="/blog"
@@ -56,7 +56,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           {post.category && (
             <div className="mb-6">
               <span className={`inline-block px-4 py-2 rounded-full text-sm font-semibold uppercase tracking-wider ${categoryStyle.bg} ${categoryStyle.text} border ${categoryStyle.border}`}>
-                {post.category}
+                {formatCategoryLabel(post.category)}
               </span>
             </div>
           )}
@@ -87,7 +87,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
         {/* Post content */}
         <div 
-          className="prose prose-lg max-w-none prose-gray prose-headings:text-gray-900 prose-headings:font-bold prose-a:text-primary-600 prose-a:no-underline hover:prose-a:underline prose-strong:text-gray-900 prose-code:text-primary-600 prose-code:bg-gray-100 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-pre:bg-gray-900 prose-pre:text-gray-100"
+          className="prose prose-lg max-w-none prose-gray prose-headings:text-gray-900 prose-headings:font-bold prose-a:text-primary-600 prose-a:no-underline hover:prose-a:underline prose-strong:text-gray-900 prose-code:text-primary-600 prose-code:bg-gray-100 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-pre:bg-gray-900 prose-pre:text-gray-100 prose-img:mx-auto prose-img:rounded-lg prose-img:shadow-sm [&_.blog-site-embed-banner]:no-underline [&_.blog-site-embed-banner]:hover:no-underline"
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
 

@@ -12,4 +12,16 @@ draft: false
 - **Site:** [viewfromabove.streamlit.app](https://viewfromabove.streamlit.app/)
 - **Code:** [github.com/orlando-code/viewfromabove](https://github.com/orlando-code/viewfromabove)
 
-*More to come.*
+## Example maps
+
+### Pembroke College, Cambridge
+
+![Custom map of Pembroke College, Cambridge.](/blog/viewfromabove/maps/pembroke.png)
+
+### Fairfield, Connecticut
+
+![Custom map of Fairfield, Connecticut.](/blog/viewfromabove/maps/fairfield.png)
+
+### Alejandro
+
+![Custom map of Alejandro.](/blog/viewfromabove/maps/alejandro.png)

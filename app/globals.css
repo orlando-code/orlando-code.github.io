@@ -36,4 +36,46 @@
   .card {
     @apply bg-white rounded-lg shadow-sm border border-gray-200 p-6;
   }
+
+  .blog-notebook-embed,
+  .blog-site-embed {
+    @apply relative my-10 w-screen overflow-hidden border-y border-gray-200 bg-white shadow-sm;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .blog-site-embed-banner {
+    @apply flex items-center justify-between gap-4 px-4 sm:px-6 lg:px-8 py-3 bg-primary-600 text-white no-underline transition-colors duration-200 hover:bg-primary-700;
+  }
+
+  .prose .blog-site-embed-banner,
+  .prose .blog-site-embed-banner:hover {
+    @apply text-white no-underline;
+  }
+
+  .blog-site-embed-banner-label {
+    @apply text-sm font-semibold uppercase tracking-wide;
+  }
+
+  .blog-site-embed-banner-url {
+    @apply flex-1 truncate text-sm sm:text-base font-medium opacity-95;
+  }
+
+  .blog-site-embed-banner-arrow {
+    @apply text-lg leading-none opacity-90;
+  }
+
+  .blog-notebook-embed iframe,
+  .blog-site-embed iframe {
+    @apply block w-full border-0 bg-white;
+    min-height: 820px;
+  }
+
+  .blog-embed-links {
+    @apply mb-8 text-sm text-gray-600;
+  }
+
+  .prose img {
+    @apply mx-auto rounded-lg shadow-sm;
+  }
 } 

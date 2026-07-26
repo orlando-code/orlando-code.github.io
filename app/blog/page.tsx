@@ -12,7 +12,7 @@ export default function BlogPage() {
             Blog
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Here I wrap up each week of research, interspersed with the occasional preoccupying side-project.
+            Research notes, papers, packages, and the occasional preoccupying side-project.
           </p>
         </div>
 

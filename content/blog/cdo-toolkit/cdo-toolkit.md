@@ -3,7 +3,7 @@ title: "cdo-toolkit"
 date: "2026-06-13T07:14:27.000Z"
 description: "CDO-based NetCDF regridding with weight caching and parallel workers."
 excerpt: "A focused regridding/extraction package spun out of esgpull-plus."
-category: "tech"
+category: "package"
 draft: false
 ---
 

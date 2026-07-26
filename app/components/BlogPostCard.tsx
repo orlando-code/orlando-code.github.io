@@ -5,6 +5,7 @@ import {
   BlogPostMeta,
   getCategoryCoverGradient,
   getCategoryStyle,
+  formatCategoryLabel,
   resolveCoverImage,
 } from '../../lib/blog';
 
@@ -16,11 +17,17 @@ export default function BlogPostCard({ post }: BlogPostCardProps) {
   const categoryStyle = getCategoryStyle(post.category);
   const coverSrc = resolveCoverImage(post.slug, post.cover);
   const gradient = getCategoryCoverGradient(post.category);
-  const href = `/blog/${encodeURI(post.slug)}`;
+  const href = post.externalUrl || `/blog/${encodeURI(post.slug)}`;
+  const isExternal = Boolean(post.externalUrl && /^https?:\/\//.test(post.externalUrl));
+  const cta = isExternal ? 'Open site →' : 'Read more →';
+
+  const cardLinkProps = isExternal
+    ? { href, target: '_blank' as const, rel: 'noopener noreferrer' }
+    : { href };
 
   return (
     <article className="group card overflow-hidden p-0 hover:shadow-lg transition-all duration-300">
-      <Link href={href} className="block">
+      <Link {...cardLinkProps} className="block">
         <div className="relative aspect-[2.4/1] overflow-hidden">
           {coverSrc ? (
             <Image
@@ -40,14 +47,14 @@ export default function BlogPostCard({ post }: BlogPostCardProps) {
             <span
               className={`absolute top-4 left-4 inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider shadow-sm ${categoryStyle.bg} ${categoryStyle.text} border ${categoryStyle.border}`}
             >
-              {post.category}
+              {formatCategoryLabel(post.category)}
             </span>
           )}
         </div>
       </Link>
 
       <div className="p-6">
-        <Link href={href}>
+        <Link {...cardLinkProps}>
           <h2 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-primary-600 transition-colors duration-200">
             {post.title}
           </h2>
@@ -75,10 +82,10 @@ export default function BlogPostCard({ post }: BlogPostCardProps) {
         )}
 
         <Link
-          href={href}
+          {...cardLinkProps}
           className="text-primary-600 hover:text-primary-700 font-medium inline-flex items-center"
         >
-          Read more →
+          {cta}
         </Link>
       </div>
     </article>
