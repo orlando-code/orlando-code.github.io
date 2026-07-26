@@ -17,3 +17,5 @@ images/
 
 # ignore synced ICRS explorer (rebuilt on each deploy)
 public/explore-icrs-2026/
+
+.vscode/
