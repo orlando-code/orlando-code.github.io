@@ -37,7 +37,7 @@ const filePaths = getAllMarkdownFiles(postsDir);
 filePaths.forEach((fullPath) => {
   const fileContents = fs.readFileSync(fullPath, 'utf8');
   const matterResult = matter(fileContents);
-  if (matterResult.data.draft) return;
+  if (matterResult.data.draft === true || matterResult.data.draft === 'true') return;
   // Slug: relative path from postsDir, remove .md, replace path separators with '/'
   const relPath = path.relative(postsDir, fullPath);
   const slug = relPath.replace(/\.md$/, '').replace(/\\/g, '/');

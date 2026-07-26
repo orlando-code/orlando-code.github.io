@@ -15,6 +15,8 @@ export interface BlogPost {
   description: string
   category?: string
   readTime?: string
+  cover?: string
+  coverAlt?: string
 }
 
 export interface BlogPostMeta {
@@ -26,6 +28,8 @@ export interface BlogPostMeta {
   category?: string
   readTime?: string
   draft?: boolean
+  cover?: string
+  coverAlt?: string
 }
 
 // Category color mapping
@@ -54,12 +58,53 @@ export const categoryColors: Record<string, { bg: string; text: string; border: 
     bg: 'bg-[#e1c5a3]',
     text: 'text-gray-900',
     border: 'border-[#e1c5a3]'
+  },
+  'weeknote': {
+    bg: 'bg-[#e1c5a3]',
+    text: 'text-gray-900',
+    border: 'border-[#e1c5a3]'
   }
 }
 
 export function getCategoryStyle(category?: string) {
   if (!category) return categoryColors['general']
   return categoryColors[category.toLowerCase()] || categoryColors['general']
+}
+
+function isDraft(value: unknown): boolean {
+  return value === true || value === 'true'
+}
+
+function parsePostDate(value: unknown): string {
+  if (typeof value !== 'string' || !value.trim()) return '1970-01-01'
+  const parsed = new Date(value)
+  return Number.isNaN(parsed.getTime()) ? '1970-01-01' : value
+}
+
+/** Resolve cover image for static export (run copy-blog-assets before build). */
+export function resolveCoverImage(slug: string, cover?: string): string | undefined {
+  if (!cover || typeof cover !== 'string') return undefined
+  const trimmed = cover.trim()
+  if (!trimmed) return undefined
+  if (trimmed.startsWith('http://') || trimmed.startsWith('https://') || trimmed.startsWith('/')) {
+    return trimmed
+  }
+  const postDir = slug.includes('/') ? slug.slice(0, slug.lastIndexOf('/')) : slug
+  return `/blog/${postDir}/${trimmed.replace(/^\.\//, '')}`
+}
+
+const categoryCoverGradients: Record<string, string> = {
+  research: 'from-[#0097c3] via-[#48cae4] to-[#90e0ef]',
+  tech: 'from-[#495057] via-[#6c757d] to-[#ffef55]',
+  personal: 'from-[#f24f26] via-[#ff6b4a] to-[#ffb4a2]',
+  general: 'from-[#a68a64] via-[#e1c5a3] to-[#f5ebe0]',
+  weeknote: 'from-[#5c677d] via-[#7d8597] to-[#bdc3c7]',
+  'long read': 'from-[#0077b6] via-[#0096c7] to-[#48cae4]',
+}
+
+export function getCategoryCoverGradient(category?: string): string {
+  if (!category) return categoryCoverGradients.general
+  return categoryCoverGradients[category.toLowerCase()] || categoryCoverGradients.general
 }
 
 // Recursively find all .md files in a directory
@@ -83,21 +128,28 @@ export function getAllPosts(): BlogPostMeta[] {
     return []
   }
   const filePaths = getAllMarkdownFiles(postsDirectory)
-  const allPostsData = filePaths.map((fullPath) => {
-    const fileContents = fs.readFileSync(fullPath, 'utf8')
-    const matterResult = matter(fileContents)
-    // Slug: relative path from postsDirectory, remove .md, replace path separators with '/'
-    const relPath = path.relative(postsDirectory, fullPath)
-    const slug = relPath.replace(/\.md$/, '').replace(/\\/g, '/')
-    return {
-      slug,
-      title: matterResult.data.title || slug,
-      date: matterResult.data.date || '1970-01-01',
-      excerpt: matterResult.data.excerpt || '',
-      description: matterResult.data.description || '',
-      category: matterResult.data.category || '',
-      readTime: matterResult.data.readTime || '',
-      draft: matterResult.data.draft ?? false,
+  const allPostsData = filePaths.flatMap((fullPath) => {
+    try {
+      const fileContents = fs.readFileSync(fullPath, 'utf8')
+      const matterResult = matter(fileContents)
+      if (isDraft(matterResult.data.draft)) return []
+
+      const relPath = path.relative(postsDirectory, fullPath)
+      const slug = relPath.replace(/\.md$/, '').replace(/\\/g, '/')
+      return [{
+        slug,
+        title: matterResult.data.title || slug,
+        date: parsePostDate(matterResult.data.date),
+        excerpt: matterResult.data.excerpt || '',
+        description: matterResult.data.description || '',
+        category: matterResult.data.category || '',
+        readTime: matterResult.data.readTime || '',
+        cover: typeof matterResult.data.cover === 'string' ? matterResult.data.cover : undefined,
+        coverAlt: typeof matterResult.data.coverAlt === 'string' ? matterResult.data.coverAlt : undefined,
+        draft: false,
+      }]
+    } catch {
+      return []
     }
   })
   return allPostsData.sort((a, b) => (a.date < b.date ? 1 : -1))
@@ -116,15 +168,19 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
     const matterResult = matter(fileContents)
     const processedContent = await remark().use(html).process(matterResult.content)
     const contentHtml = processedContent.toString()
+    if (isDraft(matterResult.data.draft)) return null
+
     return {
       slug,
       title: matterResult.data.title || slug,
-      date: matterResult.data.date || '1970-01-01',
+      date: parsePostDate(matterResult.data.date),
       excerpt: matterResult.data.excerpt || '',
       content: contentHtml,
       description: matterResult.data.description || '',
       category: matterResult.data.category || '',
       readTime: matterResult.data.readTime || '',
+      cover: typeof matterResult.data.cover === 'string' ? matterResult.data.cover : undefined,
+      coverAlt: typeof matterResult.data.coverAlt === 'string' ? matterResult.data.coverAlt : undefined,
     }
   } catch (error) {
     return null
@@ -136,12 +192,20 @@ export function getAllPostSlugs(): { params: { slug: string } }[] {
     return []
   }
   const filePaths = getAllMarkdownFiles(postsDirectory)
-  return filePaths.map((fullPath) => {
-    const relPath = path.relative(postsDirectory, fullPath)
-    return {
-      params: {
-        slug: relPath.replace(/\.md$/, '').replace(/\\/g, '/'),
-      },
+  return filePaths.flatMap((fullPath) => {
+    try {
+      const fileContents = fs.readFileSync(fullPath, 'utf8')
+      const matterResult = matter(fileContents)
+      if (isDraft(matterResult.data.draft)) return []
+
+      const relPath = path.relative(postsDirectory, fullPath)
+      return [{
+        params: {
+          slug: relPath.replace(/\.md$/, '').replace(/\\/g, '/'),
+        },
+      }]
+    } catch {
+      return []
     }
   })
 } 

@@ -15,5 +15,5 @@ images/
 # keep essential small, site-wide images
 # Note: assets/ directory is now tracked for favicon files
 
-# ignore blog template
-content/blog/hello-world/
+# ignore synced ICRS explorer (rebuilt on each deploy)
+public/explore-icrs-2026/

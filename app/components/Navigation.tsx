@@ -1,6 +1,6 @@
 'use client'
 
-import { Github, Linkedin, Menu, Twitter, X } from 'lucide-react'
+import { Github, GraduationCap, Linkedin, Menu, X } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
@@ -17,25 +17,15 @@ const socialLinks = [
     icon: Linkedin,
   },
   {
-    name: 'ResearchGate',
-    url: 'https://researchgate.net/profile/Orlando-Timmerman',
-    icon: () => (
-      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M19.586 0H4.414C1.974 0 0 1.974 0 4.414v15.172C0 22.026 1.974 24 4.414 24h15.172C22.026 24 24 22.026 24 19.586V4.414C24 1.974 22.026 0 19.586 0zM8.064 18.953c-2.055 0-3.718-1.663-3.718-3.718s1.663-3.718 3.718-3.718 3.718 1.663 3.718 3.718-1.663 3.718-3.718 3.718zm7.781-7.781c-1.329 0-2.406-1.077-2.406-2.406s1.077-2.406 2.406-2.406 2.406 1.077 2.406 2.406-1.077 2.406-2.406 2.406z"/>
-      </svg>
-    ),
-  },
-  {
-    name: 'Bluesky',
-    url: 'https://bsky.app/profile/did:plc:bzgueshahib2een6fglnb7ap',
-    icon: Twitter,
+    name: 'Google Scholar',
+    url: 'https://scholar.google.com/citations?user=vI-ipk4AAAAJ&hl=en',
+    icon: GraduationCap,
   },
 ]
 
 const navItems = [
   { name: 'Home', href: '/' },
   { name: 'Blog', href: '/blog' },
-  { name: 'Services', href: '/services' },
   { name: 'CV', href: '/cv' },
   { name: 'Contact', href: '/contact' },
 ]
@@ -103,7 +93,6 @@ export default function Navigation() {
           </div>
         </div>
         </div>
-      {/* </div> */}
 
       {/* Mobile menu */}
       {isMenuOpen && (
@@ -147,4 +136,4 @@ export default function Navigation() {
       )}
     </nav>
   )
-} 
+}

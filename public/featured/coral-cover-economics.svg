@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" role="img" aria-label="Coral reef economics visualization">
+  <defs>
+    <linearGradient id="ocean" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b7285"/>
+      <stop offset="55%" stop-color="#1098ad"/>
+      <stop offset="100%" stop-color="#22b8cf"/>
+    </linearGradient>
+    <linearGradient id="coral" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#f76707"/>
+      <stop offset="100%" stop-color="#ff922b"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="450" fill="url(#ocean)"/>
+  <path d="M0 320 C120 280 180 360 280 310 S460 260 560 300 S700 340 800 290 L800 450 L0 450 Z" fill="#087f5b" opacity="0.55"/>
+  <g fill="url(#coral)" opacity="0.95">
+    <circle cx="180" cy="250" r="34"/>
+    <circle cx="250" cy="220" r="22"/>
+    <circle cx="320" cy="260" r="28"/>
+    <circle cx="520" cy="230" r="30"/>
+    <circle cx="590" cy="255" r="20"/>
+    <circle cx="650" cy="220" r="26"/>
+  </g>
+  <polyline points="120,120 220,170 320,140 420,190 520,150 620,180 720,130" fill="none" stroke="#ffe066" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="720" cy="130" r="10" fill="#ffe066"/>
+</svg>

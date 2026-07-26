@@ -1,6 +1,7 @@
 import { ArrowLeft, Calendar, Clock } from 'lucide-react'
+import Image from 'next/image'
 import Link from 'next/link'
-import { getAllPostSlugs, getCategoryStyle, getPostBySlug } from '../../../lib/blog'
+import { getAllPostSlugs, getCategoryStyle, getPostBySlug, resolveCoverImage } from '../../../lib/blog'
 
 interface BlogPostPageProps {
   params: {
@@ -24,11 +25,11 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   }
 
   const categoryStyle = getCategoryStyle(post.category);
+  const coverSrc = resolveCoverImage(post.slug, post.cover);
 
   return (
     <div className="min-h-screen bg-white">
       <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        {/* Back to blog link */}
         <Link 
           href="/blog"
           className="inline-flex items-center text-primary-600 hover:text-primary-700 mb-8 font-medium"
@@ -37,7 +38,19 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           Back to Blog
         </Link>
 
-        {/* Post header */}
+        {coverSrc && (
+          <div className="relative aspect-[2.2/1] rounded-xl overflow-hidden mb-10 shadow-md">
+            <Image
+              src={coverSrc}
+              alt={post.coverAlt || post.title}
+              fill
+              className="object-cover"
+              sizes="(max-width: 896px) 100vw, 896px"
+              priority
+            />
+          </div>
+        )}
+
         <header className="mb-12">
           {/* Category label */}
           {post.category && (

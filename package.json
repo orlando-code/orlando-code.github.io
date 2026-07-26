@@ -3,8 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build && npm run generate-rss",
+    "dev": "npm run copy-blog-assets && next dev",
+    "sync-icrs": "node scripts/sync-icrs-explorer.mjs",
+    "copy-blog-assets": "node scripts/copy-blog-assets.mjs",
+    "build": "npm run sync-icrs && npm run copy-blog-assets && next build && npm run generate-rss",
     "start": "next start",
     "lint": "next lint",
     "export": "next export",
