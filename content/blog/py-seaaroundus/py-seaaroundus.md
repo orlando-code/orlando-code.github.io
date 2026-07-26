@@ -20,19 +20,24 @@ pip install py-seaaroundus
 
 The `economics_figures.ipynb` notebook walks through region lookup, catch time series, caching, batch downloads, and optional charts.
 
-<div class="blog-notebook-embed">
+<div class="not-prose blog-notebook-embed">
+  <a class="blog-site-embed-banner" href="/blog/py-seaaroundus/economics_figures.html" target="_blank" rel="noopener noreferrer">
+    <span class="blog-site-embed-banner-label">Open notebook</span>
+    <span class="blog-site-embed-banner-url">economics_figures.ipynb</span>
+    <span class="blog-site-embed-banner-arrow" aria-hidden="true">↗</span>
+  </a>
   <iframe
     title="py-seaaroundus economics figures notebook"
-    src="https://nbviewer.org/url/https://orlando-codes.com/blog/py-seaaroundus/economics_figures.ipynb"
+    src="/blog/py-seaaroundus/economics_figures.html"
     loading="lazy"
     height="900"
   ></iframe>
 </div>
 
 <p class="blog-embed-links">
-  <a href="https://nbviewer.org/url/https://orlando-codes.com/blog/py-seaaroundus/economics_figures.ipynb" target="_blank" rel="noopener noreferrer">Open in nbviewer</a>
+  <a href="/blog/py-seaaroundus/economics_figures.html" target="_blank" rel="noopener noreferrer">Open full notebook</a>
   ·
-  <a href="/blog/py-seaaroundus/economics_figures.ipynb" target="_blank" rel="noopener noreferrer">Download notebook</a>
+  <a href="/blog/py-seaaroundus/economics_figures.ipynb" target="_blank" rel="noopener noreferrer">Download .ipynb</a>
   ·
   <a href="https://github.com/orlando-code/py-seaaroundus" target="_blank" rel="noopener noreferrer">View on GitHub</a>
 </p>

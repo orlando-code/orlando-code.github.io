@@ -15,7 +15,7 @@ draft: false
 - **Dashboard:** [/coral-cover-economics/](/coral-cover-economics/)
 - **Code:** [github.com/orlando-code/coral-cover-economics](https://github.com/orlando-code/coral-cover-economics)
 
-<div class="blog-site-embed">
+<div class="not-prose blog-site-embed">
   <a class="blog-site-embed-banner" href="/coral-cover-economics/" target="_blank" rel="noopener noreferrer">
     <span class="blog-site-embed-banner-label">Open dashboard</span>
     <span class="blog-site-embed-banner-url">orlando-codes.com/coral-cover-economics</span>

@@ -14,7 +14,7 @@ draft: false
 
 I produced the site for the production.
 
-<div class="blog-site-embed">
+<div class="not-prose blog-site-embed">
   <a class="blog-site-embed-banner" href="https://scenes-climate-era.com/" target="_blank" rel="noopener noreferrer">
     <span class="blog-site-embed-banner-label">Open site</span>
     <span class="blog-site-embed-banner-url">scenes-climate-era.com</span>

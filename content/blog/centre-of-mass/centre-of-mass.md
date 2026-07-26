@@ -12,7 +12,7 @@ draft: false
 - **Site:** [/centre-of-mass/](/centre-of-mass/)
 - **Code:** [github.com/orlando-code/centre-of-mass](https://github.com/orlando-code/centre-of-mass)
 
-<div class="blog-site-embed">
+<div class="not-prose blog-site-embed">
   <a class="blog-site-embed-banner" href="/centre-of-mass/" target="_blank" rel="noopener noreferrer">
     <span class="blog-site-embed-banner-label">Open site</span>
     <span class="blog-site-embed-banner-url">orlando-codes.com/centre-of-mass</span>
