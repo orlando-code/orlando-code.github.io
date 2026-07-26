@@ -169,7 +169,7 @@ export default function STEMTutoringPage() {
               <div className="flex items-start">
                 <CheckCircle className="h-6 w-6 text-yellow-600 mt-1 mr-3 flex-shrink-0" />
                 <div>
-                  <h3 className="font-semibold text-gray-900 mb-2">PhD Researcher at the University of Cambridge</h3>
+                  <h3 className="font-semibold text-gray-900 mb-2">Researcher at the University of Cambridge</h3>
                   <p className="text-gray-600">Currently computing the impact of climate change on marine ecosystems.</p>
                 </div>
               </div>
@@ -204,7 +204,7 @@ export default function STEMTutoringPage() {
                     {review.text}
                   </p>
                 </div>
-                <div className="text-sm text-gray-500 text-right mt-auto">— {review.author}</div>
+                <div className="text-sm text-gray-500 text-right mt-auto">– {review.author}</div>
               </div>
             ))}
           </div>

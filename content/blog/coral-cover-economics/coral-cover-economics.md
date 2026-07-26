@@ -2,7 +2,7 @@
 title: "Coral cover economics"
 date: "2026-01-17T07:26:44.000Z"
 description: "Projecting tourism revenue losses as coral reefs decline under climate change."
-excerpt: "Bayesian coral cover modelling meets economic valuation — with an interactive dashboard."
+excerpt: "Bayesian coral cover modelling meets economic valuation – with an interactive dashboard."
 category: "research"
 cover: "/featured/coral-cover-economics.svg"
 coverAlt: "Coral reef economics visualization"

@@ -23,14 +23,42 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center">
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 mb-6">
-              Hello, I&apos;m{' '}
-              <span className="text-primary-600">Orlando</span>
+              {/* Hello, I&apos;m{' '} */}
+              <span className="text-primary-600">Orlando Timmerman</span>
             </h1>
-            <p className="text-xl sm:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
-              PhD researcher playing around with data, algorithms, and pixels to understand and predict changes in marine ecosystems,
-              with a focus on coral reef conservation and climate adaptation.
+            <p className="text-lg sm:text-xl text-gray-600 mb-4 max-w-3xl mx-auto">
+              PhD Student
+              <span className="mx-2 text-primary-600 font-bold align-middle" aria-hidden="true">⋅</span>
+              University of Cambridge
+              <span className="mx-2 text-primary-600 font-bold align-middle" aria-hidden="true">⋅</span>
+              Marine Data Science
             </p>
-            <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4">
+            <div className="space-y-1">
+              <p className="text-l sm:text-l text-gray-600 max-w-3l mx-auto">
+                Python
+                <span className="mx-2 text-primary-600 font-bold align-middle" aria-hidden="true">⋅</span>
+                R
+                <span className="mx-2 text-primary-600 font-bold align-middle" aria-hidden="true">⋅</span>
+                Remote sensing
+                <span className="mx-2 text-primary-600 font-bold align-middle" aria-hidden="true">⋅</span>
+                Machine learning
+                <span className="mx-2 text-primary-600 font-bold align-middle" aria-hidden="true">⋅</span>
+                JavaScript
+              </p>
+              <p className="text-l sm:text-l text-gray-600 max-w-3l mx-auto">
+                Earth system modelling
+                <span className="mx-2 text-primary-600 font-bold align-middle" aria-hidden="true">⋅</span>
+                Distribution modelling
+                <span className="mx-2 text-primary-600 font-bold align-middle" aria-hidden="true">⋅</span>
+                Environmental economics
+                <span className="mx-2 text-primary-600 font-bold align-middle" aria-hidden="true">⋅</span>
+                Quantitative meta-analysis
+              </p>
+            </div>
+       
+
+
+            <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-4 sm:space-x-4">
               <Link href="/contact" className="btn-primary flex items-center">
                 <Mail className="mr-2 h-4 w-4" />
                 Get in Touch
@@ -58,7 +86,7 @@ export default function HomePage() {
                 <h3 className="text-xl font-semibold text-gray-900">Blog</h3>
               </div>
               <p className="text-gray-600 mb-4 flex-grow">
-                Unsolicited ruminations on climate, policy, and research. And pretty maps.
+                Unsolicited updates on my work.
               </p>
               <span className="text-primary-600 font-medium flex items-center mt-auto">
                 Read Articles
@@ -103,7 +131,7 @@ export default function HomePage() {
               <FeaturedCard
                 href="/coral-cover-economics/"
                 title="Coral cover economics"
-                description="Bayesian coral cover modelling meets economic valuation — projecting tourism revenue losses as reefs decline."
+                description="Bayesian coral cover modelling meets economic valuation – projecting tourism revenue losses as reefs decline."
                 imageSrc="/featured/coral-cover-economics.svg"
                 imageAlt="Coral cover economics project"
                 cta="Open dashboard"
@@ -119,7 +147,7 @@ export default function HomePage() {
               <FeaturedCard
                 href="https://pypi.org/project/esgpull-plus/"
                 title="esgpull-plus"
-                description="YAML-driven ESGF downloads, CDO regridding, and CMIP6 surface/seafloor extraction — on PyPI."
+                description="YAML-driven ESGF downloads, CDO regridding, and CMIP6 surface/seafloor extraction – on PyPI."
                 imageSrc="/featured/esgpull-plus.svg"
                 imageAlt="esgpull-plus data pipeline"
                 cta="View on PyPI"

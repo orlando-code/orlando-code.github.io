@@ -4,8 +4,8 @@ date: "2025-10-10T13:52:18.000Z"
 description: "ESGF download tooling with a YAML API, regridding, and surface/seafloor extraction."
 excerpt: "Extensions to esgf-download: programmatic search/download, CDO regridding, and more."
 category: "package"
-cover: "/featured/esgpull-plus.svg"
-coverAlt: "Climate data pipeline illustration"
+cover: search-cover.gif
+coverAlt: "Screen recording of esgpull-plus searching and downloading CMIP6 data"
 draft: false
 ---
 
@@ -17,5 +17,7 @@ draft: false
 ```bash
 pip install esgpull-plus
 ```
+
+![Searching and downloading CMIP6 data with esgpull-plus.](/blog/esgpull-plus/search-cover.gif)
 
 *More to come.*

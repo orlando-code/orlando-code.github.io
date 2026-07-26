@@ -61,7 +61,13 @@ export default function ContactPage() {
                       <Mail className="h-6 w-6 text-primary-600 mr-2 flex-shrink-0" />
                       <h3 className="font-semibold text-gray-900">Email</h3>
                     </div>
-                    <span>rt582 . at . cam.ac.uk</span>
+                    <a
+                      href="mailto:rt582@cam.ac.uk"
+                      className="inline-flex items-center text-gray-600 hover:text-primary-600 transition-colors"
+                    >
+                      rt582@cam.ac.uk
+                    </a>
+               
                   </div>
                 </div>
                 <div className="flex flex-col items-center flex-1">
@@ -112,7 +118,7 @@ export default function ContactPage() {
                   href="https://scholar.google.com/citations?user=vI-ipk4AAAAJ&hl=en"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center p-4 border border-gray-200 rounded-lg hover:border-primary-300 hover:bg-primary-50 transition-colors duration-200"
+                  className="col-span-2 justify-self-center w-[calc(50%-0.5rem)] flex items-center p-4 border border-gray-200 rounded-lg hover:border-primary-300 hover:bg-primary-50 transition-colors duration-200"
                 >
                   <GraduationCap className="h-6 w-6 text-gray-600 mr-3" />
                   <div>
