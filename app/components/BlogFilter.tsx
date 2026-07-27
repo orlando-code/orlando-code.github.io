@@ -23,7 +23,7 @@ export default function BlogFilter({ posts }: BlogFilterProps) {
       const key = normalizeCategory(post.category)
       counts.set(key, (counts.get(key) || 0) + 1)
     }
-    return [...counts.entries()]
+    return Array.from(counts.entries())
       .sort((a, b) => a[0].localeCompare(b[0]))
       .map(([key, count]) => ({ key, count }))
   }, [posts])
