@@ -2,10 +2,14 @@
 title: "ICRS 2026 Explorer"
 date: "2026-07-26T12:00:00.000Z"
 description: "Interactive map, emissions estimates, and co-authorship network for ICRS in Auckland."
-excerpt: "Explore talks, travel footprints, and author connections for the International Coral Reef Symposium 2026."
+excerpt: "Contact speakers, explore talks, author connections, and travel footprints for the International Coral Reef Symposium 2026."
 category: "general"
 draft: false
 ---
+
+
+The International Coral Reef Symposium (ICRS) last week was arguably the highlight of my coral career so far. 
+
 
 **ICRS 2026 Explorer** is an interactive companion for the International Coral Reef Symposium in Auckland – browse talks on a map, estimate travel emissions, and explore the co-authorship network behind the programme.
 

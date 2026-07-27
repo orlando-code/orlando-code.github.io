@@ -2,7 +2,7 @@
 title: "View from Above"
 date: "2025-04-25T10:08:44.000Z"
 description: "Custom map drawing from OpenStreetMap data."
-excerpt: "A Streamlit app for generating pretty maps – all things mapping."
+excerpt: "Silly mapping fun – makes a great gift!"
 category: "general"
 draft: false
 ---

@@ -28,13 +28,17 @@ export default function BlogPostCard({ post }: BlogPostCardProps) {
   return (
     <article className="group card overflow-hidden p-0 hover:shadow-lg transition-all duration-300">
       <Link {...cardLinkProps} className="block">
-        <div className="relative aspect-[2.4/1] overflow-hidden">
+        <div className={`relative aspect-[2.4/1] overflow-hidden ${post.coverFit === 'contain' ? 'bg-slate-100' : ''}`}>
           {coverSrc ? (
             <Image
               src={coverSrc}
               alt={post.coverAlt || post.title}
               fill
-              className="object-cover transition-transform duration-500 group-hover:scale-105"
+              className={`${
+                post.coverFit === 'contain'
+                  ? 'object-contain p-2 transition-transform duration-500 group-hover:scale-[1.02]'
+                  : 'object-cover transition-transform duration-500 group-hover:scale-105'
+              }`}
               sizes="(max-width: 768px) 100vw, 896px"
             />
           ) : (

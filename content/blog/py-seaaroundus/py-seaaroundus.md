@@ -2,9 +2,13 @@
 title: "py-seaaroundus"
 date: "2026-07-08T21:35:09.000Z"
 description: "Python wrapper for the Sea Around Us fisheries API."
-excerpt: "Programmatic access to catch, effort, and spatial data from Sea Around Us."
+excerpt: "Easy access to the Sea Around Us database: quantity and valuation of national fisheries data disaggregated by e.g. catch type, fishing sector etc."
 category: "package"
 draft: false
+cover: pysea-cover.png
+coverAlt: "The value of national reef fisheries around the world in 2019"
+coverFit: contain
+externalUrl: "/py-seaaroundus/"
 ---
 
 **py-seaaroundus** is a Python wrapper for the [Sea Around Us](https://www.seaaroundus.org/) API, inspired by the R package [rseaaroundus](https://github.com/SeaAroundUs/rseaaroundus).

@@ -2,7 +2,7 @@
 title: "Casting in the Moonlight: how do lunar clocks control coral spawning?"
 date: "2025-03-13T12:00:00.000Z"
 description: "A Reefbites article on lunar spawning cues in Acropora corals."
-excerpt: "Outreach piece for Reefbites on moonlight, darkness, and coral spawning synchrony."
+excerpt: "Reporting on cool research for Reefbites – a piece on moonlight and coral spawning synchrony."
 category: "general"
 draft: false
 ---

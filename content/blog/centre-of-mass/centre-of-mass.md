@@ -4,6 +4,8 @@ date: "2026-07-12T07:33:39.000Z"
 description: "Where in the world are you most centred?"
 excerpt: "Where is your geographic centre? A time-weighted centre-of-mass calculator built on a long-haul flight."
 category: "general"
+cover: "com-cover.png"
+coverAlt: "The creator's centre of mass – somewhere in the middle of Wales..."
 draft: false
 ---
 

@@ -1,8 +1,8 @@
 ---
-title: "Persistence of coral reef structures into the 21st Century"
+title: "Persistence of coral reef structures into the 21st century"
 date: "2026-02-19T00:00:00.000Z"
 description: "Meta-analysis of calcification and bioerosion rates under climate change."
-excerpt: "Code for the NREE review synthesising reef accretion and erosion under warming and acidification."
+excerpt: "What happens to calcification rates under climate change? We published a review paper synthesising reef accretion and erosion under warming and acidification."
 category: "paper"
 draft: false
 ---

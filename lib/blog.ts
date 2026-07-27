@@ -19,6 +19,7 @@ export interface BlogPost {
   readTime?: string
   cover?: string
   coverAlt?: string
+  coverFit?: 'cover' | 'contain'
   externalUrl?: string
 }
 
@@ -33,6 +34,7 @@ export interface BlogPostMeta {
   draft?: boolean
   cover?: string
   coverAlt?: string
+  coverFit?: 'cover' | 'contain'
   externalUrl?: string
 }
 
@@ -48,6 +50,11 @@ async function markdownToHtml(content: string): Promise<string> {
 function parseExternalUrl(value: unknown): string | undefined {
   if (typeof value !== 'string' || !value.trim()) return undefined
   return value.trim()
+}
+
+function parseCoverFit(value: unknown): 'cover' | 'contain' | undefined {
+  if (value === 'contain' || value === 'cover') return value
+  return undefined
 }
 
 // Category color mapping
@@ -208,6 +215,7 @@ export function getAllPosts(): BlogPostMeta[] {
         readTime: matterResult.data.readTime || '',
         cover: typeof matterResult.data.cover === 'string' ? matterResult.data.cover : undefined,
         coverAlt: typeof matterResult.data.coverAlt === 'string' ? matterResult.data.coverAlt : undefined,
+        coverFit: parseCoverFit(matterResult.data.coverFit),
         externalUrl: parseExternalUrl(matterResult.data.externalUrl),
         draft: false,
       }]
@@ -243,6 +251,7 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
       readTime: matterResult.data.readTime || '',
       cover: typeof matterResult.data.cover === 'string' ? matterResult.data.cover : undefined,
       coverAlt: typeof matterResult.data.coverAlt === 'string' ? matterResult.data.coverAlt : undefined,
+      coverFit: parseCoverFit(matterResult.data.coverFit),
       externalUrl: parseExternalUrl(matterResult.data.externalUrl),
     }
   } catch (error) {

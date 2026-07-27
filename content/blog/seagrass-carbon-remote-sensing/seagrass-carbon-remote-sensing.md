@@ -2,7 +2,7 @@
 title: "Oceanographic drivers of carbon storage in European seagrass beds"
 date: "2026-01-02T21:26:31.000Z"
 description: "Predicting seagrass sediment core carbon density from remote sensing data."
-excerpt: "Modelling pipeline for mapping seagrass carbon stocks across Europe – paper in review."
+excerpt: "How much carbon does seagrass lock up via organic matter and sediment-trapping root systems? Paper currently in review."
 category: "paper"
 draft: false
 ---

@@ -1,15 +1,17 @@
 ---
-title: "Coral cover economics"
-date: "2026-01-17T07:26:44.000Z"
-description: "Projecting revenue losses from ecosystem services associated with coral reefs as they degrade under climate change."
-excerpt: "Bayesian modelling of coral cover meets economic valuation via an interactive dashboard."
-category: "research"
-cover: economics-cover.png
-coverAlt: "Coral cover economics dashboard visualization"
-externalUrl: "/coral-cover-economics/"
+title: "Towards deployment-centric multimodal AI beyond vision and language"
+date: "2025-01-15T08:23:44.000Z"
+description: "Exploring how multimodal AI may be deployed more thoughtfully and effectively."
+excerpt: "How can we do better with multimodal AI in the climate space. And what is multimodal AI anyway??"
+category: "paper"
+cover: multimodal-cover.png
+coverAlt: "Multimodal AI for climate adaptation"
+externalUrl: "/multimodal-ai/"
 draft: false
 ---
 
+To complete!
+<!-- 
 **Coral cover economics** combines hierarchical Bayesian beta regression of coral cover (following Sully et al. 2022) with economic valuation to project tourism revenue losses as reefs decline under RCP 4.5 and 8.5.
 
 - **Dashboard:** [/coral-cover-economics/](/coral-cover-economics/)
@@ -27,4 +29,4 @@ draft: false
     loading="lazy"
     height="900"
   ></iframe>
-</div>
+</div> -->

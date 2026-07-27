@@ -39,12 +39,12 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         </Link>
 
         {coverSrc && (
-          <div className="relative aspect-[2.2/1] rounded-xl overflow-hidden mb-10 shadow-md">
+          <div className={`relative aspect-[2.2/1] rounded-xl overflow-hidden mb-10 shadow-md ${post.coverFit === 'contain' ? 'bg-slate-100' : ''}`}>
             <Image
               src={coverSrc}
               alt={post.coverAlt || post.title}
               fill
-              className="object-cover"
+              className={post.coverFit === 'contain' ? 'object-contain p-3' : 'object-cover'}
               sizes="(max-width: 896px) 100vw, 896px"
               priority
             />

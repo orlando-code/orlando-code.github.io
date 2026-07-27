@@ -2,7 +2,7 @@
 title: "esgpull-plus"
 date: "2025-10-10T13:52:18.000Z"
 description: "ESGF download tooling with a YAML API, regridding, and surface/seafloor extraction."
-excerpt: "Extensions to esgf-download: programmatic search/download, CDO regridding, and more."
+excerpt: "Need to know the climate of the past and future? Streamlining access to ESGF Metagrid Earth System Model data."
 category: "package"
 cover: search-cover.gif
 coverAlt: "Screen recording of esgpull-plus searching and downloading CMIP6 data"
