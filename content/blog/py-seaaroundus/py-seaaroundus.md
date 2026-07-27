@@ -8,8 +8,10 @@ draft: false
 cover: pysea-cover.png
 coverAlt: "The value of national reef fisheries around the world in 2019"
 coverFit: contain
-externalUrl: "/py-seaaroundus/"
+# externalUrl: "/py-seaaroundus/"
 ---
+
+
 
 **py-seaaroundus** is a Python wrapper for the [Sea Around Us](https://www.seaaroundus.org/) API, inspired by the R package [rseaaroundus](https://github.com/SeaAroundUs/rseaaroundus).
 

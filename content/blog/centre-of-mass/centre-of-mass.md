@@ -9,10 +9,11 @@ coverAlt: "The creator's centre of mass – somewhere in the middle of Wales...
 draft: false
 ---
 
-**Centre of mass** takes places you've lived and how long you spent in each (days, months, or years) and calculates your time-weighted geographic centre — plus a spread metric showing how dispersed your life has been. You can add the same place more than once with different durations.
+This is not a useful tool. But a long flight to the other side of the globe got me thinking how some people stay in the same place their whole lives, while others bounce from country to country. I wondered where, on average, I had 'been' spatially. And how much 'bouncing' had I done, reletive to others, for example all my New Zealander friends now living in London?
 
-- **Site:** [/centre-of-mass/](/centre-of-mass/)
-- **Code:** [github.com/orlando-code/centre-of-mass](https://github.com/orlando-code/centre-of-mass)
+So this silly little app takes places you've been, and how long you've spent there, and calculates your time-weighted geographic centre — plus a spread metric showing how dispersed your life has been.
+
+I thought it was cool.
 
 <div class="not-prose blog-site-embed">
   <a class="blog-site-embed-banner" href="/centre-of-mass/" target="_blank" rel="noopener noreferrer">
