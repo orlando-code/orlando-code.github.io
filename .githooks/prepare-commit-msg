@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Also strip during prepare-commit-msg (covers editor / -m / template paths).
+set -euo pipefail
+
+msg_file="${1:?commit message file required}"
+hook_dir="$(cd "$(dirname "$0")" && pwd)"
+exec "$hook_dir/commit-msg" "$msg_file"
