@@ -8,15 +8,18 @@ draft: false
 cover: pysea-cover.png
 coverAlt: "The value of national reef fisheries around the world in 2019"
 coverFit: contain
-# externalUrl: "/py-seaaroundus/"
 ---
 
+While looking to quantify the effect of reef degradation on the ecosystem services they provide, I was in search of a global dataset of the value of reef fisheries.
 
+I came across the [Sea Around Us](https://www.seaaroundus.org/), a project run from the University of British Columbia, Canada, which produces estimates of temporal trends in national fishery catches by synthesising multiple data sources. These data are disaggregated into sub-categories including fishing sector (commercial, industrial, subsistence), functional group (everything from small reef-associated fish to large sharks, via shrimps) and many others.
 
-**py-seaaroundus** is a Python wrapper for the [Sea Around Us](https://www.seaaroundus.org/) API, inspired by the R package [rseaaroundus](https://github.com/SeaAroundUs/rseaaroundus).
+This data seemed perfect for my use case, but had one problem: I couldn't find a way to download it at scale. An R library advertised on the [Tools Guide](https://www.seaaroundus.org/tools-guide/) 404-ed, and I wasn't about to click through country by country...
 
-- **PyPI:** [pypi.org/project/py-seaaroundus](https://pypi.org/project/py-seaaroundus/)
-- **Code:** [github.com/orlando-code/py-seaaroundus](https://github.com/orlando-code/py-seaaroundus)
+With the considerable help of [this fork of the original library](https://github.com/theAbby/seaaroundus) – mine is basically just an up-to-date version with a few more bells and whistles – I implemented a rapid and lightweight Python implementation, [py-seaaroundus](https://pypi.org/project/py-seaaroundus/) which uses local caching to avoid heavy API usage.
+
+I hope it will help you too!
+
 
 ```bash
 pip install py-seaaroundus
