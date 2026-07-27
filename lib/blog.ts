@@ -5,6 +5,15 @@ import rehypeRaw from 'rehype-raw'
 import rehypeStringify from 'rehype-stringify'
 import { remark } from 'remark'
 import remarkRehype from 'remark-rehype'
+import type { BlogPostMeta } from './blog-shared'
+
+export type { BlogPostMeta } from './blog-shared'
+export {
+  categoryColors,
+  formatCategoryLabel,
+  getCategoryCoverGradient,
+  getCategoryStyle,
+} from './blog-shared'
 
 const postsDirectory = path.join(process.cwd(), 'content/blog')
 
@@ -17,21 +26,6 @@ export interface BlogPost {
   description: string
   category?: string
   readTime?: string
-  cover?: string
-  coverAlt?: string
-  coverFit?: 'cover' | 'contain'
-  externalUrl?: string
-}
-
-export interface BlogPostMeta {
-  slug: string
-  title: string
-  date: string
-  excerpt: string
-  description: string
-  category?: string
-  readTime?: string
-  draft?: boolean
   cover?: string
   coverAlt?: string
   coverFit?: 'cover' | 'contain'
@@ -55,60 +49,6 @@ function parseExternalUrl(value: unknown): string | undefined {
 function parseCoverFit(value: unknown): 'cover' | 'contain' | undefined {
   if (value === 'contain' || value === 'cover') return value
   return undefined
-}
-
-// Category color mapping
-export const categoryColors: Record<string, { bg: string; text: string; border: string }> = {
-  'research': {
-    bg: 'bg-[#9be3f9]',
-    text: 'text-[#0097c3]',
-    border: 'border-[#0097c3]'
-  },
-  'long read': {
-    bg: 'bg-[#0097c3]',
-    text: 'text-white',
-    border: 'border-[#0097c3]'
-  },
-  'personal': {
-    bg: 'bg-[#f24f26]',
-    text: 'text-white',
-    border: 'border-[#f24f26]'
-  },
-  'tech': {
-    bg: 'bg-[#ffef55]',
-    text: 'text-gray-900',
-    border: 'border-[#ffef55]'
-  },
-  'paper': {
-    bg: 'bg-[#0077b6]',
-    text: 'text-white',
-    border: 'border-[#0077b6]'
-  },
-  'package': {
-    bg: 'bg-[#495057]',
-    text: 'text-white',
-    border: 'border-[#495057]'
-  },
-  'general': {
-    bg: 'bg-[#e1c5a3]',
-    text: 'text-gray-900',
-    border: 'border-[#e1c5a3]'
-  },
-  'weeknote': {
-    bg: 'bg-[#e1c5a3]',
-    text: 'text-gray-900',
-    border: 'border-[#e1c5a3]'
-  }
-}
-
-export function getCategoryStyle(category?: string) {
-  if (!category) return categoryColors['general']
-  return categoryColors[category.toLowerCase()] || categoryColors['general']
-}
-
-export function formatCategoryLabel(category?: string): string {
-  if (!category) return ''
-  return category.charAt(0).toUpperCase() + category.slice(1).toLowerCase()
 }
 
 function isDraft(value: unknown): boolean {
@@ -160,22 +100,6 @@ export function resolveCoverImage(slug: string, cover?: string): string | undefi
   return discoverCoverImage(slug)
 }
 
-const categoryCoverGradients: Record<string, string> = {
-  research: 'from-[#0097c3] via-[#48cae4] to-[#90e0ef]',
-  tech: 'from-[#495057] via-[#6c757d] to-[#ffef55]',
-  paper: 'from-[#0077b6] via-[#0096c7] to-[#48cae4]',
-  package: 'from-[#343a40] via-[#495057] to-[#6c757d]',
-  personal: 'from-[#f24f26] via-[#ff6b4a] to-[#ffb4a2]',
-  general: 'from-[#a68a64] via-[#e1c5a3] to-[#f5ebe0]',
-  weeknote: 'from-[#5c677d] via-[#7d8597] to-[#bdc3c7]',
-  'long read': 'from-[#0077b6] via-[#0096c7] to-[#48cae4]',
-}
-
-export function getCategoryCoverGradient(category?: string): string {
-  if (!category) return categoryCoverGradients.general
-  return categoryCoverGradients[category.toLowerCase()] || categoryCoverGradients.general
-}
-
 // Recursively find all .md files in a directory
 function getAllMarkdownFiles(dir: string): string[] {
   let results: string[] = []
@@ -205,6 +129,7 @@ export function getAllPosts(): BlogPostMeta[] {
 
       const relPath = path.relative(postsDirectory, fullPath)
       const slug = relPath.replace(/\.md$/, '').replace(/\\/g, '/')
+      const cover = typeof matterResult.data.cover === 'string' ? matterResult.data.cover : undefined
       return [{
         slug,
         title: matterResult.data.title || slug,
@@ -213,7 +138,8 @@ export function getAllPosts(): BlogPostMeta[] {
         description: matterResult.data.description || '',
         category: matterResult.data.category || '',
         readTime: matterResult.data.readTime || '',
-        cover: typeof matterResult.data.cover === 'string' ? matterResult.data.cover : undefined,
+        cover,
+        coverSrc: resolveCoverImage(slug, cover),
         coverAlt: typeof matterResult.data.coverAlt === 'string' ? matterResult.data.coverAlt : undefined,
         coverFit: parseCoverFit(matterResult.data.coverFit),
         externalUrl: parseExternalUrl(matterResult.data.externalUrl),

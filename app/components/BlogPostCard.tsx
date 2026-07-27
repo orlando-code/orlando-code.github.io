@@ -1,34 +1,39 @@
-import { Calendar, Clock } from 'lucide-react';
-import Image from 'next/image';
-import Link from 'next/link';
+'use client'
+
+import { Calendar, Clock } from 'lucide-react'
+import Image from 'next/image'
+import Link from 'next/link'
 import {
   BlogPostMeta,
+  formatCategoryLabel,
   getCategoryCoverGradient,
   getCategoryStyle,
-  formatCategoryLabel,
-  resolveCoverImage,
-} from '../../lib/blog';
+} from '../../lib/blog-shared'
 
 interface BlogPostCardProps {
-  post: BlogPostMeta;
+  post: BlogPostMeta
 }
 
 export default function BlogPostCard({ post }: BlogPostCardProps) {
-  const categoryStyle = getCategoryStyle(post.category);
-  const coverSrc = resolveCoverImage(post.slug, post.cover);
-  const gradient = getCategoryCoverGradient(post.category);
-  const href = post.externalUrl || `/blog/${encodeURI(post.slug)}`;
-  const isExternal = Boolean(post.externalUrl && /^https?:\/\//.test(post.externalUrl));
-  const cta = isExternal ? 'Open site →' : 'Read more →';
+  const categoryStyle = getCategoryStyle(post.category)
+  const coverSrc = post.coverSrc
+  const gradient = getCategoryCoverGradient(post.category)
+  const href = post.externalUrl || `/blog/${encodeURI(post.slug)}`
+  const isExternal = Boolean(post.externalUrl && /^https?:\/\//.test(post.externalUrl))
+  const cta = isExternal ? 'Open site →' : 'Read more →'
 
   const cardLinkProps = isExternal
     ? { href, target: '_blank' as const, rel: 'noopener noreferrer' }
-    : { href };
+    : { href }
 
   return (
     <article className="group card overflow-hidden p-0 hover:shadow-lg transition-all duration-300">
       <Link {...cardLinkProps} className="block">
-        <div className={`relative aspect-[2.4/1] overflow-hidden ${post.coverFit === 'contain' ? 'bg-slate-100' : ''}`}>
+        <div
+          className={`relative aspect-[2.4/1] overflow-hidden ${
+            post.coverFit === 'contain' ? 'bg-slate-100' : ''
+          }`}
+        >
           {coverSrc ? (
             <Image
               src={coverSrc}
@@ -93,5 +98,5 @@ export default function BlogPostCard({ post }: BlogPostCardProps) {
         </Link>
       </div>
     </article>
-  );
+  )
 }

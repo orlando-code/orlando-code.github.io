@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "npm run sync-subprojects && npm run copy-blog-assets && npm run render-notebooks && next dev",
+    "dev": "npm run sync-icrs && npm run sync-subprojects && npm run copy-blog-assets && npm run render-notebooks && next dev",
     "sync-icrs": "node scripts/sync-icrs-explorer.mjs",
     "sync-subprojects": "node scripts/sync-subprojects.mjs",
     "copy-blog-assets": "node scripts/copy-blog-assets.mjs",

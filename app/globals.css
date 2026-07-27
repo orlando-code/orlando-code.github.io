@@ -42,8 +42,10 @@
     @apply relative my-10 overflow-hidden border-y border-gray-200 bg-white shadow-sm;
     width: 100vw;
     max-width: 100vw;
-    margin-left: calc(50% - 50vw);
-    margin-right: calc(50% - 50vw);
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
   }
 
   .blog-site-embed-banner {
@@ -70,6 +72,7 @@
   .blog-notebook-embed iframe,
   .blog-site-embed iframe {
     @apply block w-full border-0 bg-white;
+    min-width: 100%;
     min-height: 820px;
   }
 

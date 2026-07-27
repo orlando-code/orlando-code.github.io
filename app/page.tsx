@@ -58,15 +58,15 @@ export default function HomePage() {
        
 
 
-            <div className="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-4 sm:space-x-4">
-              <Link href="/contact" className="btn-primary flex items-center">
+            <div className="mt-8 flex flex-col sm:flex-row justify-center items-center gap-4">
+              <Link href="/cv" className="btn-secondary inline-flex items-center">
+                <FileText className="mr-2 h-4 w-4" />
+                View CV
+              </Link>
+              <Link href="/contact" className="btn-primary inline-flex items-center">
                 <Mail className="mr-2 h-4 w-4" />
                 Get in Touch
                 <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-              <Link href="/cv" className="btn-secondary flex items-center">
-                <FileText className="mr-2 h-4 w-4" />
-                View CV
               </Link>
             </div>
           </div>

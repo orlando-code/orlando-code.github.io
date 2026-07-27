@@ -88,7 +88,6 @@ export default function CVPage() {
                 </div>
               </div>
             </div>
-add
             {/* Research */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
               <h2 className="text-2xl font-bold text-gray-900 mb-4">Research</h2>
@@ -203,6 +202,62 @@ add
               </div>
             </div>
 
+            {/* Publications & Conferences */}
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">Selected Publications & Talks</h2>
+              <div className="space-y-4">
+                <div className="border-l-4 border-primary-200 pl-4">
+                  <h3 className="font-semibold text-gray-900 text-sm mb-1">
+                    <a href="https://www.nature.com/articles/s43017-026-00764-4" className="text-primary-600 hover:underline">Persistence of coral reef structures into the 21st century</a>
+                  </h3>
+                  <p className="text-gray-600 text-sm mb-1">C. Cornwall, O. Timmerman et al. (2026)</p>
+                  <p className="text-gray-500 text-xs">Nature Reviews Earth & Environment. Best oral presentation, Reef Conservation UK 2025.</p>
+                </div>
+
+                <div className="border-l-4 border-primary-200 pl-4">
+                  <h3 className="font-semibold text-gray-900 text-sm mb-1">
+                    <a href="https://www.nature.com/articles/s42256-025-01116-5" className="text-primary-600 hover:underline">Towards deployment-centric multimodal AI beyond vision and language</a>
+                  </h3>
+                  <p className="text-gray-600 text-sm mb-1">X. Liu et al. (2025)</p>
+                  <p className="text-gray-500 text-xs">Nature Machine Intelligence</p>
+                </div>
+
+                <div className="border-l-4 border-primary-200 pl-4">
+                  <h3 className="font-semibold text-gray-900 text-sm mb-1">
+                    Oceanographic drivers of carbon storage in European seagrass beds
+                  </h3>
+                  <p className="text-gray-600 text-sm mb-1">N. Gallo, O. Timmerman et al. (2026)</p>
+                  <p className="text-gray-500 text-xs">In review</p>
+                </div>
+
+                <div className="border-l-4 border-primary-200 pl-4">
+                  <h3 className="font-semibold text-gray-900 text-sm mb-1">
+                    Forecasting economic consequences of global coral reef degradation: Socioeconomic risk in a warming world
+                  </h3>
+                  <p className="text-gray-600 text-sm mb-1">O. Timmerman, M. Spalding, O. Branson (2026)</p>
+                  <p className="text-gray-500 text-xs">Oral presentation, International Coral Reef Symposium (in prep)</p>
+                </div>
+
+                <div className="border-l-4 border-primary-200 pl-4">
+                  <h3 className="font-semibold text-gray-900 text-sm mb-1">
+                    Past, present, and predicted environmental suitability of the world&apos;s reefs
+                  </h3>
+                  <p className="text-gray-600 text-sm mb-1">O. Timmerman, O. Branson (2024)</p>
+                  <p className="text-gray-500 text-xs">Poster, Reef Conservation UK, London. Best Poster award.</p>
+                </div>
+
+                <div className="border-l-4 border-primary-200 pl-4">
+                  <h3 className="font-semibold text-gray-900 text-sm mb-1">
+                    Prediction of future environmental suitability of coral reefs via multimodal machine learning
+                  </h3>
+                  <p className="text-gray-600 text-sm mb-1">O. Timmerman, O. Branson (2024)</p>
+                  <p className="text-gray-500 text-xs">Oral presentation, European Coral Reef Symposium</p>
+                </div>
+              </div>
+            </div>
+
+            
+
             {/* Positions of Responsibility */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
               <h2 className="text-2xl font-bold text-gray-900 mb-6">Leadership & Service</h2>
@@ -292,59 +347,7 @@ add
               </div>
             </div>
 
-            {/* Publications & Conferences */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Selected Publications & Talks</h2>
-              <div className="space-y-4">
-                <div className="border-l-4 border-primary-200 pl-4">
-                  <h3 className="font-semibold text-gray-900 text-sm mb-1">
-                    <a href="https://www.nature.com/articles/s43017-026-00764-4" className="text-primary-600 hover:underline">Persistence of coral reef structures into the 21st century</a>
-                  </h3>
-                  <p className="text-gray-600 text-sm mb-1">C. Cornwall, O. Timmerman et al. (2026)</p>
-                  <p className="text-gray-500 text-xs">Nature Reviews Earth & Environment. Best oral presentation, Reef Conservation UK 2025.</p>
-                </div>
-
-                <div className="border-l-4 border-primary-200 pl-4">
-                  <h3 className="font-semibold text-gray-900 text-sm mb-1">
-                    <a href="https://www.nature.com/articles/s42256-025-01116-5" className="text-primary-600 hover:underline">Towards deployment-centric multimodal AI beyond vision and language</a>
-                  </h3>
-                  <p className="text-gray-600 text-sm mb-1">X. Liu et al. (2025)</p>
-                  <p className="text-gray-500 text-xs">Nature Machine Intelligence</p>
-                </div>
-
-                <div className="border-l-4 border-primary-200 pl-4">
-                  <h3 className="font-semibold text-gray-900 text-sm mb-1">
-                    Oceanographic drivers of carbon storage in European seagrass beds
-                  </h3>
-                  <p className="text-gray-600 text-sm mb-1">N. Gallo, O. Timmerman et al. (2026)</p>
-                  <p className="text-gray-500 text-xs">In review</p>
-                </div>
-
-                <div className="border-l-4 border-primary-200 pl-4">
-                  <h3 className="font-semibold text-gray-900 text-sm mb-1">
-                    Forecasting economic consequences of global coral reef degradation: Socioeconomic risk in a warming world
-                  </h3>
-                  <p className="text-gray-600 text-sm mb-1">O. Timmerman, M. Spalding, O. Branson (2026)</p>
-                  <p className="text-gray-500 text-xs">Oral presentation, International Coral Reef Symposium (in prep)</p>
-                </div>
-
-                <div className="border-l-4 border-primary-200 pl-4">
-                  <h3 className="font-semibold text-gray-900 text-sm mb-1">
-                    Past, present, and predicted environmental suitability of the world&apos;s reefs
-                  </h3>
-                  <p className="text-gray-600 text-sm mb-1">O. Timmerman, O. Branson (2024)</p>
-                  <p className="text-gray-500 text-xs">Poster, Reef Conservation UK, London. Best Poster award.</p>
-                </div>
-
-                <div className="border-l-4 border-primary-200 pl-4">
-                  <h3 className="font-semibold text-gray-900 text-sm mb-1">
-                    Prediction of future environmental suitability of coral reefs via multimodal machine learning
-                  </h3>
-                  <p className="text-gray-600 text-sm mb-1">O. Timmerman, O. Branson (2024)</p>
-                  <p className="text-gray-500 text-xs">Oral presentation, European Coral Reef Symposium</p>
-                </div>
-              </div>
-            </div>
+            
 
             {/* Interests
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">

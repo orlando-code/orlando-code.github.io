@@ -29,7 +29,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   return (
     <div className="min-h-screen bg-white">
-      <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 overflow-visible">
+      <article className="py-16 overflow-visible">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <Link 
           href="/blog"
           className="inline-flex items-center text-primary-600 hover:text-primary-700 mb-8 font-medium"
@@ -84,13 +85,15 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             )}
           </div>
         </header>
+        </div>
 
-        {/* Post content */}
+        {/* Post content — embeds break out to full viewport width */}
         <div 
-          className="prose prose-lg max-w-none prose-gray prose-headings:text-gray-900 prose-headings:font-bold prose-a:text-primary-600 prose-a:no-underline hover:prose-a:underline prose-strong:text-gray-900 prose-code:text-primary-600 prose-code:bg-gray-100 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-pre:bg-gray-900 prose-pre:text-gray-100 prose-img:mx-auto prose-img:rounded-lg prose-img:shadow-sm [&_.blog-site-embed]:not-prose [&_.blog-notebook-embed]:not-prose [&_.blog-site-embed-banner]:no-underline [&_.blog-site-embed-banner]:hover:no-underline"
+          className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 prose prose-lg max-w-none prose-gray prose-headings:text-gray-900 prose-headings:font-bold prose-a:text-primary-600 prose-a:no-underline hover:prose-a:underline prose-strong:text-gray-900 prose-code:text-primary-600 prose-code:bg-gray-100 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-pre:bg-gray-900 prose-pre:text-gray-100 prose-img:mx-auto prose-img:rounded-lg prose-img:shadow-sm [&_.blog-site-embed]:not-prose [&_.blog-notebook-embed]:not-prose [&_.blog-site-embed-banner]:no-underline [&_.blog-site-embed-banner]:hover:no-underline"
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
 
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Navigation */}
         <footer className="mt-16 pt-8 border-t border-gray-200">
           <Link 
@@ -101,6 +104,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             Back to all posts
           </Link>
         </footer>
+        </div>
       </article>
     </div>
   )
