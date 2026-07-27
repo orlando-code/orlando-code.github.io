@@ -7,10 +7,9 @@ category: "paper"
 draft: false
 ---
 
-Accompanying code for the meta-analysis in *Persistence of coral reef structures into the twenty-first century* (Cornwall et al.), published in **Nature Reviews Earth & Environment**.
+Last year I jumped at the chance to turn a data compilation task into a quantitative meta-analysis in collaboration with the lovely [Chris Cornwall](https://people.wgtn.ac.nz/christopher.cornwall) and his students at the Victoria University of Wellington, New Zealand.
 
-- **Paper:** [doi.org/10.1038/s43017-026-00764-4](https://doi.org/10.1038/s43017-026-00764-4)
-- **Code:** [github.com/orlando-code/NREE_persistence_reef_structures_meta_analysis](https://github.com/orlando-code/NREE_persistence_reef_structures_meta_analysis)
+A few hundred papers – and many more hours – later I'm thrilled to present the results, published in [**Nature Reviews Earth & Environment**](https://doi.org/10.1038/s43017-026-00764-4).
 
 ---
 
