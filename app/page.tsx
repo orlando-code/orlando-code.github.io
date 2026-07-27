@@ -131,27 +131,28 @@ export default function HomePage() {
               <FeaturedCard
                 href="/coral-cover-economics/"
                 title="Coral cover economics"
-                description="Bayesian coral cover modelling meets economic valuation – projecting tourism revenue losses as reefs decline."
-                imageSrc="/featured/coral-cover-economics.svg"
-                imageAlt="Coral cover economics project"
+                description="Bayesian modelling of coral cover meets economic valuation via an interactive dashboard."
+                imageSrc="/blog/coral-cover-economics/economics-cover.png"
+                imageAlt="Coral cover economics dashboard visualization"
                 cta="Open dashboard"
               />
               <FeaturedCard
                 href="/explore-icrs-2026/"
                 title="ICRS 2026 Explorer"
-                description="Interactive map, emissions estimates, and co-authorship network for ICRS in Auckland."
-                imageSrc="/featured/icrs-explorer.svg"
+                description="Contact speakers, explore talks, author connections, and travel footprints for the International Coral Reef Symposium 2026."
+                imageSrc="/blog/icrs-2026-explorer/icrs-cover.png"
                 imageAlt="ICRS 2026 explorer map"
                 cta="Open explorer"
               />
               <FeaturedCard
                 href="https://pypi.org/project/esgpull-plus/"
                 title="esgpull-plus"
-                description="YAML-driven ESGF downloads, CDO regridding, and CMIP6 surface/seafloor extraction – on PyPI."
-                imageSrc="/featured/esgpull-plus.svg"
-                imageAlt="esgpull-plus data pipeline"
+                description="Need to know the climate of the past and future? Streamlining access to ESGF Metagrid Earth System Model data."
+                imageSrc="/blog/esgpull-plus/search-cover.gif"
+                imageAlt="Screen recording of esgpull-plus searching and downloading CMIP6 data"
                 cta="View on PyPI"
                 external
+                imageFit="contain"
               />
             </div>
           </div>

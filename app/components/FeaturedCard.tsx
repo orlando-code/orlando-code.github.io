@@ -10,6 +10,7 @@ interface FeaturedCardProps {
   imageAlt: string;
   cta?: string;
   external?: boolean;
+  imageFit?: 'cover' | 'contain';
 }
 
 export default function FeaturedCard({
@@ -20,6 +21,7 @@ export default function FeaturedCard({
   imageAlt,
   cta = 'Explore',
   external = false,
+  imageFit = 'cover',
 }: FeaturedCardProps) {
   return (
     <Link
@@ -28,13 +30,18 @@ export default function FeaturedCard({
       rel={external ? 'noopener noreferrer' : undefined}
       className="group card overflow-hidden p-0 hover:shadow-lg transition-all duration-300 flex flex-col h-full"
     >
-      <div className="relative aspect-[16/9] overflow-hidden">
+      <div className={`relative aspect-[16/9] overflow-hidden ${imageFit === 'contain' ? 'bg-slate-100' : ''}`}>
         <Image
           src={imageSrc}
           alt={imageAlt}
           fill
-          className="object-cover transition-transform duration-500 group-hover:scale-105"
+          className={`${
+            imageFit === 'contain'
+              ? 'object-contain p-2 transition-transform duration-500 group-hover:scale-[1.02]'
+              : 'object-cover transition-transform duration-500 group-hover:scale-105'
+          }`}
           sizes="(max-width: 768px) 100vw, 33vw"
+          unoptimized={imageSrc.endsWith('.gif')}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
         <h3 className="absolute bottom-4 left-4 right-4 text-xl font-semibold text-white drop-shadow-sm">
