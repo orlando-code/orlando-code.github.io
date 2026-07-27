@@ -2,12 +2,12 @@
 title: "Centre of mass"
 date: "2026-07-12T07:33:39.000Z"
 description: "Where in the world are you most centred?"
-excerpt: "A time-weighted geographic centre-of-mass calculator – built on a long-haul flight."
+excerpt: "Where is your geographic centre? A time-weighted centre-of-mass calculator built on a long-haul flight."
 category: "general"
 draft: false
 ---
 
-**Centre of mass** takes places you've lived and calculates your time-weighted geographic centre – plus a spread metric showing how dispersed your life has been.
+**Centre of mass** takes places you've lived and how long you spent in each (days, months, or years) and calculates your time-weighted geographic centre — plus a spread metric showing how dispersed your life has been. You can add the same place more than once with different durations.
 
 - **Site:** [/centre-of-mass/](/centre-of-mass/)
 - **Code:** [github.com/orlando-code/centre-of-mass](https://github.com/orlando-code/centre-of-mass)
