@@ -1,16 +1,16 @@
 ---
-title: "Towards deployment-centric multimodal AI beyond vision and language"
-date: "2025-01-15T08:23:44.000Z"
-description: "Exploring how multimodal AI may be deployed more thoughtfully and effectively."
-excerpt: "How can we do better with multimodal AI in the climate space. And what is multimodal AI anyway??"
-category: "paper"
-cover: multimodal-cover.png
-coverAlt: "Multimodal AI for climate adaptation"
+title: "Attend Climate Informatics 2026 from your sofa!"
+date: "2024-04-25T08:21:42.000Z"
+description: "Facilitating online attendence at an international conference to improve accessibility."
+excerpt: "We want to hear from everyone, not just those able to get here in-person"
+category: "general"
+cover: ci-cover.png
+coverAlt: "Zoom into the digital space at Climate Informatics 2024"
 # externalUrl: "/multimodal-ai/"
-draft: false
+draft: true
 ---
 
-My first m
+TO DO
 
 
 <!-- 
