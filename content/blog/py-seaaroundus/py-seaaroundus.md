@@ -27,12 +27,12 @@ pip install py-seaaroundus
 
 ## Demo notebook
 
-The `economics_figures.ipynb` notebook walks through region lookup, catch time series, caching, batch downloads, and optional charts.
+The `demo.ipynb` notebook shows how to interact with the API to retrieve catch time series and visualise the data.
 
 <div class="not-prose blog-notebook-embed">
   <a class="blog-site-embed-banner" href="/blog/py-seaaroundus/economics_figures.html" target="_blank" rel="noopener noreferrer">
     <span class="blog-site-embed-banner-label">Open notebook</span>
-    <span class="blog-site-embed-banner-url">economics_figures.ipynb</span>
+    <span class="blog-site-embed-banner-url">demo.ipynb</span>
     <span class="blog-site-embed-banner-arrow" aria-hidden="true">↗</span>
   </a>
   <iframe
@@ -46,7 +46,7 @@ The `economics_figures.ipynb` notebook walks through region lookup, catch time s
 <p class="blog-embed-links">
   <a href="/blog/py-seaaroundus/economics_figures.html" target="_blank" rel="noopener noreferrer">Open full notebook</a>
   ·
-  <a href="/blog/py-seaaroundus/economics_figures.ipynb" target="_blank" rel="noopener noreferrer">Download .ipynb</a>
+  <a href="/blog/py-seaaroundus/demo.ipynb" target="_blank" rel="noopener noreferrer">Download .ipynb</a>
   ·
   <a href="https://github.com/orlando-code/py-seaaroundus" target="_blank" rel="noopener noreferrer">View on GitHub</a>
 </p>
