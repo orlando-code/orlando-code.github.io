@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" role="img" aria-label="Climate data pipeline">
+  <defs>
+    <linearGradient id="sky" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1c2541"/>
+      <stop offset="100%" stop-color="#3a506b"/>
+    </linearGradient>
+    <linearGradient id="grid" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#5bc0be" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#5bc0be" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="450" fill="url(#sky)"/>
+  <g stroke="#5bc0be" stroke-width="1" opacity="0.25">
+    <path d="M80 80H720M80 160H720M80 240H720M80 320H720M80 400H720"/>
+    <path d="M120 40V410M240 40V410M360 40V410M480 40V410M600 40V410"/>
+  </g>
+  <rect x="120" y="110" width="560" height="230" rx="18" fill="url(#grid)"/>
+  <path d="M170 280 L270 220 L370 250 L470 180 L570 210 L630 170" fill="none" stroke="#ffd166" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <g fill="#06d6a0">
+    <rect x="170" y="120" width="90" height="60" rx="10"/>
+    <rect x="300" y="120" width="90" height="60" rx="10"/>
+    <rect x="430" y="120" width="90" height="60" rx="10"/>
+    <rect x="560" y="120" width="90" height="60" rx="10"/>
+  </g>
+  <path d="M215 180 V250 M345 180 V250 M475 180 V250 M605 180 V250" stroke="#06d6a0" stroke-width="4" opacity="0.8"/>
+</svg>

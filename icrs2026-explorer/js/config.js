@@ -1,0 +1,28 @@
+/** Runtime config for the static site (set via meta tags in index.html). */
+
+function metaContent(name) {
+  return document.querySelector(`meta[name="${name}"]`)?.content?.trim() || "";
+}
+
+function normalizeBasePath(value) {
+  const trimmed = String(value || "").trim();
+  if (!trimmed) return "";
+  let base = trimmed.startsWith("/") ? trimmed : `/${trimmed}`;
+  if (!base.endsWith("/")) base += "/";
+  return base;
+}
+
+export const SITE_BASE_PATH = normalizeBasePath(metaContent("icrs-base-path"));
+export const OFFSET_API_URL = metaContent("icrs-offset-api");
+
+export function canonicalSiteUrl() {
+  const configured = metaContent("icrs-canonical-url");
+  if (configured) {
+    return configured.endsWith("/") ? configured : `${configured}/`;
+  }
+  if (SITE_BASE_PATH) {
+    return `${location.origin}${SITE_BASE_PATH}`;
+  }
+  const path = location.pathname.endsWith("/") ? location.pathname : `${location.pathname}/`;
+  return `${location.origin}${path}`;
+}

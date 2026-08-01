@@ -1,0 +1,866 @@
+import { affiliationMapKey, escapeHtml, haversineKm } from "./utils.js";
+import { OFFSET_API_URL, REQUIRE_DELEGATE_ID, SKIP_TURNSTILE, TURNSTILE_SITE_KEY } from "./config.js";
+
+let offsetTurnstileWidgetId = null;
+let offsetTurnstileToken = "";
+let offsetTurnstilePending = null;
+
+const TURNSTILE_READY_TIMEOUT_MS = 12_000;
+const TURNSTILE_EXECUTE_TIMEOUT_MS = 20_000;
+const FETCH_TIMEOUT_MS = 25_000;
+
+async function waitForTurnstileReady(timeoutMs = TURNSTILE_READY_TIMEOUT_MS) {
+  if (!window.turnstile) return false;
+  if (!window.turnstile.ready) return true;
+  return new Promise((resolve) => {
+    let settled = false;
+    const finish = (ready) => {
+      if (settled) return;
+      settled = true;
+      window.clearTimeout(timerId);
+      resolve(ready);
+    };
+    const timerId = window.setTimeout(() => finish(Boolean(window.turnstile)), timeoutMs);
+    try {
+      window.turnstile.ready(() => finish(true));
+    } catch {
+      finish(Boolean(window.turnstile));
+    }
+  });
+}
+
+async function fetchJsonWithTimeout(url, options = {}, timeoutMs = FETCH_TIMEOUT_MS) {
+  const controller = new AbortController();
+  const timeoutId = window.setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const response = await fetch(url, { ...options, signal: controller.signal });
+    const payload = await response.json().catch(() => ({}));
+    return { response, payload };
+  } finally {
+    window.clearTimeout(timeoutId);
+  }
+}
+
+function finishOffsetTurnstilePending(token = "") {
+  if (!offsetTurnstilePending) return;
+  const { resolve } = offsetTurnstilePending;
+  offsetTurnstilePending = null;
+  resolve(token);
+}
+
+function offsetTurnstileMountEl() {
+  let mount = document.getElementById("emissions-offset-turnstile");
+  if (!mount) {
+    mount = document.createElement("div");
+    mount.id = "emissions-offset-turnstile";
+    mount.className = "turnstile-mount";
+    mount.setAttribute("aria-hidden", "true");
+    document.body.appendChild(mount);
+  }
+  return mount;
+}
+
+function resetTurnstile() {
+  if (offsetTurnstileWidgetId != null && window.turnstile) {
+    try {
+      window.turnstile.remove(offsetTurnstileWidgetId);
+    } catch {
+      /* widget may already be gone */
+    }
+  }
+  offsetTurnstileWidgetId = null;
+  offsetTurnstileToken = "";
+  finishOffsetTurnstilePending("");
+}
+
+function mountOffsetTurnstile() {
+  resetTurnstile();
+  const mount = offsetTurnstileMountEl();
+  if (!TURNSTILE_SITE_KEY || !window.turnstile) return;
+  try {
+    offsetTurnstileWidgetId = window.turnstile.render(mount, {
+      sitekey: TURNSTILE_SITE_KEY,
+      action: "turnstile-spin-v2",
+      size: "invisible",
+      callback: (token) => {
+        offsetTurnstileToken = token;
+        finishOffsetTurnstilePending(token);
+      },
+      "expired-callback": () => {
+        offsetTurnstileToken = "";
+        finishOffsetTurnstilePending("");
+      },
+      "error-callback": () => {
+        offsetTurnstileToken = "";
+        finishOffsetTurnstilePending("");
+      },
+    });
+  } catch (error) {
+    offsetTurnstileWidgetId = null;
+    console.warn("Turnstile mount failed:", error);
+  }
+}
+
+function offsetTurnstileResponse() {
+  if (offsetTurnstileToken) return offsetTurnstileToken;
+  if (offsetTurnstileWidgetId == null || !window.turnstile?.getResponse) return "";
+  return window.turnstile.getResponse(offsetTurnstileWidgetId) || "";
+}
+
+async function ensureOffsetTurnstileToken() {
+  const existing = offsetTurnstileResponse();
+  if (existing) return existing;
+  if (offsetTurnstileWidgetId == null) {
+    const ready = await waitForTurnstileReady();
+    if (!ready) return "";
+    mountOffsetTurnstile();
+  }
+  if (offsetTurnstileWidgetId == null || !window.turnstile?.execute) return "";
+
+  return new Promise((resolve) => {
+    const timeoutId = window.setTimeout(() => {
+      finishOffsetTurnstilePending(offsetTurnstileResponse());
+    }, TURNSTILE_EXECUTE_TIMEOUT_MS);
+
+    offsetTurnstilePending = {
+      resolve: (token) => {
+        window.clearTimeout(timeoutId);
+        resolve(token);
+      },
+    };
+
+    try {
+      window.turnstile.execute(offsetTurnstileWidgetId);
+    } catch {
+      window.clearTimeout(timeoutId);
+      finishOffsetTurnstilePending("");
+    }
+  });
+}
+
+function initOffsetTurnstile() {
+  if (!TURNSTILE_SITE_KEY || SKIP_TURNSTILE || offsetTurnstileWidgetId != null) return;
+
+  const tryMount = () => {
+    void waitForTurnstileReady().then((ready) => {
+      if (ready && offsetTurnstileWidgetId == null) mountOffsetTurnstile();
+    });
+  };
+
+  if (window.turnstile) {
+    tryMount();
+    return;
+  }
+
+  let attempts = 0;
+  const timerId = window.setInterval(() => {
+    attempts += 1;
+    if (window.turnstile) {
+      window.clearInterval(timerId);
+      tryMount();
+    } else if (attempts >= 150) {
+      window.clearInterval(timerId);
+    }
+  }, 100);
+}
+
+const STATIC_REGISTRATIONS_URL = "data/offset-registrations.json";
+const POLL_INTERVAL_MS = 5_000;
+const OFFSET_GREEN = "#2d8a4e";
+function emptyAggregate() {
+  return { counts: { speakers: {}, delegates: {} }, totals: { speakers: 0, delegates: 0 } };
+}
+
+function normalizeAggregate(payload) {
+  const aggregate = emptyAggregate();
+  for (const pool of ["speakers", "delegates"]) {
+    const counts = payload?.counts?.[pool];
+    if (counts && typeof counts === "object") {
+      for (const [key, value] of Object.entries(counts)) {
+        if (Number.isFinite(value) && value > 0) aggregate.counts[pool][key] = value;
+      }
+    }
+    const total = payload?.totals?.[pool];
+    aggregate.totals[pool] = Number.isFinite(total) && total > 0 ? total : 0;
+  }
+  return aggregate;
+}
+
+function stableAttendeeId(name, locationId) {
+  const key = `${name.trim().toLowerCase()}|${locationId}`;
+  let hash = 2166136261;
+  for (let index = 0; index < key.length; index += 1) {
+    hash ^= key.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+  return `offset-${(hash >>> 0).toString(16).padStart(8, "0")}`;
+}
+
+export function personKey(name, affiliation) {
+  return `${String(name).trim().toLowerCase()}|${affiliationMapKey(affiliation)}`;
+}
+
+export function buildEmissionsAttendeesFromSite(siteLocations, emissionsLocations, exportedAttendees = []) {
+  if (exportedAttendees?.length) {
+    return exportedAttendees
+      .slice()
+      .sort((left, right) =>
+        left.name.localeCompare(right.name, undefined, { sensitivity: "base" })
+      );
+  }
+
+  const travelLocations = emissionsLocations.filter((location) => location.co2e_kg > 0);
+  const seen = new Set();
+  const attendees = [];
+
+  function emissionsLocationForSite(siteLocation) {
+    const key = affiliationMapKey(siteLocation.affiliation);
+    const candidates = travelLocations.filter(
+      (location) => affiliationMapKey(location.affiliation) === key
+    );
+    if (!candidates.length) return null;
+    if (candidates.length === 1) return candidates[0];
+    return candidates.sort((left, right) => {
+      const leftDistance = haversineKm(
+        siteLocation.lat,
+        siteLocation.lon,
+        left.lat,
+        left.lon
+      );
+      const rightDistance = haversineKm(
+        siteLocation.lat,
+        siteLocation.lon,
+        right.lat,
+        right.lon
+      );
+      return leftDistance - rightDistance;
+    })[0];
+  }
+
+  for (const siteLocation of siteLocations) {
+    const emissionsLocation = emissionsLocationForSite(siteLocation);
+    if (!emissionsLocation) continue;
+
+    for (const name of siteLocation.speakers || []) {
+      const trimmed = String(name).trim();
+      if (!trimmed) continue;
+      const dedupeKey = `${trimmed.toLowerCase()}|${emissionsLocation.id}`;
+      if (seen.has(dedupeKey)) continue;
+      seen.add(dedupeKey);
+      attendees.push({
+        id: stableAttendeeId(trimmed, emissionsLocation.id),
+        name: trimmed,
+        affiliation: emissionsLocation.affiliation,
+        location_id: emissionsLocation.id,
+        co2e_kg: emissionsLocation.co2e_per_speaker_kg,
+      });
+    }
+  }
+
+  return attendees.sort((left, right) =>
+    left.name.localeCompare(right.name, undefined, { sensitivity: "base" })
+  );
+}
+
+export function createOffsetTracker({
+  elements,
+  getAttendees,
+  getHeadline,
+  getPool,
+  isSpeakerAttendee,
+  onChange,
+  onRegisterSuccess,
+  apiUrl = OFFSET_API_URL,
+  requireDelegateId = REQUIRE_DELEGATE_ID,
+}) {
+  let attendees = [];
+  let attendeeById = new Map();
+  let selectedAttendeeId = null;
+  let searchQuery = "";
+  let pollTimer = null;
+  let loadError = "";
+  let statusMessage = "";
+  let statusIsError = false;
+  let statusIsSuccess = false;
+  let delegateIdInput = "";
+  let delegateIdErrorMessage = "";
+  let aggregate = emptyAggregate();
+  let offsetCountByAffiliation = new Map();
+  const pendingRegistrationIds = new Set();
+
+  function activePool() {
+    return getPool?.() === "delegates" ? "delegates" : "speakers";
+  }
+
+  function rebuildOffsetCounts() {
+    offsetCountByAffiliation = new Map();
+    const pools =
+      activePool() === "delegates" ? ["speakers", "delegates"] : ["speakers"];
+    for (const pool of pools) {
+      for (const [key, value] of Object.entries(aggregate.counts[pool])) {
+        offsetCountByAffiliation.set(key, (offsetCountByAffiliation.get(key) || 0) + value);
+      }
+    }
+  }
+
+  async function loadRegistrations() {
+    loadError = "";
+    if (apiUrl) {
+      try {
+        const { response, payload } = await fetchJsonWithTimeout(apiUrl, { cache: "no-store" });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        aggregate = normalizeAggregate(payload);
+        return;
+      } catch (error) {
+        loadError = "Could not refresh live offset totals.";
+        console.warn("Offset API unavailable:", error);
+      }
+    }
+
+    try {
+      const { response, payload } = await fetchJsonWithTimeout(STATIC_REGISTRATIONS_URL, {
+        cache: "no-store",
+      });
+      if (!response.ok) return;
+      aggregate = normalizeAggregate(payload);
+    } catch {
+      aggregate = emptyAggregate();
+    }
+  }
+
+  function refreshAttendees() {
+    attendees = getAttendees();
+    attendeeById = new Map(attendees.map((attendee) => [attendee.id, attendee]));
+    rebuildOffsetCounts();
+    render();
+  }
+
+  function offsetShareForLocation(locationId, travelAttendees, affiliation) {
+    if (!locationId || !travelAttendees) return 0;
+    const affiliationKey = affiliationMapKey(affiliation);
+    if (!affiliationKey) return 0;
+    const count = offsetCountByAffiliation.get(affiliationKey) || 0;
+    return Math.min(1, count / travelAttendees);
+  }
+
+  function stats() {
+    const totalAttendees = getHeadline()?.attendees_estimated || attendees.length || 1;
+    const registeredCount =
+      aggregate.totals.speakers +
+      (activePool() === "delegates" ? aggregate.totals.delegates : 0);
+    const percent = totalAttendees ? (registeredCount / totalAttendees) * 100 : 0;
+    return { registeredCount, totalAttendees, percent };
+  }
+
+  function closeSuggestions() {
+    if (!elements.suggestions) return;
+    elements.suggestions.innerHTML = "";
+    elements.suggestions.classList.remove("open");
+  }
+
+  function syncSelectionFromQuery() {
+    const query = searchQuery.trim();
+    if (!query) {
+      selectedAttendeeId = null;
+      return;
+    }
+    const exact = attendees.find(
+      (attendee) => attendee.name.toLowerCase() === query.toLowerCase()
+    );
+    selectedAttendeeId = exact ? exact.id : null;
+  }
+
+  function hasLockedSelection() {
+    return Boolean(selectedAttendeeId && attendeeById.has(selectedAttendeeId));
+  }
+
+  function lockSelection(attendee) {
+    if (!attendee) return;
+    selectedAttendeeId = attendee.id;
+    searchQuery = attendee.name;
+    if (elements.query) elements.query.value = attendee.name;
+    closeSuggestions();
+  }
+
+  function filteredAttendees() {
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) return attendees.slice(0, 40);
+    return attendees
+      .filter((attendee) => {
+        const haystack = `${attendee.name} ${attendee.affiliation}`.toLowerCase();
+        return haystack.includes(query);
+      })
+      .slice(0, 40);
+  }
+
+  function renderSuggestions() {
+    if (!elements.suggestions) return;
+    const query = searchQuery.trim();
+    if (!query || hasLockedSelection()) {
+      closeSuggestions();
+      return;
+    }
+
+    const matches = filteredAttendees();
+    if (!matches.length) {
+      closeSuggestions();
+      return;
+    }
+
+    elements.suggestions.innerHTML = "";
+    for (const attendee of matches) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "suggestion";
+      button.dataset.attendeeId = attendee.id;
+      button.innerHTML = `${escapeHtml(attendee.name)}<small>${escapeHtml(attendee.affiliation)}</small>`;
+      button.addEventListener("mousedown", (event) => {
+        event.preventDefault();
+        if (pendingRegistrationIds.has(attendee.id)) return;
+        lockSelection(attendee);
+        renderTracker();
+        renderStatus();
+      });
+      elements.suggestions.appendChild(button);
+    }
+    elements.suggestions.classList.add("open");
+  }
+
+  function normalizedDelegateId() {
+    const raw = elements.delegateId?.value ?? delegateIdInput;
+    return String(raw || "").replace(/\D/g, "").slice(0, 5);
+  }
+
+  function delegateIdReady() {
+    return !requireDelegateId || /^\d{5}$/.test(normalizedDelegateId());
+  }
+
+  function beginRegistering(attendeeId) {
+    pendingRegistrationIds.add(attendeeId);
+    renderTracker();
+  }
+
+  function endRegistering(attendeeId) {
+    pendingRegistrationIds.delete(attendeeId);
+    renderTracker();
+    renderDelegateIdError();
+    renderStatus();
+  }
+
+  function clearOffsetForm() {
+    if (elements.query) elements.query.value = "";
+    if (elements.delegateId) elements.delegateId.value = "";
+    searchQuery = "";
+    delegateIdInput = "";
+    selectedAttendeeId = null;
+    closeSuggestions();
+  }
+
+  function applyRegistrationResult(result) {
+    if (!result) return;
+    if (result.error) {
+      showRegistrationError(result.error, { underDelegateField: result.underDelegateField });
+      return;
+    }
+    if (result.message) {
+      clearDelegateIdError();
+      setStatus(result.message, { success: true });
+      if (result.clearForm) clearOffsetForm();
+      render({ updateMap: result.updateMap ?? false });
+    }
+  }
+
+  function showRegistrationError(message, { underDelegateField = false } = {}) {
+    const text = String(message || "").trim();
+    if (!text) return;
+    if (underDelegateField) {
+      setDelegateIdError(text);
+    } else {
+      clearDelegateIdError();
+    }
+    setStatus(text, { error: true, success: false });
+    render({ updateMap: false });
+  }
+
+  function resolveSelectedAttendee() {
+    if (selectedAttendeeId && attendeeById.has(selectedAttendeeId)) {
+      return attendeeById.get(selectedAttendeeId);
+    }
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) return null;
+    const exact = attendees.find((attendee) => attendee.name.toLowerCase() === query);
+    if (exact) return exact;
+    const matches = filteredAttendees();
+    return matches.length === 1 ? matches[0] : null;
+  }
+
+  const DELEGATE_ID_ERROR =
+    "Incorrect delegate ID. Check the code from your confirmation email.";
+
+  function renderDelegateIdError() {
+    const text = delegateIdErrorMessage;
+    if (elements.delegateIdError) {
+      elements.delegateIdError.textContent = text;
+      if (text) elements.delegateIdError.removeAttribute("hidden");
+      else elements.delegateIdError.setAttribute("hidden", "");
+    }
+    if (elements.delegateId) {
+      elements.delegateId.setAttribute("aria-invalid", text ? "true" : "false");
+    }
+    elements.delegateField?.classList.toggle("field--error", Boolean(text));
+    elements.form?.classList.toggle("emissions-offset-register--error", Boolean(text));
+  }
+
+  function setDelegateIdError(message) {
+    delegateIdErrorMessage = String(message || "").trim();
+    renderDelegateIdError();
+  }
+
+  function clearDelegateIdError() {
+    setDelegateIdError("");
+  }
+
+  function renderStatus() {
+    if (!elements.status) return;
+    // Kept in a variable rather than written straight to the DOM so the
+    // five-second poll cannot wipe a message the user has not read yet.
+    const text = statusMessage || loadError;
+    elements.status.textContent = text;
+    elements.status.hidden = !text;
+    elements.status.classList.toggle("error", statusIsError || Boolean(loadError));
+    elements.status.classList.toggle("success", statusIsSuccess && !statusIsError && !loadError);
+  }
+
+  function setStatus(message, { error = false, success = false } = {}) {
+    statusMessage = message;
+    statusIsError = error;
+    statusIsSuccess = success;
+    renderStatus();
+  }
+
+  function renderTracker() {
+    const { registeredCount, totalAttendees, percent } = stats();
+    const isRegistering = pendingRegistrationIds.size > 0;
+    if (elements.fill) {
+      elements.fill.style.width = `${Math.min(100, percent)}%`;
+    }
+    if (elements.label) {
+      const rounded = percent < 10 ? percent.toFixed(1) : Math.round(percent).toString();
+      elements.label.innerHTML = `<strong>${rounded}%</strong> offset · <strong>${registeredCount.toLocaleString()}</strong> of ${totalAttendees.toLocaleString()} ${getHeadline()?.attendee_label || "delegates"} offsetted`;
+    }
+    if (elements.form) {
+      elements.form.classList.toggle("emissions-offset-register--pending", isRegistering);
+    }
+    if (elements.registerButton) {
+      const attendee = resolveSelectedAttendee();
+      elements.registerButton.disabled =
+        isRegistering ||
+        !attendee ||
+        !delegateIdReady() ||
+        pendingRegistrationIds.has(attendee.id);
+      elements.registerButton.textContent = isRegistering ? "Registering…" : "I've offset my travel";
+      elements.registerButton.setAttribute("aria-busy", isRegistering ? "true" : "false");
+    }
+  }
+
+  function render({ updateMap = false } = {}) {
+    renderSuggestions();
+    renderDelegateIdError();
+    renderStatus();
+    renderTracker();
+    if (updateMap) onChange?.();
+  }
+
+  async function persistRegistration(attendee, token) {
+    try {
+      const { response, payload } = await fetchJsonWithTimeout(apiUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: attendee.id,
+          name: attendee.name,
+          affiliation_key: affiliationMapKey(attendee.affiliation || ""),
+          pool: isSpeakerAttendee?.(attendee) === false ? "delegates" : "speakers",
+          ...(requireDelegateId ? { delegate_id: normalizedDelegateId() } : {}),
+          "cf-turnstile-response": token,
+        }),
+      });
+
+      if (!response.ok) {
+        offsetTurnstileToken = "";
+        window.turnstile?.reset?.(offsetTurnstileWidgetId);
+        const delegateMismatch =
+          requireDelegateId &&
+          (response.status === 403 ||
+            String(payload.error || "").toLowerCase().includes("delegate id"));
+        return {
+          created: false,
+          error: delegateMismatch
+            ? DELEGATE_ID_ERROR
+            : payload.error || "Registration failed. Please try again.",
+          underDelegateField: delegateMismatch,
+        };
+      }
+
+      if (requireDelegateId && payload.delegate_verified !== true) {
+        return {
+          created: false,
+          error:
+            "This API is not checking delegate IDs. For local testing, use docker compose and point index.html at http://127.0.0.1:8080/api/offsets.",
+          underDelegateField: true,
+        };
+      }
+
+      const accepted = Boolean(payload.created);
+
+      const pool = isSpeakerAttendee?.(attendee) === false ? "delegates" : "speakers";
+      const beforeTotal =
+        aggregate.totals.speakers +
+        (activePool() === "delegates" ? aggregate.totals.delegates : 0);
+
+      if (accepted && !payload.pending) {
+        aggregate.totals[pool] += 1;
+        const key = affiliationMapKey(attendee.affiliation || "");
+        if (key) {
+          aggregate.counts[pool][key] = (aggregate.counts[pool][key] || 0) + 1;
+        }
+        rebuildOffsetCounts();
+      }
+
+      let message;
+      if (payload.pending) {
+        message = `Thanks, ${attendee.name}! Your offset is logged and will be counted once checked.`;
+      } else if (accepted) {
+        message = payload.reactivated
+          ? `Thanks, ${attendee.name}! Your offset is registered again.`
+          : `Thanks, ${attendee.name}! Your offset is registered.`;
+      } else {
+        message = `${attendee.name} is already registered on the server.`;
+      }
+
+      offsetTurnstileToken = "";
+      window.turnstile?.reset?.(offsetTurnstileWidgetId);
+
+      void loadRegistrations()
+        .then(() => {
+          rebuildOffsetCounts();
+          const afterTotal =
+            aggregate.totals.speakers +
+            (activePool() === "delegates" ? aggregate.totals.delegates : 0);
+          if (accepted && !payload.pending && afterTotal < beforeTotal + 1) {
+            aggregate.totals[pool] += 1;
+            const key = affiliationMapKey(attendee.affiliation || "");
+            if (key) {
+              aggregate.counts[pool][key] = (aggregate.counts[pool][key] || 0) + 1;
+            }
+            rebuildOffsetCounts();
+          }
+          render({ updateMap: true });
+        })
+        .catch(() => {
+          /* loadRegistrations handles its own errors */
+        });
+
+      return {
+        created: accepted,
+        message,
+        clearForm: true,
+        updateMap: true,
+      };
+    } catch (error) {
+      offsetTurnstileToken = "";
+      window.turnstile?.reset?.(offsetTurnstileWidgetId);
+      const timedOut = error?.name === "AbortError";
+      console.warn("Offset registration failed:", error);
+      return {
+        created: false,
+        error: timedOut
+          ? "Registration timed out. Check your connection and try again."
+          : "Registration failed. Please try again.",
+      };
+    }
+  }
+
+  async function registerSelected() {
+    const attendee = resolveSelectedAttendee();
+    if (!attendee) {
+      if (searchQuery.trim()) setStatus("Select your name from the suggestions.");
+      return false;
+    }
+    if (pendingRegistrationIds.has(attendee.id)) {
+      return false;
+    }
+
+    if (!apiUrl) {
+      setStatus("Live registration API is not configured.");
+      return false;
+    }
+    if (requireDelegateId && !delegateIdReady()) {
+      setStatus("Enter your 5-digit delegate ID.");
+      return false;
+    }
+
+    let token = "local-dev";
+    if (!SKIP_TURNSTILE) {
+      setStatus("Verifying…");
+      token = await ensureOffsetTurnstileToken();
+      if (!token) {
+        setStatus("Verification failed. Please try again.", { error: true });
+        return false;
+      }
+    }
+
+    selectedAttendeeId = attendee.id;
+    beginRegistering(attendee.id);
+    closeSuggestions();
+    elements.query?.blur();
+
+    try {
+      const result = await persistRegistration(attendee, token);
+      applyRegistrationResult(result);
+      if (result?.created) onRegisterSuccess?.(attendee);
+      return Boolean(result?.created);
+    } finally {
+      endRegistering(attendee.id);
+    }
+  }
+
+  function bindEvents() {
+    elements.query?.addEventListener("input", (event) => {
+      searchQuery = event.target.value;
+      syncSelectionFromQuery();
+      statusMessage = "";
+      statusIsError = false;
+      statusIsSuccess = false;
+      clearDelegateIdError();
+      render();
+    });
+
+    elements.delegateId?.addEventListener("input", (event) => {
+      const digits = String(event.target.value || "").replace(/\D/g, "").slice(0, 5);
+      delegateIdInput = digits;
+      if (elements.delegateId && elements.delegateId.value !== digits) {
+        elements.delegateId.value = digits;
+      }
+      statusMessage = "";
+      statusIsError = false;
+      statusIsSuccess = false;
+      clearDelegateIdError();
+      renderTracker();
+    });
+
+    elements.query?.addEventListener("focus", () => {
+      if (hasLockedSelection()) return;
+      if (searchQuery.trim()) renderSuggestions();
+    });
+
+    document.addEventListener("click", (event) => {
+      if (
+        elements.suggestions &&
+        !elements.suggestions.contains(event.target) &&
+        event.target !== elements.query
+      ) {
+        closeSuggestions();
+      }
+    });
+
+    elements.form?.addEventListener("submit", (event) => {
+      event.preventDefault();
+      void registerSelected();
+    });
+
+    elements.registerButton?.addEventListener("click", () => {
+      void registerSelected();
+    });
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") {
+        void loadRegistrations().then(() => {
+          rebuildOffsetCounts();
+          render({ updateMap: true });
+        });
+      }
+    });
+  }
+
+  function startPolling() {
+    if (!apiUrl || pollTimer) return;
+    pollTimer = window.setInterval(() => {
+      if (document.visibilityState !== "visible") return;
+      void loadRegistrations().then(() => {
+        rebuildOffsetCounts();
+        render({ updateMap: true });
+      });
+    }, POLL_INTERVAL_MS);
+  }
+
+  function stopPolling() {
+    if (!pollTimer) return;
+    window.clearInterval(pollTimer);
+    pollTimer = null;
+  }
+
+  async function init() {
+    if (elements.delegateField) {
+      elements.delegateField.hidden = !requireDelegateId;
+    }
+    initOffsetTurnstile();
+    refreshAttendees();
+    bindEvents();
+    startPolling();
+    render();
+    try {
+      await loadRegistrations();
+      rebuildOffsetCounts();
+      render({ updateMap: true });
+    } catch {
+      /* loadRegistrations handles its own errors */
+    }
+  }
+
+  return {
+    init,
+    stopPolling,
+    refreshAttendees,
+    offsetShareForLocation,
+    stats,
+    OFFSET_GREEN,
+  };
+}
+
+export function circlePolygon(map, lon, lat, radiusPx, steps = 32) {
+  if (!map || radiusPx <= 0) return null;
+  const center = map.project([lon, lat]);
+  const ring = [];
+
+  for (let index = 0; index <= steps; index += 1) {
+    const angle = (2 * Math.PI * index) / steps;
+    const x = center.x + radiusPx * Math.cos(angle);
+    const y = center.y + radiusPx * Math.sin(angle);
+    const point = map.unproject([x, y]);
+    ring.push([point.lng, point.lat]);
+  }
+
+  return ring;
+}
+
+export function pieSlicePolygon(map, lon, lat, radiusPx, fraction) {
+  if (!map || fraction <= 0 || fraction >= 1) return null;
+  const center = map.project([lon, lat]);
+  const centerGeo = map.unproject([center.x, center.y]);
+  const start = -Math.PI / 2;
+  const end = start + fraction * Math.PI * 2;
+  const steps = Math.max(8, Math.ceil(32 * fraction));
+  const ring = [[centerGeo.lng, centerGeo.lat]];
+
+  for (let index = 0; index <= steps; index += 1) {
+    const angle = start + ((end - start) * index) / steps;
+    const x = center.x + radiusPx * Math.cos(angle);
+    const y = center.y + radiusPx * Math.sin(angle);
+    const point = map.unproject([x, y]);
+    ring.push([point.lng, point.lat]);
+  }
+  ring.push([centerGeo.lng, centerGeo.lat]);
+
+  return ring;
+}
