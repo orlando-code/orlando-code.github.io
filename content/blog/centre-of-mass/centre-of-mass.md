@@ -11,7 +11,7 @@ draft: false
 
 This is not a useful tool. But a long flight to the other side of the globe got me thinking how some people stay in the same place their whole lives, while others bounce from country to country. I wondered where, on average, I had 'been' spatially? And how much 'bouncing' had I done, relative to others, for example all my New Zealander friends now living in London?
 
-So this silly little app takes places you've been and how long you spent there, and calculates your time-weighted geographic centre – plus a spread metric showing how dispersed your life has been.
+So this silly little app takes places you've been and how long you spent there, and calculates your time-weighted geographic centre – plus a spread metric<sup id="fnref-spread" class="footnote-ref"><a href="#spread-calculation">1</a></sup> showing how dispersed your life has been.
 
 I thought it was cool.
 
@@ -30,4 +30,15 @@ I thought it was cool.
 </div>
 
 
-Quantifying spread
+<p id="spread-calculation">
+<sup class="footnote-ref"><a href="#fnref-spread">1</a></sup>
+To quantify geographical spread, I used the mean resultant length of the time-weighted unit vectors on the sphere, converted to an equivalent angular spread:
+</p>
+
+$$
+\delta = \arccos(\bar{R}),
+\qquad
+\bar{R} = \frac{\left\| \sum_i t_i\,\mathbf{u}_i \right\|}{\sum_i t_i}
+$$
+
+where $t_i$ is the time spent at location $i$ and $\mathbf{u}_i$ is the corresponding unit vector. This is $0^\circ$ when all time is spent in one place, and approaches $90^\circ$ for maximally mixed lives (for example equal time at antipodes).

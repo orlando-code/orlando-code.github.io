@@ -84,4 +84,18 @@
   .prose img {
     @apply mx-auto rounded-lg shadow-sm;
   }
+
+  .prose .footnote-ref {
+    @apply text-primary-600 font-medium no-underline;
+    font-size: 0.7em;
+    line-height: 0;
+  }
+
+  .prose .footnote-ref a {
+    @apply text-primary-600 no-underline hover:underline;
+  }
+
+  .prose .katex-display {
+    @apply my-6 overflow-x-auto;
+  }
 } 
