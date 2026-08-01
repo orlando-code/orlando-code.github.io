@@ -9,7 +9,7 @@ coverAlt: "The creator's centre of mass – somewhere in the middle of Wales...
 draft: false
 ---
 
-This is not a useful tool. But a long flight to the other side of the globe got me thinking how some people stay in the same place their whole lives, while others bounce from country to country. I wondered where, on average, I had 'been' spatially. And how much 'bouncing' had I done, relative to others, for example all my New Zealander friends now living in London?
+This is not a useful tool. But a long flight to the other side of the globe got me thinking how some people stay in the same place their whole lives, while others bounce from country to country. I wondered where, on average, I had 'been' spatially? And how much 'bouncing' had I done, relative to others, for example all my New Zealander friends now living in London?
 
 So this silly little app takes places you've been and how long you spent there, and calculates your time-weighted geographic centre – plus a spread metric showing how dispersed your life has been.
 
@@ -28,3 +28,6 @@ I thought it was cool.
     height="820"
   ></iframe>
 </div>
+
+
+Quantifying spread

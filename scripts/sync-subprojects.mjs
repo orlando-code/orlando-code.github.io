@@ -58,8 +58,9 @@ function copyCentreOfMass(source) {
   fs.rmSync(target, { recursive: true, force: true });
   fs.mkdirSync(target, { recursive: true });
 
+  const skip = new Set(['.git', '.cursor', 'node_modules']);
   for (const entry of fs.readdirSync(source, { withFileTypes: true })) {
-    if (entry.name === '.git') continue;
+    if (skip.has(entry.name)) continue;
     const sourcePath = path.join(source, entry.name);
     const targetPath = path.join(target, entry.name);
     fs.cpSync(sourcePath, targetPath, { recursive: true });
