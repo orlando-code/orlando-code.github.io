@@ -1,5 +1,14 @@
+import type { Metadata } from 'next'
 import { getAllPosts } from '../../lib/blog'
 import BlogFilter from '../components/BlogFilter'
+import { pageMetadata } from '../../lib/site'
+
+export const metadata: Metadata = pageMetadata({
+  title: 'Blog',
+  description:
+    'Research notes, papers, packages, and projects by Orlando Timmerman — marine data science PhD student at the University of Cambridge.',
+  path: '/blog/',
+})
 
 export default function BlogPage() {
   const posts = getAllPosts()

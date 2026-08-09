@@ -1,5 +1,14 @@
 import { Calendar, Mail } from 'lucide-react'
+import type { Metadata } from 'next'
 import Link from 'next/link'
+import { pageMetadata } from '../../lib/site'
+
+export const metadata: Metadata = pageMetadata({
+  title: 'CV',
+  description:
+    'Curriculum vitae of Orlando Timmerman — PhD researcher in marine data science at the University of Cambridge. Education, research, publications, and experience.',
+  path: '/cv/',
+})
 
 export default function CVPage() {
   return (

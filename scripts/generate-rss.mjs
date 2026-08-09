@@ -3,7 +3,11 @@ import fs from 'fs';
 import matter from 'gray-matter';
 import path from 'path';
 
-const siteUrl = 'https://orlando-code.github.io/';
+const siteUrl = 'https://orlando-codes.com/';
+
+function postUrl(slug) {
+  return `${siteUrl}blog/${slug}/`;
+}
 const postsDir = path.join(process.cwd(), 'content/blog');
 
 function getAllMarkdownFiles(dir) {
@@ -43,8 +47,8 @@ filePaths.forEach((fullPath) => {
   const slug = relPath.replace(/\.md$/, '').replace(/\\/g, '/');
   feed.addItem({
     title: matterResult.data.title || slug,
-    id: `${siteUrl}/blog/${slug}`,
-    link: `${siteUrl}/blog/${slug}`,
+    id: postUrl(slug),
+    link: postUrl(slug),
     description: matterResult.data.excerpt || matterResult.data.description || '',
     date: new Date(matterResult.data.date),
   });

@@ -1,12 +1,38 @@
 import { ArrowLeft, Calendar, Clock } from 'lucide-react'
+import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
+import JsonLd from '../../components/JsonLd'
 import { getAllPostSlugs, getCategoryStyle, formatCategoryLabel, getPostBySlug, resolveCoverImage } from '../../../lib/blog'
+import { blogPostingJsonLd } from '../../../lib/json-ld'
+import { absoluteUrl, pageMetadata } from '../../../lib/site'
 
 interface BlogPostPageProps {
   params: {
     slug: string[] | string
   }
+}
+
+export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
+  const slug = Array.isArray(params.slug) ? params.slug.join('/') : params.slug
+  const post = await getPostBySlug(slug)
+
+  if (!post) {
+    return { title: 'Post not found' }
+  }
+
+  const description = post.description || post.excerpt || `Blog post by Orlando Timmerman`
+  const coverSrc = resolveCoverImage(post.slug, post.cover)
+
+  return pageMetadata({
+    title: post.title,
+    description,
+    path: `/blog/${slug}/`,
+    ogImage: coverSrc ? absoluteUrl(coverSrc) : undefined,
+    ogType: 'article',
+    publishedTime: post.date,
+    modifiedTime: post.date,
+  })
 }
 
 export async function generateStaticParams() {
@@ -26,9 +52,19 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   const categoryStyle = getCategoryStyle(post.category);
   const coverSrc = resolveCoverImage(post.slug, post.cover);
+  const description = post.description || post.excerpt
 
   return (
     <div className="min-h-screen bg-white">
+      <JsonLd
+        data={blogPostingJsonLd({
+          title: post.title,
+          description: description || post.title,
+          slug: post.slug,
+          date: post.date,
+          image: coverSrc ? absoluteUrl(coverSrc) : undefined,
+        })}
+      />
       <article className="py-16 overflow-visible">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <Link 

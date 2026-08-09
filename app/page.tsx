@@ -1,7 +1,16 @@
 import { ArrowRight, FileText, Mail, User } from 'lucide-react'
+import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import FeaturedCard from './components/FeaturedCard'
+import { pageMetadata } from '../lib/site'
+
+export const metadata: Metadata = pageMetadata({
+  title: 'Orlando Timmerman — Marine Data Science PhD, University of Cambridge',
+  description:
+    'Orlando Timmerman is a PhD researcher in marine data science at the University of Cambridge, working on coral reefs, remote sensing, climate, and environmental economics.',
+  path: '/',
+})
 
 export default function HomePage() {
   return (
