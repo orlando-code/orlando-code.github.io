@@ -12,7 +12,7 @@ const SITE_ROOT = path.resolve(__dirname, "..");
 const EXPLORER_SRC = process.env.ICRS_EXPLORER_SRC || path.resolve(SITE_ROOT, "../explore-icrs-2026");
 const TARGET_DIR = path.join(SITE_ROOT, "public", "explore-icrs-2026/");
 const BASE_PATH = process.env.ICRS_BASE_PATH || "/explore-icrs-2026/";
-const bundleScript = path.join(EXPLORER_SRC, "scripts", "bundle_static_site.mjs");
+const bundleScript = path.join(EXPLORER_SRC, "scripts", "site", "bundle_static_site.mjs");
 
 const result = spawnSync(
   process.execPath,
