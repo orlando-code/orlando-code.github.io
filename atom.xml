@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://orlando-code.github.io/</id>
+    <title>Orlando Timmerman's Blog</title>
+    <updated>2025-07-21T20:00:04.303Z</updated>
+    <generator>Next.js + feed</generator>
+    <link rel="alternate" href="https://orlando-code.github.io/"/>
+    <subtitle>Updates and posts</subtitle>
+    <icon>https://orlando-code.github.io//favicon.ico</icon>
+    <rights>All rights reserved 2025, Orlando Timmerman</rights>
+    <entry>
+        <title type="html"><![CDATA[Welcome!]]></title>
+        <id>https://orlando-code.github.io//blog/welcome/welcome</id>
+        <link href="https://orlando-code.github.io//blog/welcome/welcome"/>
+        <updated>2025-07-19T08:00:00.000Z</updated>
+        <summary type="html"><![CDATA[Welcome to my first blog post, answering the question: how did this get here?]]></summary>
+    </entry>
+</feed>

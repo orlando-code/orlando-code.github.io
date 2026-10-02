@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
+    <meta name="icrs-base-path" content="/explore-icrs-2026/" />
+    <meta
+      name="icrs-canonical-url"
+      content="https://orlando-codes.com/explore-icrs-2026/"
+    />
+    <script>
+      (function () {
+        var meta = document.querySelector('meta[name="icrs-base-path"]');
+        var base = meta && meta.content ? meta.content.trim() : "";
+        if (!base) return;
+        if (!base.startsWith("/")) base = "/" + base;
+        if (!base.endsWith("/")) base += "/";
+        var path = location.pathname;
+        var baseRoot = base.slice(0, -1);
+        var onBasePath =
+          path === baseRoot ||
+          path === base ||
+          path.startsWith(base) ||
+          path.startsWith(baseRoot + "/");
+        if (!onBasePath) return;
+        var el = document.createElement("base");
+        el.href = base;
+        document.head.appendChild(el);
+      })();
+    </script>
+    <!-- Live offset API. Set after deploying backend/ (see backend/README.md) -->
+    <meta name="icrs-offset-api" content="https://icrs-offset-api.fly.dev/api/offsets" />
+    <meta name="icrs-contact-api" content="https://icrs-offset-api.fly.dev/api/contact" />
+    <meta name="icrs-require-delegate-id" content="1" />
+    <!-- Offset map modes (default on): set content="0" to disable country choropleth or affiliation slices -->
+    <!-- Country choropleth on; affiliation pie-slices paused (nation colour only). -->
+    <!-- <meta name="icrs-offset-country-choropleth" content="0" /> -->
+    <meta name="icrs-offset-affiliation-slices" content="0" />
+    <meta name="icrs-turnstile-site-key" content="0x4AAAAAAD_imTavnxW9TlYT" />
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    <link rel="canonical" href="https://orlando-codes.com/explore-icrs-2026/" />
+    <title>ICRS 2026</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <div class="welcome-overlay" id="welcome-overlay" hidden>
+      <div
+        class="welcome-card"
+        role="dialog"
+        aria-labelledby="welcome-title"
+        aria-modal="true"
+      >
+        <p class="hover-kicker">Welcome</p>
+        <h2 id="welcome-title">The ICRS 2026 Explorer</h2>
+        <p class="welcome-lead">
+          An interactive investigation of the who, what, and where of the conference.
+        </p>
+        <ul class="welcome-list">
+          <li><strong>Map</strong> – speaker affiliations; search by name, institution, or topic keyword.</li>
+          <li><strong>Network</strong> – co-authorship links between speakers and institutions; highlight people working in the same topics e.g. bleaching, OAE.</li>
+          <li><strong>Emissions</strong> – estimated return-trip CO₂e to Auckland. There's been a lot of discussion about it: so let's quantify and analyse it!</li>
+        </ul>
+        <p class="welcome-lead">
+          If you find an error or have a suggestion, please contact me (Orlando) at <a href="mailto:rt582@cam.ac.uk">rt582@cam.ac.uk</a>.
+        </p>
+        <button type="button" class="btn-primary welcome-dismiss" id="welcome-dismiss">
+          Get started
+        </button>
+      </div>
+    </div>
+
+    <header class="topbar">
+      <div class="brand">
+        <h1 id="site-title">ICRS 2026</h1>
+        <p id="site-summary">
+          Channelling the momentum and inspiration of the conference to facilitate connections and collaborations.
+        </p>
+      </div>
+      <div class="topbar-nav">
+        <a class="site-back-link" href="https://orlando-codes.com/">← Orlando's site</a>
+        <nav class="tabs" aria-label="Views">
+          <button type="button" class="tab active" data-tab="map">Map</button>
+          <button type="button" class="tab" data-tab="network">Network</button>
+          <button type="button" class="tab" data-tab="emissions">Emissions</button>
+          <button type="button" class="tab" data-tab="methods">Methods</button>
+          <button type="button" class="tab" data-tab="share">More</button>
+        </nav>
+      </div>
+    </header>
+
+    <main class="layout">
+      <aside class="panel" id="map-panel">
+        <div class="panel-header">
+          <h2>Search</h2>
+          <p>Match speaker names, affiliations, talk titles, or abstract text.</p>
+        </div>
+
+        <form class="entry-form" id="search-form" autocomplete="off">
+          <div class="field search-wrap">
+            <label for="search-query">Speaker or keyword</label>
+            <input
+              id="search-query"
+              name="query"
+              placeholder="e.g. Heron, coral restoration, bleaching"
+            />
+            <div id="search-suggestions" class="suggestions" role="listbox"></div>
+          </div>
+          <div class="form-actions">
+            <button class="btn-primary" type="submit">Search</button>
+            <button class="btn-ghost" type="button" id="btn-clear-search">Clear</button>
+          </div>
+          <details class="panel-help-dropdown map-search-help" id="map-search-help">
+            <summary> Spot a problem?</summary>
+            <p>
+              If something doesn't look right, please let me know at <a href="mailto:rt582@cam.ac.uk">rt582@cam.ac.uk</a>!
+            </p>
+          </details>
+          <div id="search-status" class="status" aria-live="polite"></div>
+        </form>
+
+        <div class="stats-card" id="stats-card"></div>
+
+        <div class="toggle-stack map-delegate-toggle-wrap" id="map-delegate-toggle-wrap">
+          <label class="toggle-field map-delegate-toggle">
+            <input type="checkbox" id="map-include-non-speaking-delegates" checked />
+            <span>Include non-speaking delegates</span>
+          </label>
+        </div>
+
+        <div class="network-legend" id="map-legend"></div>
+
+        <div class="results-header">
+          <h3 id="results-title">All locations</h3>
+        </div>
+        <div class="results-wrap" id="results-list"></div>
+      </aside>
+
+      <aside class="panel" id="network-panel" hidden>
+        <div class="panel-header">
+          <h2>Co-authorship network</h2>
+          <p>Show where speakers shared authorship on ICRS talks. Search by name, affiliation, or talk keyword (e.g. bleaching, OAE) to cluster people by topic; select a node to see their profile, contact, co-authorships, and similar talks.</p>
+        </div>
+
+        <div class="entry-form network-controls">
+          <div class="field search-wrap">
+            <label for="network-search-query">Search network</label>
+            <input
+              id="network-search-query"
+              placeholder="e.g. bleaching, OAE, David Suggett"
+            />
+            <div id="network-suggestions" class="suggestions" role="listbox"></div>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn-primary" id="network-search-btn">Search</button>
+            <button type="button" class="btn-ghost" id="network-clear-search">Clear</button>
+          </div>
+          <div class="field">
+            <label for="network-density">Nodes shown</label>
+            <select id="network-density">
+              <option value="150" selected>Top 150 by talk count (fast)</option>
+              <option value="300">Top 300</option>
+              <option value="600">Top 600</option>
+              <option value="all">All (may load slowly with &gt;2,000 attendees)</option>
+            </select>
+          </div>
+          <div class="network-controls-row">
+            <div class="segmented">
+              <button type="button" class="segment active" data-network-mode="individual">
+                By individual
+              </button>
+              <button type="button" class="segment" data-network-mode="affiliation">
+                By affiliation
+              </button>
+            </div>
+            <div class="network-action-buttons">
+              <button type="button" class="btn-ghost btn-small" id="network-clear-selection" hidden>
+                Clear selection
+              </button>
+              <button type="button" class="segment" id="network-reset-zoom">Reset view</button>
+            </div>
+          </div>
+          <p id="network-summary" class="status"></p>
+          <p id="network-search-status" class="status" aria-live="polite"></p>
+        </div>
+
+        <section class="stage network-stage stage-stack" id="network-stage" hidden>
+          <div class="network-hint-banner" id="network-hint-banner" hidden>
+            <div
+              class="network-hint-card"
+              role="dialog"
+              aria-labelledby="network-hint-title"
+              aria-modal="true"
+            >
+              <p class="hover-kicker">Network search</p>
+              <h2 id="network-hint-title">Find collaborators by topic</h2>
+              <p class="network-hint-lead">
+                Search talk titles and abstracts for a keyword – e.g. <strong>bleaching</strong>,
+                <strong>OAE</strong>, or <strong>restoration</strong> – to highlight speakers and co-authors working on that topic.
+              </p>
+              <img
+                class="network-hint-illustration"
+                src="assets/network-search-hint.svg"
+                width="640"
+                height="320"
+                alt="Diagram: typing bleaching in the search box highlights related speakers and their co-authorship links in the network"
+              />
+              <!-- <ol class="network-hint-steps">
+                <li>Type a topic or name in <strong>Search network</strong>.</li>
+                <li>Matching nodes light up along with their co-authors.</li>
+                <li>Click a node to inspect talks, connections, and public contact links; switch to <strong>By affiliation</strong> for institutional clusterings.</li>
+              </ol> -->
+              <button type="button" class="btn-primary network-hint-dismiss" id="network-hint-dismiss">
+                Got it
+              </button>
+            </div>
+          </div>
+          <div class="stage-canvas network-stage-canvas">
+            <div class="stage-badge network-help-badge">Pinch/scroll to zoom · drag to pan · tap/click a node to select</div>
+            <svg id="network-svg" aria-label="Co-authorship network"></svg>
+          </div>
+        </section>
+
+        <div class="network-sidebar-scroll">
+          <div class="network-card-slot" id="network-card-slot">
+          <aside class="network-side-card" id="network-card" hidden>
+            <div class="network-card-header">
+              <p class="hover-kicker">Selected node</p>
+              <div class="network-card-header-actions">
+                <button type="button" class="btn-ghost btn-small" id="network-card-clear" hidden>
+                  Clear
+                </button>
+                <button
+                  type="button"
+                  class="network-data-info-btn"
+                  id="network-data-info-btn"
+                  aria-label="How was this information gathered?"
+                  aria-expanded="false"
+                  aria-controls="network-data-info"
+                >
+                  ?
+                </button>
+              </div>
+            </div>
+            <div class="network-data-info" id="network-data-info" hidden>
+              <p>
+                Delegate profiles are compiled from public sources: the ICRS programme we all received,
+                institutional websites, and web searches. Information is matched by name and
+                affiliation but may contain errors.
+              </p>
+              <div class="network-data-info-actions">
+                <a
+                  class="btn-ghost btn-small network-data-fix-link"
+                  id="network-data-fix-link"
+                  href="mailto:rt582@cam.ac.uk"
+                >
+                  Fix this information
+                </a>
+                <a
+                  class="btn-ghost btn-small network-data-removal-link"
+                  id="network-data-removal-link"
+                  href="mailto:rt582@cam.ac.uk"
+                >
+                  Remove this information
+                </a>
+              </div>
+            </div>
+            <h2 id="network-card-title"></h2>
+            <p id="network-card-meta" class="hover-meta"></p>
+            <div id="network-card-contacts" class="network-card-contacts" hidden></div>
+            <div id="network-card-talks" class="network-card-talks" hidden></div>
+            <button type="button" class="btn-ghost btn-small network-talk-back" id="network-talk-back" hidden>
+              ← All talks
+            </button>
+            <div id="network-talk-detail" class="network-talk-detail" hidden>
+              <p class="hover-kicker">Presentation details</p>
+              <h3 id="network-talk-title" class="network-talk-title"></h3>
+              <p id="network-talk-format" class="network-talk-format" hidden></p>
+              <div id="network-talk-authors" class="network-talk-authors"></div>
+              <div id="network-talk-abstract" class="network-talk-abstract"></div>
+            </div>
+            <div id="network-similar-talks" class="network-similar-talks" hidden>
+              <p class="hover-kicker">Similar talks</p>
+              <p id="network-similar-status" class="status" aria-live="polite"></p>
+              <ul id="network-similar-list" class="network-similar-list"></ul>
+            </div>
+          </aside>
+          </div>
+
+          <div class="results-wrap" id="network-results-wrap">
+            <div class="results-header">
+              <h3 id="network-results-title">Search matches</h3>
+            </div>
+            <div id="network-results"></div>
+          </div>
+        </div>
+
+        <div class="network-legend-stack">
+          <div class="network-legend" id="network-legend-coauthorship"></div>
+          <div class="network-sidebar-bars">
+            <div class="network-legend" id="network-legend-scale"></div>
+          </div>
+          <div class="network-sidebar-bars">
+            <div class="results-header network-sidebar-bars-header">
+              <h3>Most talks of current network view</h3>
+            </div>
+            <div
+              class="network-bar-chart"
+              id="network-bar-chart"
+              aria-label="Talk count ranking for visible nodes"
+            ></div>
+          </div>
+        </div>
+      </aside>
+
+      <aside class="panel" id="emissions-panel" hidden>
+        <div class="panel-header">
+          <h2>Travel emissions</h2>
+          <!-- <p>Estimated return-trip CO₂e for speakers and delegates travelling to ICRS in Auckland.</p> -->
+        </div>
+
+        <div class="emissions-headline" id="emissions-headline">
+          <p class="emissions-kicker">Total estimated emissions of return travel to ICRS 2026</p>
+          <p class="emissions-total" id="emissions-total"></p>
+          <p class="emissions-assumption" id="emissions-assumption"></p>
+          <div class="emissions-offset-tracker" id="emissions-offset-tracker">
+            <div class="emissions-offset-tracker-bar" aria-hidden="true">
+              <div class="emissions-offset-tracker-fill" id="emissions-offset-tracker-fill"></div>
+            </div>
+            <p class="emissions-offset-tracker-label" id="emissions-offset-tracker-label"></p>
+            <div
+              id="emissions-offset-choropleth-legend"
+              class="emissions-offset-choropleth-legend"
+              hidden
+            ></div>
+          </div>
+          <form class="emissions-offset-register entry-form" id="emissions-offset-form" autocomplete="off">
+            <h3 class="emissions-offset-register-title">Register your pledge</h3>
+            <div class="emissions-offset-suggestion">
+              <p>Suggested carbon contribution providers offering a range of project types and prices:</p>
+              <ul>
+                <li><a href="https://marketplace.goldstandard.org/collections/all" target="_blank">Gold Standard</a></li>
+                <li><a href="https://www.cooleffect.org/travel-offset" target="_blank">Cool Effect</a></li>
+                <li><a href="https://www.greenfleet.com.au/collections/flight-offsets" target="_blank">Greenfleet</a></li>
+              </ul>
+              <p>
+                See <a href="#methods-carbon-contributions">Methods</a> for more information.
+              </p>
+            </div>
+            <div class="field search-wrap">
+              <label class="visually-hidden" for="emissions-offset-query">...Let's turn this map green!</label>
+              <input
+                id="emissions-offset-query"
+                name="offset-query"
+                placeholder="Search your name…"
+              />
+              <div id="emissions-offset-suggestions" class="suggestions" role="listbox"></div>
+              <!-- <p class="emissions-offset-find-yourself"> -->
+                <!-- <a href="#share-contact-title" data-open-share-contact>Can't find yourself / having issues?</a> -->
+              <!-- </p> -->
+            </div>
+            <div class="field emissions-offset-delegate-field" id="emissions-offset-delegate-field" hidden>
+              <label for="emissions-offset-delegate-id">Your delegate ID (in teawa@conference.nz emails)</label>
+              <input
+                id="emissions-offset-delegate-id"
+                name="delegate-id"
+                inputmode="numeric"
+                pattern="[0-9]{2,5}"
+                title="Enter your 2–5 digit delegate ID from your welcome email"
+                minlength="2"
+                maxlength="5"
+                autocomplete="off"
+                placeholder="e.g. 12 or 123 or 12345"
+              />
+              <!-- <p class="field-hint">Use the ID from your registration confirmation email.</p> -->
+              <p
+                class="delegate-id-error"
+                id="emissions-offset-delegate-error"
+                role="alert"
+                aria-live="assertive"
+                hidden
+              ></p>
+            </div>
+            <p
+              class="status emissions-offset-feedback"
+              id="emissions-offset-status"
+              role="status"
+              aria-live="polite"
+            ></p>
+            <div class="form-actions">
+              <div class="emissions-offset-register-action" id="emissions-offset-register-action">
+                <div
+                  id="emissions-offset-turnstile"
+                  class="emissions-offset-turnstile turnstile-pill"
+                  aria-hidden="true"
+                ></div>
+                <p
+                  class="emissions-offset-turnstile-hint"
+                  id="emissions-offset-turnstile-hint"
+                  hidden
+                >
+                  Complete the check above to enable registration.
+                </p>
+                <button class="btn-primary" type="submit" id="emissions-offset-register">
+                  I've pledged
+                </button>
+              </div>
+              <details class="panel-help-dropdown emissions-offset-id-help" id="emissions-offset-id-help">
+                <summary> Issues with your delegate ID?</summary>
+                <p>
+                  Your delegate ID is a 2-5 digit number provided on most emails from teawa@conference.nz. Due to some privacy measures or organisational quirks, yours might not show up. If you're having any issues registering your offset, please email me at <a href="mailto:rt582@cam.ac.uk">rt582@cam.ac.uk</a>.
+                </p>
+              </details>
+              <!-- <a class="btn-ghost" href="#share-contact-title" data-open-share-contact>Can't find yourself / having issues?</a> -->
+            </div>
+  
+          </form>
+          <div class="emissions-headline-actions toggle-stack" id="emissions-delegate-toggle-wrap">
+            <label class="toggle-field emissions-delegate-toggle">
+              <input type="checkbox" id="include-non-speaking-delegates" checked />
+              <span>Include non-speaking delegates</span>
+            </label>
+            <label class="toggle-field emissions-distance-toggle">
+              <input type="checkbox" id="emissions-distance-toggle" />
+              <span>Show distance and route to ICRS</span>
+            </label>
+          </div>
+          <p class="emissions-meta" id="emissions-meta"></p>
+          <p class="emissions-delegate-note" id="emissions-delegate-note" hidden></p>
+        </div>
+        <div class="emissions-context" id="emissions-context"></div>
+        <div class="emissions-mode-breakdown" id="emissions-mode-breakdown" hidden></div>
+
+        <div class="network-controls entry-form emissions-controls">
+          <div class="segmented">
+            <button type="button" class="segment active" data-emissions-mode="affiliation">
+              By affiliation
+            </button>
+            <button type="button" class="segment" data-emissions-mode="country">
+              By country
+            </button>
+          </div>
+        </div>
+
+        <div class="network-legend" id="emissions-legend"></div>
+
+        <div class="results-header emissions-bar-header">
+          <h3 id="emissions-bar-chart-title">Top emitters</h3>
+          <button
+            type="button"
+            class="emissions-chart-mode-btn"
+            id="emissions-pledgers-toggle"
+            aria-pressed="false"
+          >
+            Top pledgers
+          </button>
+        </div>
+        <div class="results-wrap network-sidebar-scroll">
+          <div class="network-bar-chart" id="emissions-bar-chart"></div>
+          <div class="results-header">
+            <h3 id="emissions-results-title">Emissions breakdown</h3>
+          </div>
+          <div id="emissions-results"></div>
+          <div class="emissions-assumptions" id="emissions-assumptions"></div>
+        </div>
+      </aside>
+
+      <aside class="panel methods-panel" id="methods-panel" hidden>
+        <div class="panel-header">
+          <h2>Methods</h2>
+
+        </div>
+
+        <div class="methods-body">
+          <section class="methods-section">
+            <p>
+              For full details see
+              <a href="https://github.com/orlando-code/explore-icrs-2026/blob/main/pipeline/METHODOLOGY.md" target="_blank" rel="noopener">METHODOLOGY.md</a>.
+            </p>
+          </section>
+
+          <section class="methods-section">
+            <h3>Data sources</h3>
+            <p>
+              Built from the official
+              <a href="https://airdrive.eventsair.com/eventsairaueprod/production-innovators-public/20d10b81d8cd43ad9b0fc3a08e5695f4" target="_blank" rel="noopener">delegate list</a>, the
+              <a href="https://innovators-icrs2026programme.eventsairsite.com/" target="_blank" rel="noopener">online programme</a>, and a list provided by the conference organisers of all the delegates who physically checked in to the conference venue.
+            </p>
+          </section>
+
+          <section class="methods-section">
+            <h3>Map locations</h3>
+            <p>
+              Institute coordinates come from Google geocoding, with manual checks and overrides where needed.
+              If no precise address is available, the pin falls back to a state or country capital such that every
+              attended delegate gets an approximate location.
+            </p>
+          </section>
+
+          <section class="methods-section">
+            <h3>Travel emissions</h3>
+            <p>
+              Return-trip CO₂e to Auckland uses the
+              <a href="https://emissions.dev/" target="_blank" rel="noopener">emissions.dev</a> Travel API from each
+              delegate's primary affiliation. Outside New Zealand (or &gt;400&nbsp;km from Auckland): economy flight.
+              Closer NZ trips: shared car at
+              <a href="https://www.nzta.govt.nz/resources/research/reports/399" target="_blank" rel="noopener">1.54 occupancy</a>.            </p>
+          </section>
+
+          <section class="methods-section" id="methods-carbon-contributions">
+            <h3>Acting on travel emissions</h3>
+            <p>
+              Gathering thousands of scientists for ICRS every four years builds the collaborations and knowledge-sharing with which we can <i><a href="https://www.icrs2026.nz/ target="_blank">"ensure a future for our coral reefs"</a></i>. However, we acknowledge the significant quantities of emissions required to bring together our global community in this way.
+              </p>
+
+              <div style="margin-bottom: 1.1em;" aria-hidden="true"></div>
+              <p>
+                First and foremost, we must focus on decarbonisation via direct emissions reduction. In cases where emissions are unavoidable or have already occurred, we can demonstrate our collective determination to mitigate the environmental damage through contributions towards high-quality, verified efforts to remove greenhouse gases from the atmosphere – ideally while also supporting biodiversity and healthy ecosystem function.
+              </p>
+                        <div style="margin-bottom: 1.1em;" aria-hidden="true"></div>
+
+              <p>
+                Historically, such efforts have been <a href="https://www.science.org/doi/10.1126/science.ade3535" target="_blank">far from perfect</a>, and it is often difficult to identify <a href="https://www.theguardian.com/environment/article/2024/may/30/corporate-carbon-offsets-credits" target="_blank">junk credits</a>. Despite this, high-quality projects do exist, and many universities have carefully-chosen carbon contribution schemes. For example, extensive research by the <a href="https://4c.cst.cam.ac.uk/" target="_blank">University of Cambridge's Centre for Carbon Credits</a> means that the University requires contributions towards a <a href="https://redd.unfccc.int/" target="_blank">REDD+</a> <a href="https://www.nature.com/articles/s41893-023-01256-9" target="_blank">project in Sierra Leone</a>. 
+              </p>
+
+                          <div style="margin-bottom: 1.1em;" aria-hidden="true"></div>
+            
+            <p>
+              The ability of individuals to contribute will vary greatly. We encourage engaging with schemes at your university or institution where possible. And if your institution doesn't have such a scheme, why not? Engaging in such discussions could have cascading positive effects far beyond an individual purchase.
+            </p>
+
+            <p>
+
+            </p>
+            <p>
+              Carbon contributions to a range of projects and prices can be made easily via sites such as <a href="https://www.goldstandard.org/" target="_blank">Gold Standard</a>, <a href="https://www.cooleffect.org/travel-offset" target="_blank">Cool Effect</a>, or <a href="https://www.greenfleet.com.au/collections/flight-offsets" target="_blank">Greenfleet</a>.
+            </p>
+
+<!--               
+                We may contribute towards high-integrity carbon removal – <i>"capturing CO₂ from the atmosphere and storing it durably in geological, terrestrial or ocean reservoirs, or in products (<a href="https://www.stateofcdr.org/asset/State-of-Carbon-Dioxide-Removal-Edition-3_June-2026.pdf" target="_blank">Edwards et al., 2026, p.10</a>)"</i>. We frame this as a 'contribution' rather than an 'offset' (<a href="https://ssir.org/articles/entry/forest-contributions-carbon-offsets#" target="_blank"></a>Blanchard et al., 2024</a>) to re-emphasise the importance of behavioural and systemic reductions of our environmental impacts rather than seeing such purchases as a license to pollute. 
+                            
+              
+              
+              is an . It does not erase the impact of emitting in the first place, and <a href="https://doi.org/10.1038/d41586-025-03313-z" target="_blank">low-quality offsets risk delaying real action</a>. However, when paired with direct efforts to reduce and make travel more worthwhile, investing in high-integrity carbon removal directs vital funding to ecosystem restoration while signalling our acknowledgement of the urgency and need for accountability.
+              
+            </p> -->
+
+            <div style="margin-bottom: 1.1em;" aria-hidden="true"></div>
+            <p>
+            As emphasised throughout ICRS: <i>"We need to get rid of carbon now like there is no tomorrow – because, for many corals, there is no tomorrow"</i>.
+</p>
+                          <div style="margin-bottom: 1.1em;" aria-hidden="true"></div>
+
+              <p><i>Thanks to <a href="https://portfolio.jcu.edu.au/researchers/scott.heron" target="_blank">Scott Heron</a> and <a href="https://anil.recoil.org/" target="_blank">Anil Madhavapeddy</a> for their support and valuable insights</i>.
+              </p>
+                
+            <!-- to mitigating the effect of these emissions. At best, it contributes towards cancelling out emissions; at worst, they waste money and encourage business as usual. But, at the bare minimum, offsetting while acting on the call to arms which reverberated throughout the conference signals that we recognise the impact of our choices, the urgency of the problem, and our commitment to doing what we can to solve it. -->
+            
+          </section>
+
+          <section class="methods-section">
+            <h3>Network and related talks</h3>
+            <p>
+              Edges link people (or affiliations) who share authorship on an ICRS presentation.
+              Non-attending co-authors appear on the graph but are not counted in attendance or emissions.
+              Related presentations use a local-hosted large language model (LLM) to surface similar abstracts for follow-up reading and possible collaborations!
+            </p>
+          </section>
+
+          <section class="methods-section">
+            <h3>Contacts</h3>
+            <p>
+              Public profile links for highly connected speakers were found online and checked by hand.
+              Emails are never bundled into the page: each request needs a
+              <a href="https://www.cloudflare.com/products/turnstile/" target="_blank" rel="noopener">Cloudflare Turnstile</a>
+              check and is rate-limited. Unhappy with your details here?
+              Email <a href="mailto:rt582@cam.ac.uk">rt582@cam.ac.uk</a> and I'll remove them.
+            </p>
+          </section>
+
+          <section class="methods-section">
+            <h3>Limitations</h3>
+            <ul>
+              <!-- <li>The delegate list is a pre-conference snapshot – late withdrawals still count toward emissions (though most would already have held tickets).</li> -->
+              <li>Some geographical pins use capital-city fallbacks when no institute address is known; hundreds of routes are country-level only, which can both under- or over-estimate distance to Auckland.</li>
+              <li>Foreign postings (e.g. Bermuda Institute of Ocean Sciences staff based in New Caledonia) keep the institute name but map and route from the delegate's country (i.e. New Caledonia rather than Bermuda).</li>
+              <li>Flights assume economy class and a single great-circle leg – real multi-leg itineraries, aircraft type, and <a href="https://map.contrails.org/specific-effects/contrails" target="_blank">specific effect of contrails</a> are not modelled, so figures are indicative.</li>
+              <li>Estimates exclude daily local transport, accommodation, and conference operations.</li>
+              <li>Non-speaking delegates appear on the map/emissions views but not in the network unless they are also listed as co-authors.</li>
+              <li>Programme-only names (not on the delegate list) are retained for the network but excluded from attendance and emissions tallies.</li>
+              <li>
+                The delegate count on the 'Map' and 'Emissions' tabs differ because some delegates requested privacy. These are only counted (anonymously) on the 'Emissions' tab.
+              </li>
+              <li>Co-authorship is programme authorship only (talk or poster lists), not wider collaboration, and may have changed between submission and delivery.</li>
+            </ul>
+          </section>
+        </div>
+      </aside>
+
+      <section class="stage stage-stack" id="map-stage">
+        <div class="stage-canvas">
+          <div class="stage-badge" id="stage-badge">Tap or click a point for information</div>
+          <div id="map"></div>
+        </div>
+        <aside class="hover-card stage-detail-panel" id="hover-card" hidden>
+          <div class="map-card-header">
+            <p class="hover-kicker">Affiliation</p>
+            <button
+              type="button"
+              class="map-location-info-btn"
+              id="map-location-info-btn"
+              aria-label="About this map location"
+              aria-expanded="false"
+              aria-controls="map-location-info"
+              hidden
+            >
+              !
+            </button>
+          </div>
+          <div class="map-location-info" id="map-location-info" hidden>
+            <p>
+              Affiliation locations are estimated from institution names and public geocoding
+              services. The pin may be incorrect - please let me know below if so!
+            </p>
+            <div class="map-location-info-actions">
+              <a
+                class="btn-ghost btn-small map-location-fix-link"
+                id="map-location-fix-link"
+                href="mailto:rt582@cam.ac.uk"
+              >
+                Send corrected location
+              </a>
+            </div>
+          </div>
+          <h2 id="hover-affiliation"></h2>
+          <p id="hover-meta" class="hover-meta"></p>
+          <ul id="hover-speakers" class="speaker-list"></ul>
+          <button type="button" class="btn-ghost btn-small network-talk-back" id="map-talk-back" hidden>
+            ← All talks
+          </button>
+          <div id="map-talk-detail" class="network-talk-detail" hidden>
+            <p class="hover-kicker">Presentation details</p>
+            <h3 id="map-talk-title" class="network-talk-title"></h3>
+            <p id="map-talk-format" class="network-talk-format" hidden></p>
+            <div id="map-talk-authors" class="network-talk-authors"></div>
+            <div
+              id="map-talk-abstract"
+              class="network-talk-abstract map-talk-abstract"
+            ></div>
+          </div>
+        </aside>
+      </section>
+
+      <section class="stage stage-stack" id="emissions-stage" hidden>
+        <div class="network-hint-banner" id="emissions-hint-banner" hidden>
+          <div
+            class="network-hint-card"
+            role="dialog"
+            aria-labelledby="emissions-hint-title"
+            aria-modal="true"
+          >
+            <p class="hover-kicker">Carbon contributions</p>
+            <h2 id="emissions-hint-title">Log a carbon contribution</h2>
+            <p class="network-hint-lead">
+              Take action and register it here: let's turn this map from
+              <span class="emissions-hint-swatch emissions-hint-swatch--low">red</span>
+              to
+              <span class="emissions-hint-swatch emissions-hint-swatch--high">green</span>!
+            </p>
+            <ol class="network-hint-steps">
+              <li>
+                Make a carbon contribution via a provider such as
+                <a href="https://marketplace.goldstandard.org/collections/all" target="_blank" rel="noopener"><strong>Gold Standard</strong></a>,
+                <a href="https://www.cooleffect.org/travel-offset" target="_blank" rel="noopener"><strong>Cool Effect</strong></a>, or
+                <a href="https://www.greenfleet.com.au/collections/flight-offsets" target="_blank" rel="noopener"><strong>Greenfleet</strong></a>.
+              </li>
+              <li>Search your name under <strong>Register your pledge</strong>.</li>
+              <li>Enter your <strong>delegate ID</strong> (on official ICRS emails: search <strong>teawa@conference.nz</strong>).</li>
+              <li>
+                Tap <strong>I've pledged</strong> – your country will get just a little greener!
+              </li>
+            </ol>
+            <button type="button" class="btn-primary network-hint-dismiss" id="emissions-hint-dismiss">
+              Got it
+            </button>
+          </div>
+        </div>
+        <div class="stage-canvas">
+          <div class="stage-badge emissions-stage-badge" style="max-width:75%; text-align:left; white-space:normal;">
+            Point size denotes estimated travel CO₂e per affiliation
+          </div>
+   
+          <div id="emissions-map"></div>
+          <div id="emissions-distance-labels" class="emissions-distance-labels" hidden></div>
+          <div id="emissions-line-tooltip" class="line-tooltip" hidden></div>
+        </div>
+        <aside class="hover-card stage-detail-panel" id="emissions-hover-card" hidden>
+          <p class="hover-kicker">Affiliation emissions</p>
+          <h2 id="emissions-hover-affiliation"></h2>
+          <p id="emissions-hover-meta" class="hover-meta"></p>
+        </aside>
+      </section>
+
+      <section class="stage share-stage" id="share-stage" hidden>
+        <div class="share-card-unified">
+          <div class="panel-header">
+            <h2>More</h2>
+            <p>Contact, share link, and about the creator.</p>
+          </div>
+          <div class="share-card-grid">
+            <aside class="share-contact share-contact-col" aria-labelledby="share-contact-title">
+              <p class="hover-kicker">Contact</p>
+              <h3 id="share-contact-title">Orlando Timmerman</h3>
+              <p class="welcome-lead">
+                If you find an error, or have any suggestions or feedback, please contact me at
+                <a href="mailto:rt582@cam.ac.uk">rt582@cam.ac.uk</a>.
+              </p>
+            </aside>
+            <div class="share-qr-col">
+              <p class="hover-kicker">Scan to open</p>
+              <h2 class="share-title">ICRS 2026 Explorer</h2>
+              <canvas id="share-qr" width="280" height="280" aria-label="QR code for site URL"></canvas>
+              <button type="button" id="share-url" class="share-url-btn" aria-label="Copy site link"></button>
+              <p id="share-status" class="status share-status" aria-live="polite" hidden></p>
+            </div>
+            <aside class="share-contact share-about-col" aria-labelledby="share-about-title">
+              <p class="hover-kicker">About the creator</p>
+              <h3 id="share-about-title">Orlando Timmerman</h3>
+              <p class="welcome-lead">
+                I'm Orlando Timmerman, a PhD student at the University of Cambridge, UK. I'm passionate about reefs and data science and believe we
+                can gather, share, and analyse data more effectively. Check out <a href="https://orlando-codes.com/" target="_blank">my site</a> for more!
+              </p>
+            </aside>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <script type="module" src="js/app.js"></script>
+  </body>
+</html>

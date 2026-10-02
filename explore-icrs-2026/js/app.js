@@ -1,0 +1,979 @@
+import { SITE_DATA } from "./locations.js";
+import { TALKS_DATA } from "./talks.js";
+import { TALK_SIMILARITIES } from "./talk-similarities.js";
+import { EMISSIONS_DATA } from "./emissions-data.js";
+import { SPEAKER_PROFILES } from "./speaker-profiles.js";
+import {
+  NON_SPEAKING_DELEGATE_GROUPS,
+  DELEGATE_PERSON_KEY_ALIASES,
+  PERSON_CANONICAL_NAMES,
+} from "./non-speaking-delegates.js";
+import {
+  MAP_EXCLUDED_AFFILIATION_KEYS,
+  MAP_EXCLUDED_NAMES,
+} from "./map-excluded-names.js";
+import {
+  EMISSIONS_EXCLUDED_NAMES,
+  EMISSIONS_EXCLUDED_PERSON_KEYS,
+} from "./emissions-excluded-delegates.js";
+import { createMapView } from "./map.js";
+import { createNetworkView } from "./network.js";
+import { createEmissionsView } from "./emissions-view.js";
+import { createShareView } from "./more.js";
+import {
+  escapeHtml,
+  buildDelegateIndex,
+  applyAffiliationGeocodeOverrides,
+  setMapExclusions,
+  filterEmissionsPool,
+  setEmissionsExclusions,
+  setDelegatePersonKeyAliases,
+  setPersonCanonicalNames,
+  activateSuggestionAt,
+  handleSuggestionListKeydown,
+  countUniqueCountries,
+  countUniqueDelegates,
+} from "./utils.js";
+
+setDelegatePersonKeyAliases(DELEGATE_PERSON_KEY_ALIASES);
+setPersonCanonicalNames(PERSON_CANONICAL_NAMES);
+
+setMapExclusions({
+  names: MAP_EXCLUDED_NAMES,
+  affiliationKeys: MAP_EXCLUDED_AFFILIATION_KEYS,
+});
+
+setEmissionsExclusions({
+  personKeys: EMISSIONS_EXCLUDED_PERSON_KEYS,
+  names: EMISSIONS_EXCLUDED_NAMES,
+});
+
+if (EMISSIONS_DATA.speakers) {
+  EMISSIONS_DATA.speakers = filterEmissionsPool(EMISSIONS_DATA.speakers, {
+    preserveHeadline: true,
+  });
+}
+if (EMISSIONS_DATA.all_delegates) {
+  EMISSIONS_DATA.all_delegates = filterEmissionsPool(EMISSIONS_DATA.all_delegates, {
+    preserveHeadline: true,
+  });
+}
+
+SITE_DATA.locations = applyAffiliationGeocodeOverrides(SITE_DATA.locations);
+if (EMISSIONS_DATA.all_delegates?.locations) {
+  EMISSIONS_DATA.all_delegates.locations = applyAffiliationGeocodeOverrides(
+    EMISSIONS_DATA.all_delegates.locations
+  );
+}
+if (EMISSIONS_DATA.speakers?.locations) {
+  EMISSIONS_DATA.speakers.locations = applyAffiliationGeocodeOverrides(
+    EMISSIONS_DATA.speakers.locations
+  );
+}
+const MAP_SEARCH_KEYWORD_HINT =
+  "Search this keyword in names, affiliations, talks, and abstracts";
+const NETWORK_SEARCH_KEYWORD_HINT =
+  "Search this keyword in names, affiliations, talks, and abstracts";
+
+function searchKeywordSuggestion(query, detail) {
+  const trimmed = String(query ?? "").trim();
+  if (trimmed.length < 2) return null;
+  return {
+    kind: "keyword",
+    label: trimmed,
+    detail,
+    query: trimmed,
+  };
+}
+
+function withKeywordSuggestionFirst(query, items, detail, limit = 8) {
+  const keyword = searchKeywordSuggestion(query, detail);
+  if (!keyword) return items.slice(0, limit);
+  return [keyword, ...items.slice(0, Math.max(0, limit - 1))];
+}
+
+function suggestionButtonClass(item) {
+  const classes = ["suggestion"];
+  if (item.kind === "keyword") classes.push("suggestion--keyword");
+  return classes.join(" ");
+}
+
+let mapSuggestionItems = [];
+let networkSuggestionItems = [];
+
+const locations = SITE_DATA.locations;
+const meta = SITE_DATA.meta;
+const delegateIndex = buildDelegateIndex(NON_SPEAKING_DELEGATE_GROUPS);
+const delegateEmissionsLocations = EMISSIONS_DATA.all_delegates?.locations || [];
+
+const $ = (id) => document.getElementById(id);
+const els = {
+  title: $("site-title"),
+  summary: $("site-summary"),
+  query: $("search-query"),
+  suggestions: $("search-suggestions"),
+  status: $("search-status"),
+  form: $("search-form"),
+  clear: $("btn-clear-search"),
+  stats: $("stats-card"),
+  mapDelegateToggleWrap: $("map-delegate-toggle-wrap"),
+  mapLegend: $("map-legend"),
+  resultsTitle: $("results-title"),
+  results: $("results-list"),
+  hoverCard: $("hover-card"),
+  hoverAffiliation: $("hover-affiliation"),
+  hoverMeta: $("hover-meta"),
+  hoverSpeakers: $("hover-speakers"),
+  mapTalkBack: $("map-talk-back"),
+  mapTalkDetail: $("map-talk-detail"),
+  mapTalkTitle: $("map-talk-title"),
+  mapTalkFormat: $("map-talk-format"),
+  mapTalkAuthors: $("map-talk-authors"),
+  mapTalkAbstract: $("map-talk-abstract"),
+  mapLocationInfoBtn: $("map-location-info-btn"),
+  mapLocationInfo: $("map-location-info"),
+  mapLocationFixLink: $("map-location-fix-link"),
+  connectionsSizeToggle: $("connections-size-toggle"),
+  mapIncludeNonSpeakingDelegates: $("map-include-non-speaking-delegates"),
+  mapPanel: $("map-panel"),
+  networkPanel: $("network-panel"),
+  emissionsPanel: $("emissions-panel"),
+  methodsPanel: $("methods-panel"),
+  mapStage: $("map-stage"),
+  networkStage: $("network-stage"),
+  networkHintBanner: $("network-hint-banner"),
+  networkHintDismiss: $("network-hint-dismiss"),
+  emissionsHintBanner: $("emissions-hint-banner"),
+  emissionsHintDismiss: $("emissions-hint-dismiss"),
+  emissionsStage: $("emissions-stage"),
+  shareStage: $("share-stage"),
+  mapContainer: $("map"),
+  networkSvg: $("network-svg"),
+  networkSummary: $("network-summary"),
+  networkCard: $("network-card"),
+  networkCardTitle: $("network-card-title"),
+  networkCardMeta: $("network-card-meta"),
+  networkCardTalks: $("network-card-talks"),
+  networkTalkBack: $("network-talk-back"),
+  networkTalkDetail: $("network-talk-detail"),
+  networkTalkTitle: $("network-talk-title"),
+  networkTalkFormat: $("network-talk-format"),
+  networkTalkAuthors: $("network-talk-authors"),
+  networkTalkAbstract: $("network-talk-abstract"),
+  networkSimilarTalks: $("network-similar-talks"),
+  networkSimilarStatus: $("network-similar-status"),
+  networkSimilarList: $("network-similar-list"),
+  networkCardContacts: $("network-card-contacts"),
+  networkDataInfoBtn: $("network-data-info-btn"),
+  networkDataInfo: $("network-data-info"),
+  networkDataFixLink: $("network-data-fix-link"),
+  networkDataRemovalLink: $("network-data-removal-link"),
+  resetZoom: $("network-reset-zoom"),
+  clearSelection: $("network-clear-selection"),
+  networkCardClear: $("network-card-clear"),
+  networkCardSlot: $("network-card-slot"),
+  networkSearch: $("network-search-query"),
+  networkSuggestions: $("network-suggestions"),
+  networkSearchStatus: $("network-search-status"),
+  networkSearchBtn: $("network-search-btn"),
+  networkClearSearch: $("network-clear-search"),
+  networkDensity: $("network-density"),
+  networkLegendCoauthorship: $("network-legend-coauthorship"),
+  networkLegendScale: $("network-legend-scale"),
+  networkBarChart: $("network-bar-chart"),
+  networkResults: $("network-results"),
+  networkResultsTitle: $("network-results-title"),
+  shareQr: $("share-qr"),
+  shareUrl: $("share-url"),
+  shareStatus: $("share-status"),
+  emissionsHeadline: $("emissions-headline"),
+  emissionsOffsetForm: $("emissions-offset-form"),
+  emissionsOffsetQuery: $("emissions-offset-query"),
+  emissionsOffsetSuggestions: $("emissions-offset-suggestions"),
+  emissionsOffsetRegister: $("emissions-offset-register"),
+  emissionsOffsetDelegateField: $("emissions-offset-delegate-field"),
+  emissionsOffsetDelegateId: $("emissions-offset-delegate-id"),
+  emissionsOffsetDelegateError: $("emissions-offset-delegate-error"),
+  emissionsOffsetDelegateIdHelp: $("emissions-offset-id-help"),
+  emissionsOffsetStatus: $("emissions-offset-status"),
+  emissionsOffsetTracker: $("emissions-offset-tracker"),
+  emissionsOffsetTrackerFill: $("emissions-offset-tracker-fill"),
+  emissionsOffsetTrackerLabel: $("emissions-offset-tracker-label"),
+  emissionsOffsetChoroplethLegend: $("emissions-offset-choropleth-legend"),
+  emissionsContext: $("emissions-context"),
+  emissionsModeBreakdown: $("emissions-mode-breakdown"),
+  emissionsLegend: $("emissions-legend"),
+  emissionsBarChart: $("emissions-bar-chart"),
+  emissionsBarChartTitle: $("emissions-bar-chart-title"),
+  emissionsResults: $("emissions-results"),
+  emissionsResultsTitle: $("emissions-results-title"),
+  emissionsAssumptions: $("emissions-assumptions"),
+  emissionsMap: $("emissions-map"),
+  emissionsDistanceLabels: $("emissions-distance-labels"),
+  emissionsLineTooltip: $("emissions-line-tooltip"),
+  emissionsHoverCard: $("emissions-hover-card"),
+  emissionsHoverAffiliation: $("emissions-hover-affiliation"),
+  emissionsHoverMeta: $("emissions-hover-meta"),
+  includeNonSpeakingDelegates: $("include-non-speaking-delegates"),
+  emissionsDistanceToggle: $("emissions-distance-toggle"),
+  emissionsPledgersToggle: $("emissions-pledgers-toggle"),
+  tabButtons: [...document.querySelectorAll("[data-tab]")],
+  networkModeButtons: [...document.querySelectorAll("[data-network-mode]")],
+  emissionsModeButtons: [...document.querySelectorAll("[data-emissions-mode]")],
+};
+
+function renderStats() {
+  const mapLocations = mapView?.getLocations?.() || SITE_DATA.locations || [];
+  const countryCount = countUniqueCountries(mapLocations);
+  const delegateCount = countUniqueDelegates(mapLocations);
+  const hasDelegatePool = mapView?.hasDelegatePool || emissionsView?.hasDelegatePool;
+  els.title.textContent = meta.title;
+  els.stats.innerHTML = [
+    `<strong>${delegateCount.toLocaleString()}</strong> delegates displayed`,
+    `<strong>${mapLocations.length.toLocaleString()}</strong> affiliations`,
+    `<strong>${countryCount.toLocaleString()}</strong> unique countries`,
+  ].join(" · ");
+  if (els.mapDelegateToggleWrap) {
+    els.mapDelegateToggleWrap.hidden = !hasDelegatePool;
+  }
+}
+
+function renderResults({
+  searchQuery,
+  matchedIds,
+  selectedId,
+  selectLocation,
+  locationList = locations,
+}) {
+  const searching = Boolean(searchQuery);
+  const ordered = [...locationList].sort((a, b) => {
+    const aMatch = matchedIds.has(a.id) ? 0 : 1;
+    const bMatch = matchedIds.has(b.id) ? 0 : 1;
+    if (aMatch !== bMatch) return aMatch - bMatch;
+    if (b.speaker_count !== a.speaker_count) return b.speaker_count - a.speaker_count;
+    return a.affiliation.localeCompare(b.affiliation, undefined, { sensitivity: "base" });
+  });
+
+  const visible = searching ? ordered.filter((location) => matchedIds.has(location.id)) : ordered;
+  els.resultsTitle.textContent = searching
+    ? `${visible.length.toLocaleString()} matching location${visible.length === 1 ? "" : "s"}`
+    : "All locations";
+
+  els.results.innerHTML = "";
+  if (!visible.length) {
+    els.results.innerHTML = `<p class="status">No locations match that search.</p>`;
+    return;
+  }
+
+  for (const location of visible.slice(0, 200)) {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "result-item";
+    btn.dataset.id = location.id;
+    btn.classList.toggle("selected", location.id === selectedId);
+    btn.classList.toggle("dimmed", searching && !matchedIds.has(location.id));
+    const metaText = location.delegate_only
+      ? `${location.speaker_details?.length || location.speaker_count} non-speaking delegate${(location.speaker_details?.length || location.speaker_count) === 1 ? "" : "s"}`
+      : (() => {
+          const nonSpeaking = location.non_speaking_delegate_count || 0;
+          const speakers = Math.max(0, location.speaker_count - nonSpeaking);
+          const peopleLabel = nonSpeaking
+            ? `${speakers} speaker${speakers === 1 ? "" : "s"} · ${nonSpeaking} non-speaking`
+            : `${location.speaker_count} delegate${location.speaker_count === 1 ? "" : "s"}`;
+          return `${peopleLabel} · On author lists of ${location.talk_count} talk${location.talk_count === 1 ? "" : "s"} · ${(location.connection_count || 0).toLocaleString()} talk${location.connection_count === 1 ? "" : "s"}`;
+        })();
+    btn.innerHTML = `
+      <div class="affiliation">${escapeHtml(location.affiliation)}</div>
+      <div class="meta">${metaText}</div>
+    `;
+    btn.addEventListener("click", () => selectLocation(location.id));
+    els.results.appendChild(btn);
+  }
+
+  if (visible.length > 200) {
+    const note = document.createElement("p");
+    note.className = "status";
+    note.textContent = `Showing first 200 of ${visible.length.toLocaleString()} matches. Refine your search to narrow further.`;
+    els.results.appendChild(note);
+  }
+}
+
+function setStatus(message, isError = false) {
+  els.status.textContent = message || "";
+  els.status.classList.toggle("error", isError);
+}
+
+function ensureNetworkIndividualMode() {
+  if (networkView.getMode() === "individual") return;
+  els.networkModeButtons.forEach((button) => {
+    button.classList.toggle("active", button.dataset.networkMode === "individual");
+  });
+  networkView.setMode("individual");
+}
+
+function showPersonInNetwork(name, personKey = "") {
+  setTab("network");
+  ensureNetworkIndividualMode();
+  const nodeId = networkView.findNodeIdByName(name, personKey);
+  if (nodeId) networkView.selectNode(nodeId);
+}
+
+function showAffiliationOnMap(locationId, speakerName) {
+  setTab("map");
+  if (locationId) {
+    mapView.selectLocation(locationId, {
+      fly: true,
+      speakerName: speakerName || undefined,
+    });
+  }
+}
+
+const mapView = createMapView(
+  SITE_DATA,
+  {
+    mapContainer: els.mapContainer,
+    hoverCard: els.hoverCard,
+    hoverAffiliation: els.hoverAffiliation,
+    hoverMeta: els.hoverMeta,
+    hoverSpeakers: els.hoverSpeakers,
+    talkBack: els.mapTalkBack,
+    talkDetail: els.mapTalkDetail,
+    talkTitle: els.mapTalkTitle,
+    talkFormat: els.mapTalkFormat,
+    talkAuthors: els.mapTalkAuthors,
+    talkAbstract: els.mapTalkAbstract,
+    talksData: TALKS_DATA,
+    locationInfoBtn: els.mapLocationInfoBtn,
+    locationInfo: els.mapLocationInfo,
+    locationFixLink: els.mapLocationFixLink,
+    legend: els.mapLegend,
+    setStatus,
+    renderResults,
+    onShowInNetwork: showPersonInNetwork,
+  },
+  { delegateEmissionsLocations, delegateIndex }
+);
+
+const networkView = createNetworkView(SITE_DATA, {
+  stage: els.networkStage,
+  networkSvg: els.networkSvg,
+  summary: els.networkSummary,
+  card: els.networkCard,
+  cardTitle: els.networkCardTitle,
+  cardMeta: els.networkCardMeta,
+  cardTalks: els.networkCardTalks,
+  talkBack: els.networkTalkBack,
+  talkDetail: els.networkTalkDetail,
+  talkTitle: els.networkTalkTitle,
+  talkFormat: els.networkTalkFormat,
+  talkAuthors: els.networkTalkAuthors,
+  talkAbstract: els.networkTalkAbstract,
+  similarTalks: els.networkSimilarTalks,
+  similarStatus: els.networkSimilarStatus,
+  similarList: els.networkSimilarList,
+  talksData: TALKS_DATA,
+  similaritiesData: TALK_SIMILARITIES,
+  cardContacts: els.networkCardContacts,
+  dataInfoBtn: els.networkDataInfoBtn,
+  dataInfo: els.networkDataInfo,
+  dataFixLink: els.networkDataFixLink,
+  dataRemovalLink: els.networkDataRemovalLink,
+  resultsWrap: $("network-results-wrap"),
+  speakerProfiles: SPEAKER_PROFILES,
+  resetZoom: els.resetZoom,
+  clearSelection: els.clearSelection,
+  cardClear: els.networkCardClear,
+  cardSlot: els.networkCardSlot,
+  legendCoauthorship: els.networkLegendCoauthorship,
+  legendScale: els.networkLegendScale,
+  barChart: els.networkBarChart,
+  results: els.networkResults,
+  resultsTitle: els.networkResultsTitle,
+  searchInput: els.networkSearch,
+  searchStatus: els.networkSearchStatus,
+  onShowOnMap: showAffiliationOnMap,
+});
+
+const shareView = createShareView(SITE_DATA, {
+  qrCanvas: els.shareQr,
+  url: els.shareUrl,
+  status: els.shareStatus,
+});
+
+const emissionsView = createEmissionsView(EMISSIONS_DATA, SITE_DATA, {
+  mapContainer: els.emissionsMap,
+  distanceLabels: els.emissionsDistanceLabels,
+  lineTooltip: els.emissionsLineTooltip,
+  headline: els.emissionsHeadline,
+  headlineTotal: $("emissions-total"),
+  headlineAssumption: $("emissions-assumption"),
+  headlineMeta: $("emissions-meta"),
+  headlineDelegateNote: $("emissions-delegate-note"),
+  delegateToggleWrap: $("emissions-delegate-toggle-wrap"),
+  includeNonSpeakersToggle: els.includeNonSpeakingDelegates,
+  offsetForm: els.emissionsOffsetForm,
+  offsetQuery: els.emissionsOffsetQuery,
+  offsetSuggestions: els.emissionsOffsetSuggestions,
+  offsetRegister: els.emissionsOffsetRegister,
+  offsetDelegateField: els.emissionsOffsetDelegateField,
+  offsetDelegateId: els.emissionsOffsetDelegateId,
+  offsetDelegateError: els.emissionsOffsetDelegateError,
+  offsetDelegateIdHelp: els.emissionsOffsetDelegateIdHelp,
+  offsetStatus: els.emissionsOffsetStatus,
+  offsetTracker: els.emissionsOffsetTracker,
+  offsetTrackerFill: els.emissionsOffsetTrackerFill,
+  offsetTrackerLabel: els.emissionsOffsetTrackerLabel,
+  offsetChoroplethLegend: els.emissionsOffsetChoroplethLegend,
+  context: els.emissionsContext,
+  modeBreakdown: els.emissionsModeBreakdown,
+  legend: els.emissionsLegend,
+  barChart: els.emissionsBarChart,
+  barChartTitle: els.emissionsBarChartTitle,
+  pledgersToggle: els.emissionsPledgersToggle,
+  results: els.emissionsResults,
+  resultsTitle: els.emissionsResultsTitle,
+  assumptions: els.emissionsAssumptions,
+  hoverCard: els.emissionsHoverCard,
+  hoverAffiliation: els.emissionsHoverAffiliation,
+  hoverMeta: els.emissionsHoverMeta,
+}, { delegateGroups: NON_SPEAKING_DELEGATE_GROUPS });
+
+let activeTab = "map";
+
+const layout = document.querySelector(".layout");
+const TAB_STORAGE_KEY = "icrs-active-tab";
+const VALID_TABS = new Set(["map", "network", "emissions", "methods", "share"]);
+const NETWORK_HINT_STORAGE_KEY = "icrs-network-hint-dismissed";
+const EMISSIONS_HINT_STORAGE_KEY = "icrs-emissions-hint-dismissed";
+
+function getStoredTab() {
+  try {
+    const stored = localStorage.getItem(TAB_STORAGE_KEY);
+    return VALID_TABS.has(stored) ? stored : "map";
+  } catch {
+    return "map";
+  }
+}
+
+function storeTab(tab) {
+  try {
+    localStorage.setItem(TAB_STORAGE_KEY, tab);
+  } catch {
+    /* private browsing */
+  }
+}
+
+function isNetworkHintDismissed() {
+  try {
+    return Boolean(localStorage.getItem(NETWORK_HINT_STORAGE_KEY));
+  } catch {
+    return false;
+  }
+}
+
+function dismissNetworkHint() {
+  if (els.networkHintBanner) {
+    els.networkHintBanner.hidden = true;
+  }
+  try {
+    localStorage.setItem(NETWORK_HINT_STORAGE_KEY, "1");
+  } catch {
+    /* private browsing */
+  }
+}
+
+function showNetworkHintIfNeeded() {
+  if (!els.networkHintBanner || isNetworkHintDismissed()) return;
+  els.networkHintBanner.hidden = false;
+}
+
+function isEmissionsHintDismissed() {
+  try {
+    return Boolean(localStorage.getItem(EMISSIONS_HINT_STORAGE_KEY));
+  } catch {
+    return false;
+  }
+}
+
+function dismissEmissionsHint() {
+  if (els.emissionsHintBanner) {
+    els.emissionsHintBanner.hidden = true;
+  }
+  try {
+    localStorage.setItem(EMISSIONS_HINT_STORAGE_KEY, "1");
+  } catch {
+    /* private browsing */
+  }
+}
+
+function showEmissionsHintIfNeeded() {
+  if (!els.emissionsHintBanner || isEmissionsHintDismissed()) return;
+  els.emissionsHintBanner.hidden = false;
+}
+
+function tabForHash(hash) {
+  if (!hash) return null;
+  if (VALID_TABS.has(hash)) return hash;
+  if (hash === "methods-panel" || hash === "methods-offsetting" || hash.startsWith("methods-")) {
+    return "methods";
+  }
+  if (hash === "share-contact-title" || hash.startsWith("share-")) {
+    return "share";
+  }
+  return null;
+}
+
+function navigateToHash({ scroll = true } = {}) {
+  const hash = decodeURIComponent(location.hash.slice(1));
+  const tab = tabForHash(hash);
+  if (tab) setTab(tab);
+  if (!hash || !scroll) return;
+
+  requestAnimationFrame(() => {
+    const target =
+      document.getElementById(hash) || (hash === "methods-panel" ? els.methodsPanel : null);
+    target?.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+}
+
+function openShareContact(event) {
+  event?.preventDefault?.();
+  setTab("share");
+  requestAnimationFrame(() => {
+    document.getElementById("share-contact-title")?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  });
+}
+
+function setTab(tab) {
+  if (!VALID_TABS.has(tab)) tab = "map";
+  activeTab = tab;
+  storeTab(tab);
+  els.tabButtons.forEach((button) => {
+    button.classList.toggle("active", button.dataset.tab === tab);
+  });
+  if (els.mapPanel) els.mapPanel.hidden = tab !== "map";
+  if (els.networkPanel) els.networkPanel.hidden = tab !== "network";
+  if (els.emissionsPanel) els.emissionsPanel.hidden = tab !== "emissions";
+  if (els.methodsPanel) els.methodsPanel.hidden = tab !== "methods";
+  if (els.mapStage) els.mapStage.hidden = tab !== "map";
+  if (els.networkStage) els.networkStage.hidden = tab !== "network";
+  if (els.emissionsStage) els.emissionsStage.hidden = tab !== "emissions";
+  if (els.shareStage) els.shareStage.hidden = tab !== "share";
+  layout?.classList.toggle("layout-methods", tab === "methods");
+  layout?.classList.toggle("layout-share", tab === "share");
+  if (tab === "map") {
+    mapView.resize();
+  } else if (tab === "network") {
+    requestAnimationFrame(() => networkView.resize());
+    showNetworkHintIfNeeded();
+  } else if (tab === "emissions") {
+    requestAnimationFrame(() => {
+      emissionsView.resize();
+      emissionsView.refreshMap?.();
+    });
+    showEmissionsHintIfNeeded();
+  } else if (tab === "share") {
+    shareView.render();
+  }
+}
+
+els.tabButtons.forEach((button) => {
+  button.addEventListener("click", () => setTab(button.dataset.tab));
+});
+
+document.querySelectorAll("[data-open-share-contact]").forEach((link) => {
+  link.addEventListener("click", openShareContact);
+});
+
+els.networkModeButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    els.networkModeButtons.forEach((item) => {
+      item.classList.toggle("active", item === button);
+    });
+    networkView.setMode(button.dataset.networkMode);
+  });
+});
+
+els.emissionsModeButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    els.emissionsModeButtons.forEach((item) => {
+      item.classList.toggle("active", item === button);
+    });
+    emissionsView.setRankMode(button.dataset.emissionsMode);
+  });
+});
+
+if (els.emissionsDistanceToggle) {
+  els.emissionsDistanceToggle.addEventListener("change", (event) => {
+    emissionsView.setDistanceMode(event.target.checked);
+  });
+}
+
+if (els.emissionsPledgersToggle) {
+  els.emissionsPledgersToggle.addEventListener("click", () => {
+    const enabled = els.emissionsPledgersToggle.getAttribute("aria-pressed") !== "true";
+    emissionsView.setTopPledgersMode(enabled);
+  });
+}
+
+const hasDelegatePool = emissionsView.hasDelegatePool || mapView.hasDelegatePool;
+
+function setIncludeNonSpeakingDelegates(enabled) {
+  const include = Boolean(enabled);
+  if (els.includeNonSpeakingDelegates) {
+    els.includeNonSpeakingDelegates.checked = include;
+  }
+  if (els.mapIncludeNonSpeakingDelegates) {
+    els.mapIncludeNonSpeakingDelegates.checked = include;
+  }
+  emissionsView.setIncludeNonSpeakers(include);
+  mapView.setIncludeNonSpeakers(include);
+  renderStats();
+}
+
+if (els.includeNonSpeakingDelegates) {
+  els.includeNonSpeakingDelegates.addEventListener("change", (event) => {
+    setIncludeNonSpeakingDelegates(event.target.checked);
+  });
+}
+
+if (els.mapIncludeNonSpeakingDelegates) {
+  els.mapIncludeNonSpeakingDelegates.disabled = !hasDelegatePool;
+  els.mapIncludeNonSpeakingDelegates.addEventListener("change", (event) => {
+    setIncludeNonSpeakingDelegates(event.target.checked);
+  });
+}
+
+if (hasDelegatePool) {
+  setIncludeNonSpeakingDelegates(true);
+}
+
+if (els.connectionsSizeToggle) {
+  els.connectionsSizeToggle.addEventListener("change", (event) => {
+    const enabled = mapView.setConnectionsSize(event.target.checked);
+    els.connectionsSizeToggle.checked = enabled;
+  });
+}
+
+function closeMapSuggestions() {
+  els.suggestions?.classList.remove("open");
+}
+
+function closeNetworkSuggestions() {
+  els.networkSuggestions?.classList.remove("open");
+}
+
+function updateMapSearch(query) {
+  if (document.activeElement === els.query) {
+    renderSuggestions(mapView.buildSuggestions(query), query);
+  }
+  mapView.applySearch(query, { fly: false });
+}
+
+function finalizeMapSearch(query) {
+  clearTimeout(mapSearchTimer);
+  mapView.applySearch(query, { fly: false });
+  closeMapSuggestions();
+}
+
+function updateNetworkSearch(query) {
+  if (document.activeElement === els.networkSearch) {
+    renderNetworkSuggestions(networkView.buildSuggestions(query), query);
+  }
+  networkView.previewSearch(query);
+}
+
+function finalizeNetworkSearch(query) {
+  clearTimeout(networkSearchTimer);
+  networkView.previewSearch(query);
+  closeNetworkSuggestions();
+}
+
+let mapSearchTimer = null;
+els.query?.addEventListener("input", () => {
+  const query = els.query.value;
+  clearTimeout(mapSearchTimer);
+  mapSearchTimer = setTimeout(() => updateMapSearch(query), 180);
+});
+
+els.query?.addEventListener("focus", () => {
+  const query = els.query?.value ?? "";
+  if (query.trim().length >= 2) {
+    renderSuggestions(mapView.buildSuggestions(query), query);
+  }
+});
+
+function applyMapSuggestion(item) {
+  els.query.value = item.query;
+  if (item.kind === "keyword") {
+    finalizeMapSearch(item.query);
+    return;
+  }
+  clearTimeout(mapSearchTimer);
+  mapView.applySearch(item.query);
+  if (item.locationId) {
+    mapView.selectLocation(item.locationId, {
+      speakerName: item.speakerName,
+      personKey: item.person_key,
+    });
+  }
+  closeMapSuggestions();
+}
+
+function applyNetworkSuggestion(item) {
+  els.networkSearch.value = item.query;
+  if (item.kind === "keyword") {
+    finalizeNetworkSearch(item.query);
+    return;
+  }
+  clearTimeout(networkSearchTimer);
+  networkView.applySearch(item.query);
+  networkView.selectNode(item.nodeId);
+  closeNetworkSuggestions();
+}
+
+function renderSuggestions(items, query = "") {
+  const suggestions = withKeywordSuggestionFirst(query, items, MAP_SEARCH_KEYWORD_HINT);
+  mapSuggestionItems = suggestions;
+  els.suggestions.innerHTML = "";
+  if (!suggestions.length) {
+    els.suggestions.classList.remove("open");
+    return;
+  }
+
+  suggestions.forEach((item) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = suggestionButtonClass(item);
+    btn.innerHTML = `${escapeHtml(item.label)}<small>${escapeHtml(item.detail)}</small>`;
+    btn.addEventListener("mousedown", (event) => {
+      event.preventDefault();
+      applyMapSuggestion(item);
+    });
+    els.suggestions.appendChild(btn);
+  });
+  els.suggestions.classList.add("open");
+  activateSuggestionAt(els.suggestions, 0);
+}
+
+document.addEventListener("click", (event) => {
+  if (!els.suggestions.contains(event.target) && event.target !== els.query) {
+    closeMapSuggestions();
+  }
+});
+
+els.form?.addEventListener("submit", (event) => {
+  event.preventDefault();
+  finalizeMapSearch(els.query.value);
+});
+
+els.query?.addEventListener("keydown", (event) => {
+  if (
+    handleSuggestionListKeydown(event, {
+      container: els.suggestions,
+      onSelect: (button) => {
+        const index = [...els.suggestions.querySelectorAll(".suggestion")].indexOf(button);
+        if (mapSuggestionItems[index]) applyMapSuggestion(mapSuggestionItems[index]);
+      },
+      onClose: closeMapSuggestions,
+    })
+  ) {
+    return;
+  }
+  if (event.key === "Enter") {
+    event.preventDefault();
+    finalizeMapSearch(els.query.value);
+  }
+});
+
+els.clear.addEventListener("click", () => {
+  els.query.value = "";
+  finalizeMapSearch("");
+});
+
+let networkSearchTimer = null;
+els.networkSearch?.addEventListener("input", () => {
+  const query = els.networkSearch.value;
+  clearTimeout(networkSearchTimer);
+  networkSearchTimer = setTimeout(() => updateNetworkSearch(query), 180);
+});
+
+els.networkSearch?.addEventListener("focus", () => {
+  const query = els.networkSearch?.value ?? "";
+  if (query.trim().length >= 2) {
+    renderNetworkSuggestions(networkView.buildSuggestions(query), query);
+  }
+});
+
+els.networkSearch?.addEventListener("keydown", (event) => {
+  if (
+    handleSuggestionListKeydown(event, {
+      container: els.networkSuggestions,
+      onSelect: (button) => {
+        const index = [...els.networkSuggestions.querySelectorAll(".suggestion")].indexOf(
+          button
+        );
+        if (networkSuggestionItems[index]) applyNetworkSuggestion(networkSuggestionItems[index]);
+      },
+      onClose: closeNetworkSuggestions,
+    })
+  ) {
+    return;
+  }
+  if (event.key === "Enter") {
+    event.preventDefault();
+    finalizeNetworkSearch(els.networkSearch.value);
+  }
+});
+
+els.networkSearchBtn?.addEventListener("click", () => {
+  finalizeNetworkSearch(els.networkSearch.value);
+});
+
+els.networkDensity?.addEventListener("change", () => {
+  networkView.setNodeLimit(els.networkDensity.value);
+});
+
+els.networkClearSearch?.addEventListener("click", () => {
+  els.networkSearch.value = "";
+  clearTimeout(networkSearchTimer);
+  networkView.applySearch("");
+  closeNetworkSuggestions();
+});
+
+function renderNetworkSuggestions(items, query = "") {
+  if (!els.networkSuggestions) return;
+  const suggestions = withKeywordSuggestionFirst(query, items, NETWORK_SEARCH_KEYWORD_HINT);
+  networkSuggestionItems = suggestions;
+  els.networkSuggestions.innerHTML = "";
+  if (!suggestions.length) {
+    els.networkSuggestions.classList.remove("open");
+    return;
+  }
+
+  suggestions.forEach((item) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = suggestionButtonClass(item);
+    btn.innerHTML = `${escapeHtml(item.label)}<small>${escapeHtml(item.detail)}</small>`;
+    btn.addEventListener("mousedown", (event) => {
+      event.preventDefault();
+      applyNetworkSuggestion(item);
+    });
+    els.networkSuggestions.appendChild(btn);
+  });
+  els.networkSuggestions.classList.add("open");
+  activateSuggestionAt(els.networkSuggestions, 0);
+}
+
+document.addEventListener("click", (event) => {
+  if (
+    els.networkSuggestions &&
+    !els.networkSuggestions.contains(event.target) &&
+    event.target !== els.networkSearch
+  ) {
+    closeNetworkSuggestions();
+  }
+});
+
+window.addEventListener("resize", () => {
+  if (activeTab === "map") mapView.resize();
+  else if (activeTab === "network") networkView.resize();
+  else if (activeTab === "emissions") emissionsView.resize();
+  else if (activeTab === "share") shareView.render();
+});
+
+renderStats();
+renderResults({
+  searchQuery: "",
+  matchedIds: mapView.getMatchedIds(),
+  selectedId: null,
+  selectLocation: mapView.selectLocation,
+  locationList: mapView.getLocations(),
+});
+mapView.applySearch("", { fly: false });
+
+const initialSearchQuery = new URLSearchParams(location.search).get("query");
+if (initialSearchQuery && els.query) {
+  els.query.value = initialSearchQuery;
+  mapView.applySearch(initialSearchQuery);
+  const cleanUrl = `${location.pathname}${location.hash}`;
+  history.replaceState(null, "", cleanUrl);
+}
+
+setTab(location.hash ? tabForHash(decodeURIComponent(location.hash.slice(1))) || getStoredTab() : getStoredTab());
+if (location.hash) navigateToHash();
+window.addEventListener("hashchange", () => navigateToHash());
+
+const WELCOME_STORAGE_KEY = "icrs-intro-dismissed";
+
+function initWelcome() {
+  const overlay = $("welcome-overlay");
+  const dismiss = $("welcome-dismiss");
+  if (!overlay || !dismiss) return;
+
+  const closeWelcome = () => {
+    overlay.hidden = true;
+    try {
+      localStorage.setItem(WELCOME_STORAGE_KEY, "1");
+    } catch {
+      /* private browsing */
+    }
+  };
+
+  let dismissed = false;
+  try {
+    dismissed = Boolean(localStorage.getItem(WELCOME_STORAGE_KEY));
+  } catch {
+    dismissed = false;
+  }
+
+  if (!dismissed) {
+    overlay.hidden = false;
+  }
+
+  dismiss.addEventListener("click", closeWelcome);
+  overlay.addEventListener("click", (event) => {
+    if (event.target === overlay) closeWelcome();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !overlay.hidden) closeWelcome();
+  });
+}
+
+initWelcome();
+
+function initNetworkHint() {
+  if (!els.networkHintBanner || !els.networkHintDismiss) return;
+
+  els.networkHintDismiss.addEventListener("click", dismissNetworkHint);
+  els.networkHintBanner.addEventListener("click", (event) => {
+    if (event.target === els.networkHintBanner) dismissNetworkHint();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && els.networkHintBanner && !els.networkHintBanner.hidden) {
+      dismissNetworkHint();
+    }
+  });
+}
+
+initNetworkHint();
+
+function initEmissionsHint() {
+  if (!els.emissionsHintBanner || !els.emissionsHintDismiss) return;
+
+  els.emissionsHintDismiss.addEventListener("click", dismissEmissionsHint);
+  els.emissionsHintBanner.addEventListener("click", (event) => {
+    if (event.target === els.emissionsHintBanner) dismissEmissionsHint();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && els.emissionsHintBanner && !els.emissionsHintBanner.hidden) {
+      dismissEmissionsHint();
+    }
+  });
+}
+
+initEmissionsHint();
