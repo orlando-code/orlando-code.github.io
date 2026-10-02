@@ -32,8 +32,9 @@ export default function CVPage() {
               </p>
             </div>
             <p className="text-sm text-gray-600 md:text-right md:border-l md:border-gray-100 md:pl-8 pt-6 border-t border-gray-100 md:pt-0 md:border-t-0">
+              Please {' '}
               <Link href="/contact" className="text-primary-600 hover:text-primary-700 font-medium">
-                Contact me
+                contact me
               </Link>{' '}
               for a customised version of this CV.
             </p>
@@ -45,7 +46,7 @@ export default function CVPage() {
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Summary</h2>
           <p className="text-gray-700 leading-relaxed">
             Third-year PhD student with extensive experience applying data science and machine learning to
-            interdisciplinary areas of the physical sciences, including climate, remote sensing, and marine ecology. A particular focus on making data more accessible, engaging, and impactful.
+            interdisciplinary areas of the physical sciences, including climate, remote sensing, and marine ecology. And tackling the question: how can we make data more accessible, engaging, and impactful?
             {/* Strong project management and interpersonal skills across academic and industry settings. Driven to
             produce research that is robust, accessible, and has real-world application and impact. */}
           </p>
@@ -104,8 +105,7 @@ export default function CVPage() {
                 I study how coral reef ecosystems respond to climate change using data science and machine learning:
                 quantitative meta-analysis to forecast changes in calcification rates; species distribution models to
                 project global reef range shifts; and Bayesian methods to forecast coral cover change and associated
-                economic impacts. My work focuses on shallow-water tropical reefs to improve understanding, interrogate the
-                limits of current datasets, and guide conservation efforts.
+                economic impacts; and intercomparisons of remote sensing datasets to meaningfully quantify spatial uncertainty.
               </p>
             </div>
 
@@ -113,17 +113,54 @@ export default function CVPage() {
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
               <h2 className="text-2xl font-bold text-gray-900 mb-6">Employment & Teaching Experience</h2>
               <div className="space-y-8">
+
+                <div className="border-l-4 border-primary-200 pl-6">
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-2">
+                    <h3 className="text-xl font-semibold text-gray-900">Visiting Researcher</h3>
+                    <span className="text-gray-500 text-sm mt-1 sm:mt-0">Autum 2026</span>
+                  </div>
+                  <p className="text-primary-600 font-medium mb-3">
+                    <a href="https://www.jcu.edu.au/" className="text-primary-600 hover:underline">James Cook University</a>, Australia
+                  </p>
+             
+                  <p className="text-gray-700">
+                    Worked with <a href="https://portfolio.jcu.edu.au/researchers/scott.heron" className="text-primary-600 hover:underline">Prof. Scott Heron</a> and <a href="https://www.researchgate.net/profile/Blake-Spady" className="text-primary-600 hover:underline">Dr Blake Spady</a> to quantify the uncertainty in sea surface temperature products and its downstream impact on reef ecology analyses.
+               
+               
+                  </p>
+                </div>
+
+                <div className="border-l-4 border-primary-200 pl-6">
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-2">
+                    <h3 className="text-xl font-semibold text-gray-900">Visiting Researcher</h3>
+                    <span className="text-gray-500 text-sm mt-1 sm:mt-0">Summer 2026</span>
+                  </div>
+                  <p className="text-primary-600 font-medium mb-3">
+                    <a href="https://www.wgtn.ac.nz/" className="text-primary-600 hover:underline">Te Herenga Waka Victoria University of Wellington</a>, New Zealand
+                  </p>
+             
+                  {/* TODO: add URLS for BIOS, JCU, Scott, Blake, ADC Theatre, David Finnigan */}
+                  <p className="text-gray-700">
+                    Visiting collaborators in New Zealand to apply Bayesian methods to a global meta-analysis of benthic calcification rates. 
+                  </p>
+                </div>
+
                 <div className="border-l-4 border-primary-200 pl-6">
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-2">
                     <h3 className="text-xl font-semibold text-gray-900">Research Internship & <a href="https://www.aaus.org/AAUS/AAUS/Certification_Program.aspx" className="text-primary-600 hover:underline">AAUS Scientific Diver</a></h3>
                     <span className="text-gray-500 text-sm mt-1 sm:mt-0">Summer 2024</span>
                   </div>
-                  <p className="text-primary-600 font-medium mb-3">Bermuda Institute of Ocean Sciences</p>
+                  <p className="text-primary-600 font-medium mb-3">
+                    <a href="https://bios.asu.edu/" className="text-primary-600 hover:underline">Bermuda Institute of Ocean Sciences</a>
+                  </p>
+             
                   <p className="text-gray-700">
-                    Applied physical and machine learning models to map fractional coral–algal–abiotic cover of
+                    Applied physical and machine learning models to map fractional coral-algal-abiotic cover of
                     shallow-water benthic ecosystems using in-situ orthomosaics and high-resolution hyperspectral
                     aerial imagery.
                   </p>
+                  <div className="h-4" /> {/* Add a little vertical space */}
+             
                   <p className="text-gray-700">Qualified <a href="https://www.aaus.org/AAUS/AAUS/Certification_Program.aspx" className="text-primary-600 hover:underline">American Academy of Underwater Sciences (AAUS) Scientific Diver</a>.</p>
                 </div>
 
@@ -131,17 +168,30 @@ export default function CVPage() {
 
                 <div className="border-l-4 border-primary-200 pl-6">
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">Open-source package maintainer</h3>
-                  <p className="text-primary-600 font-medium mb-3">esgpull-plus, cdo-toolkit, & py-seaaroundus</p>
+                  <p className="text-primary-600 font-medium mb-3"><a href="https://pypi.org/project/esgpull-plus/" className="text-primary-600 hover:underline">esgpull-plus</a>, <a href="https://pypi.org/project/cdo-toolkit/" className="text-primary-600 hover:underline">cdo-toolkit</a>, & <a href="https://github.com/orlandotimmerman/py-seaaroundus" className="text-primary-600 hover:underline">py-seaaroundus</a></p>
                   <p className="text-gray-700">
-                    Author and maintainer of Python libraries for Earth System Grid Federation (ESGF) downloads and Coupled Model Intercomparison Project (CMIP6) NetCDF processing
-                    (<a href="https://pypi.org/project/esgpull-plus/" className="text-primary-600 hover:underline">esgpull-plus</a>, <a href="https://pypi.org/project/cdo-toolkit/" className="text-primary-600 hover:underline">cdo-toolkit</a>), and programmatic access to <a href="https://www.seaaroundus.org/" className="text-primary-600 hover:underline">Sea Around Us</a> fisheries data
+                    Author and maintainer of Python libraries for downloading Earth System Grid Federation (ESGF) Coupled Model Intercomparison Project (CMIP6) data
+                    (<a href="https://pypi.org/project/esgpull-plus/" className="text-primary-600 hover:underline">esgpull-plus</a>), 4D netcdf processing (<a href="https://pypi.org/project/cdo-toolkit/" className="text-primary-600 hover:underline">cdo-toolkit</a>), and programmatic access to <a href="https://www.seaaroundus.org/" className="text-primary-600 hover:underline">Sea Around Us</a> fisheries data
                     (<a href="https://github.com/orlandotimmerman/py-seaaroundus" className="text-primary-600 hover:underline">py-seaaroundus</a>).
                   </p>
                 </div>
 
+                {/* TODO: add in the journal title */}
+
+                {/* <div className="border-l-4 border-primary-200 pl-6">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Reviewer</h3>
+                  <p className="text-primary-600 font-medium mb-3">Journal title goes here</p>
+                  <p className="text-gray-700">
+                    Invited reviewer for papers relating to coral reef calcification and carbonate budgets.
+                  </p>
+                </div> */}
+
                 <div className="border-l-4 border-primary-200 pl-6">
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">Supervisor</h3>
-                  <p className="text-primary-600 font-medium mb-2">University of Cambridge · Natural Sciences Tripos</p>
+                  <p className="text-primary-600 font-medium mb-2">
+                    <a href="https://www.cam.ac.uk/" className="text-primary-600 hover:underline">University of Cambridge</a> · Natural Sciences Tripos
+                  </p>
+             
                   <p className="text-gray-700">
                     Quantitative Environmental Science (second-year undergraduate) and Data Science and Advanced
                     Machine Learning (MRes).
@@ -156,18 +206,20 @@ export default function CVPage() {
 
                 <div className="border-l-4 border-primary-200 pl-6">
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">Demonstrator</h3>
-                  <p className="text-primary-600 font-medium mb-2">University of Cambridge</p>
+                  <p className="text-primary-600 font-medium mb-2"><a href="https://www.cam.ac.uk/" className="text-primary-600 hover:underline">University of Cambridge</a></p>
                   <p className="text-gray-700">
                     Part II Computing for Earth Sciences (third-year undergraduate) and Quantitative Environmental
-                    Science. Translating physical
-                    concepts into code and facilitating self-sufficient improvement of coding practices.
+                    Science (second-year undergraduate). Translating physical concepts into maths and facilitating self-sufficient improvement of coding practices.
                   </p>
                 </div>
 
                 <div className="border-l-4 border-primary-200 pl-6">
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">PADI Divemaster</h3>
-                  <p className="text-primary-600 font-medium mb-2">Blue Season Bali Career Development Centre</p>
-                  <p className="text-gray-700">Planned, organised, and led dives as a qualified PADI Divemaster</p>
+                  <p className="text-primary-600 font-medium mb-2">
+                    <a href="https://www.baliocean.com/" className="text-primary-600 hover:underline">Blue Season Bali Career Development Centre</a>
+                  </p>
+             
+                  <p className="text-gray-700">Planned, organised, and led dives as a qualified PADI Divemaster.</p>
                 </div>
               </div>
             </div>
@@ -215,6 +267,22 @@ export default function CVPage() {
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
               <h2 className="text-2xl font-bold text-gray-900 mb-6">Selected Publications & Talks</h2>
               <div className="space-y-4">
+                {/* <div className="border-l-4 border-primary-200 pl-4">
+                  <h3 className="font-semibold text-gray-900 text-sm mb-1">
+                    <a href="https://www.nature.com/articles/s43017-026-00764-4" className="text-primary-600 hover:underline">From working together to acting together: a proposed action agenda for the coral reef community</a>
+                  </h3>
+                  <p className="text-gray-600 text-sm mb-1">M. Rocha de Souza and O. Timmerman et al. (2026)</p>
+                  <p className="text-gray-500 text-xs">Coral Reefs</p>
+                </div>
+
+                <div className="border-l-4 border-primary-200 pl-4">
+                  <h3 className="font-semibold text-gray-900 text-sm mb-1">
+                    <a href="https://www.nature.com/articles/s43017-026-00764-4" className="text-primary-600 hover:underline">The responsibility of knowing: coral reef science after the 16th International Coral Reef Symposium</a>
+                  </h3>
+                  <p className="text-gray-600 text-sm mb-1">C. Voolstra, E. Camp, O. Timmerman, S. Heron et al. (2026)</p>
+                  <p className="text-gray-500 text-xs">Coral Reefs</p>
+                </div> */}
+
                 <div className="border-l-4 border-primary-200 pl-4">
                   <h3 className="font-semibold text-gray-900 text-sm mb-1">
                     <a href="https://www.nature.com/articles/s43017-026-00764-4" className="text-primary-600 hover:underline">Persistence of coral reef structures into the 21st century</a>
@@ -228,23 +296,23 @@ export default function CVPage() {
                     <a href="https://www.nature.com/articles/s42256-025-01116-5" className="text-primary-600 hover:underline">Towards deployment-centric multimodal AI beyond vision and language</a>
                   </h3>
                   <p className="text-gray-600 text-sm mb-1">X. Liu et al. (2025)</p>
-                  <p className="text-gray-500 text-xs">Nature Machine Intelligence</p>
+                  <p className="text-gray-500 text-xs">Nature Machine Intelligence.</p>
                 </div>
 
                 <div className="border-l-4 border-primary-200 pl-4">
                   <h3 className="font-semibold text-gray-900 text-sm mb-1">
                     Oceanographic drivers of carbon storage in European seagrass beds
                   </h3>
-                  <p className="text-gray-600 text-sm mb-1">N. Gallo, O. Timmerman et al. (2026)</p>
-                  <p className="text-gray-500 text-xs">In review</p>
+                  <p className="text-gray-600 text-sm mb-1">N. Gallo and O. Timmerman et al. (2026)</p>
+                  <p className="text-gray-500 text-xs">In review.</p>
                 </div>
 
                 <div className="border-l-4 border-primary-200 pl-4">
                   <h3 className="font-semibold text-gray-900 text-sm mb-1">
                     Forecasting economic consequences of global coral reef degradation: Socioeconomic risk in a warming world
                   </h3>
-                  <p className="text-gray-600 text-sm mb-1">O. Timmerman, M. Spalding, O. Branson (2026)</p>
-                  <p className="text-gray-500 text-xs">Oral presentation, International Coral Reef Symposium (in prep)</p>
+                  <p className="text-gray-600 text-sm mb-1">O. Timmerman, O. Branson (2026)</p>
+                  <p className="text-gray-500 text-xs">Oral presentation, International Coral Reef Symposium.</p>
                 </div>
 
                 <div className="border-l-4 border-primary-200 pl-4">
@@ -260,7 +328,7 @@ export default function CVPage() {
                     Prediction of future environmental suitability of coral reefs via multimodal machine learning
                   </h3>
                   <p className="text-gray-600 text-sm mb-1">O. Timmerman, O. Branson (2024)</p>
-                  <p className="text-gray-500 text-xs">Oral presentation, European Coral Reef Symposium</p>
+                  <p className="text-gray-500 text-xs">Oral presentation, European Coral Reef Symposium.</p>
                 </div>
               </div>
             </div>
@@ -275,7 +343,10 @@ export default function CVPage() {
                   <Calendar className="h-4 w-4 text-primary-600 mt-1 mr-3 flex-shrink-0" />
                   <div>
                     <h3 className="font-semibold text-gray-900 text-sm">Producer, <a href="https://scenes-climate-era.com/" className="text-primary-600 hover:underline">Scenes from the Climate Era</a></h3>
-                    <p className="text-gray-600 text-sm">Pitched and produced a play by David Finnigan for the ADC Theatre, Cambridge</p>
+                    <p className="text-gray-600 text-sm">
+                      Pitched and produced a play by David Finnigan for the <a href="https://www.adctheatre.com/" className="text-primary-600 hover:underline">ADC Theatre</a>, Cambridge
+                    </p>
+               
                     <p className="text-gray-500 text-xs">2026</p>
                   </div>
                 </div>
@@ -295,15 +366,15 @@ export default function CVPage() {
                   <Calendar className="h-4 w-4 text-primary-600 mt-1 mr-3 flex-shrink-0" />
                   <div>
                     <h3 className="font-semibold text-gray-900 text-sm">Student Representative</h3>
-                    <p className="text-gray-600 text-sm">AI for Environmental Risk Management Committee</p>
-                    <p className="text-gray-500 text-xs">2025 – Present</p>
+                    <p className="text-gray-600 text-sm"><a href="https://ai4er-cdt.esc.cam.ac.uk/" className="text-primary-600 hover:underline">AI for Environmental Risk</a>  Management Committee</p>
+                    <p className="text-gray-500 text-xs">2025 – 2026</p>
                   </div>
                 </div>
 
                 <div className="flex items-start">
                   <Calendar className="h-4 w-4 text-primary-600 mt-1 mr-3 flex-shrink-0" />
                   <div>
-                    <h3 className="font-semibold text-gray-900 text-sm">Writer, Reefbites</h3>
+                    <h3 className="font-semibold text-gray-900 text-sm">Writer, <a href="https://reefbites.com/" className="text-primary-600 hover:underline">Reefbites</a></h3>
                     <p className="text-gray-600 text-sm">International Coral Reef Society early-career science communication blog</p>
                     <p className="text-gray-500 text-xs">2025 – 2026</p>
                   </div>
@@ -313,7 +384,7 @@ export default function CVPage() {
                   <Calendar className="h-4 w-4 text-primary-600 mt-1 mr-3 flex-shrink-0" />
                   <div>
                     <h3 className="font-semibold text-gray-900 text-sm">Sub-editor</h3>
-                    <p className="text-gray-600 text-sm"><a href="https://www.cambridge.org/core/books/thriving-sustainably-on-planet-earth/8069C7252063AB7F058F0F3FE46CAFCE" className="text-primary-600 hover:underline">Thriving Sustainably on Planet Earth</a> – textbook of manifestos on engaging children with sustainability</p>
+                    <p className="text-gray-600 text-sm"><a href="https://www.cambridge.org/core/books/thriving-sustainably-on-planet-earth/8069C7252063AB7F058F0F3FE46CAFCE" className="text-primary-600 hover:underline">Thriving Sustainably on Planet Earth</a> – textbook of manifestos on the engagement of children with sustainability</p>
                     <p className="text-gray-500 text-xs">2024 – 2025</p>
                   </div>
                 </div>
@@ -322,7 +393,10 @@ export default function CVPage() {
                   <Calendar className="h-4 w-4 text-primary-600 mt-1 mr-3 flex-shrink-0" />
                   <div>
                     <h3 className="font-semibold text-gray-900 text-sm">Virtual Experience Project Lead</h3>
-                    <p className="text-gray-600 text-sm">Climate Informatics 2024 – programme committee and submission reviewer</p>
+                    <p className="text-gray-600 text-sm">
+                      <a href="https://alan-turing-institute.github.io/climate-informatics-2024/" className="text-primary-600 hover:underline">Climate Informatics 2024</a> – programme committee and submission reviewer
+                    </p>
+               
                     <p className="text-gray-500 text-xs">2023 – 2024</p>
                   </div>
                 </div>
@@ -331,7 +405,7 @@ export default function CVPage() {
                   <Calendar className="h-4 w-4 text-primary-600 mt-1 mr-3 flex-shrink-0" />
                   <div>
                     <h3 className="font-semibold text-gray-900 text-sm">Club Captain</h3>
-                    <p className="text-gray-600 text-sm">University of Cambridge Triathlon Club</p>
+                    <p className="text-gray-600 text-sm"><a href="https://www.cutric.co.uk/" className="text-primary-600 hover:underline">University of Cambridge Triathlon Club</a></p>
                     <p className="text-gray-500 text-xs">2023 – 2024</p>
                   </div>
                 </div>
@@ -340,7 +414,7 @@ export default function CVPage() {
                   <Calendar className="h-4 w-4 text-primary-600 mt-1 mr-3 flex-shrink-0" />
                   <div>
                     <h3 className="font-semibold text-gray-900 text-sm">Seminar Organiser & Social Secretary</h3>
-                    <p className="text-gray-600 text-sm">AI for Environmental Risk CDT</p>
+                    <p className="text-gray-600 text-sm"><a href="https://ai4er-cdt.esc.cam.ac.uk/" className="text-primary-600 hover:underline">AI for Environmental Risk</a> CDT, including organisation of events for the annual retreat</p>
                     <p className="text-gray-500 text-xs">2022 – 2023</p>
                   </div>
                 </div>
@@ -348,8 +422,8 @@ export default function CVPage() {
                 <div className="flex items-start">
                   <Calendar className="h-4 w-4 text-primary-600 mt-1 mr-3 flex-shrink-0" />
                   <div>
-                    <h3 className="font-semibold text-gray-900 text-sm">President, Chaos</h3>
-                    <p className="text-gray-600 text-sm">Award-winning departmental Physics society (~1000 members); previously Design & Promotions Representative</p>
+                    <h3 className="font-semibold text-gray-900 text-sm">President, <a href="https://www.bristolchaos.com/" className="text-primary-600 hover:underline">Chaos</a></h3>
+                    <p className="text-gray-600 text-sm">Award-winning departmental Physics society (~1000 members) at the University of Bristol; previously Design & Promotions Representative</p>
                     <p className="text-gray-500 text-xs">2020 – 2021</p>
                   </div>
                 </div>
