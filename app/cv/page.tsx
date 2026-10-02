@@ -176,16 +176,6 @@ export default function CVPage() {
                   </p>
                 </div>
 
-                {/* TODO: add in the journal title */}
-
-                {/* <div className="border-l-4 border-primary-200 pl-6">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">Reviewer</h3>
-                  <p className="text-primary-600 font-medium mb-3">Journal title goes here</p>
-                  <p className="text-gray-700">
-                    Invited reviewer for papers relating to coral reef calcification and carbonate budgets.
-                  </p>
-                </div> */}
-
                 <div className="border-l-4 border-primary-200 pl-6">
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">Supervisor</h3>
                   <p className="text-primary-600 font-medium mb-2">
@@ -339,6 +329,20 @@ export default function CVPage() {
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
               <h2 className="text-2xl font-bold text-gray-900 mb-6">Leadership & Service</h2>
               <div className="space-y-4">
+
+                <div className="flex items-start">
+                  <Calendar className="h-4 w-4 text-primary-600 mt-1 mr-3 flex-shrink-0" />
+                  <div>
+                    <h3 className="font-semibold text-gray-900 text-sm">Reviewer, <a href="https://onlinelibrary.wiley.com/journal/10969837" className="text-primary-600 hover:underline">Earth Surface Processes and Landforms</a></h3>
+                    <p className="text-gray-600 text-sm">
+                      Invited reviewer for papers relating to coral reef calcification and carbonate budgets
+                    </p>
+               
+                    <p className="text-gray-500 text-xs">2026</p>
+                  </div>
+                </div>
+
+
                 <div className="flex items-start">
                   <Calendar className="h-4 w-4 text-primary-600 mt-1 mr-3 flex-shrink-0" />
                   <div>
