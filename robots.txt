@@ -1,0 +1,5 @@
+User-Agent: *
+Allow: /
+
+Host: https://orlando-codes.com
+Sitemap: https://orlando-codes.com/sitemap.xml

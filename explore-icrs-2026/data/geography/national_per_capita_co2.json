@@ -1,0 +1,263 @@
+{
+  "countries": {
+    "AE": {
+      "tonnes_co2e_per_capita": 18.255,
+      "kg_co2e_per_capita": 18255.2
+    },
+    "AU": {
+      "tonnes_co2e_per_capita": 14.099,
+      "kg_co2e_per_capita": 14098.7
+    },
+    "BE": {
+      "tonnes_co2e_per_capita": 7.307,
+      "kg_co2e_per_capita": 7306.6
+    },
+    "BM": {
+      "tonnes_co2e_per_capita": 4.135,
+      "kg_co2e_per_capita": 4135.5
+    },
+    "BR": {
+      "tonnes_co2e_per_capita": 2.318,
+      "kg_co2e_per_capita": 2318.3
+    },
+    "BZ": {
+      "tonnes_co2e_per_capita": 0.932,
+      "kg_co2e_per_capita": 932.5
+    },
+    "CA": {
+      "tonnes_co2e_per_capita": 14.007,
+      "kg_co2e_per_capita": 14007.3
+    },
+    "CH": {
+      "tonnes_co2e_per_capita": 3.746,
+      "kg_co2e_per_capita": 3745.7
+    },
+    "CM": {
+      "tonnes_co2e_per_capita": 0.353,
+      "kg_co2e_per_capita": 353.4
+    },
+    "CN": {
+      "tonnes_co2e_per_capita": 9.315,
+      "kg_co2e_per_capita": 9315.1
+    },
+    "CO": {
+      "tonnes_co2e_per_capita": 1.798,
+      "kg_co2e_per_capita": 1797.8
+    },
+    "CZ": {
+      "tonnes_co2e_per_capita": 7.13,
+      "kg_co2e_per_capita": 7129.7
+    },
+    "DE": {
+      "tonnes_co2e_per_capita": 6.944,
+      "kg_co2e_per_capita": 6944
+    },
+    "DK": {
+      "tonnes_co2e_per_capita": 4.278,
+      "kg_co2e_per_capita": 4278.2
+    },
+    "EC": {
+      "tonnes_co2e_per_capita": 2.645,
+      "kg_co2e_per_capita": 2644.7
+    },
+    "ES": {
+      "tonnes_co2e_per_capita": 4.505,
+      "kg_co2e_per_capita": 4505.4
+    },
+    "FJ": {
+      "tonnes_co2e_per_capita": 1.622,
+      "kg_co2e_per_capita": 1622.2
+    },
+    "FM": {
+      "tonnes_co2e_per_capita": 0.002,
+      "kg_co2e_per_capita": 1.8
+    },
+    "FR": {
+      "tonnes_co2e_per_capita": 4.004,
+      "kg_co2e_per_capita": 4003.6
+    },
+    "GB": {
+      "tonnes_co2e_per_capita": 4.221,
+      "kg_co2e_per_capita": 4220.8
+    },
+    "GU": {
+      "tonnes_co2e_per_capita": 0.002,
+      "kg_co2e_per_capita": 1.8
+    },
+    "ID": {
+      "tonnes_co2e_per_capita": 2.865,
+      "kg_co2e_per_capita": 2865
+    },
+    "IE": {
+      "tonnes_co2e_per_capita": 6.036,
+      "kg_co2e_per_capita": 6036.1
+    },
+    "IL": {
+      "tonnes_co2e_per_capita": 5.765,
+      "kg_co2e_per_capita": 5765.3
+    },
+    "IN": {
+      "tonnes_co2e_per_capita": 2.174,
+      "kg_co2e_per_capita": 2173.7
+    },
+    "IR": {
+      "tonnes_co2e_per_capita": 9.053,
+      "kg_co2e_per_capita": 9053.3
+    },
+    "IT": {
+      "tonnes_co2e_per_capita": 5.076,
+      "kg_co2e_per_capita": 5075.7
+    },
+    "JM": {
+      "tonnes_co2e_per_capita": 2.844,
+      "kg_co2e_per_capita": 2843.8
+    },
+    "JP": {
+      "tonnes_co2e_per_capita": 7.842,
+      "kg_co2e_per_capita": 7842.4
+    },
+    "KE": {
+      "tonnes_co2e_per_capita": 0.383,
+      "kg_co2e_per_capita": 383.4
+    },
+    "KR": {
+      "tonnes_co2e_per_capita": 11.362,
+      "kg_co2e_per_capita": 11362.3
+    },
+    "LK": {
+      "tonnes_co2e_per_capita": 1.065,
+      "kg_co2e_per_capita": 1064.7
+    },
+    "MU": {
+      "tonnes_co2e_per_capita": 3.536,
+      "kg_co2e_per_capita": 3536.3
+    },
+    "MX": {
+      "tonnes_co2e_per_capita": 3.637,
+      "kg_co2e_per_capita": 3637.4
+    },
+    "MY": {
+      "tonnes_co2e_per_capita": 8.323,
+      "kg_co2e_per_capita": 8323.2
+    },
+    "MZ": {
+      "tonnes_co2e_per_capita": 0.292,
+      "kg_co2e_per_capita": 292
+    },
+    "NG": {
+      "tonnes_co2e_per_capita": 0.567,
+      "kg_co2e_per_capita": 566.9
+    },
+    "NI": {
+      "tonnes_co2e_per_capita": 0.83,
+      "kg_co2e_per_capita": 829.8
+    },
+    "NL": {
+      "tonnes_co2e_per_capita": 6.602,
+      "kg_co2e_per_capita": 6601.9
+    },
+    "NZ": {
+      "tonnes_co2e_per_capita": 6.014,
+      "kg_co2e_per_capita": 6014.1
+    },
+    "OM": {
+      "tonnes_co2e_per_capita": 18.652,
+      "kg_co2e_per_capita": 18652
+    },
+    "PA": {
+      "tonnes_co2e_per_capita": 2.738,
+      "kg_co2e_per_capita": 2738.3
+    },
+    "PE": {
+      "tonnes_co2e_per_capita": 2.024,
+      "kg_co2e_per_capita": 2024.2
+    },
+    "PF": {
+      "tonnes_co2e_per_capita": 3.456,
+      "kg_co2e_per_capita": 3455.9
+    },
+    "PG": {
+      "tonnes_co2e_per_capita": 0.517,
+      "kg_co2e_per_capita": 517
+    },
+    "PH": {
+      "tonnes_co2e_per_capita": 1.503,
+      "kg_co2e_per_capita": 1503
+    },
+    "PL": {
+      "tonnes_co2e_per_capita": 7.551,
+      "kg_co2e_per_capita": 7551.1
+    },
+    "PT": {
+      "tonnes_co2e_per_capita": 3.325,
+      "kg_co2e_per_capita": 3324.8
+    },
+    "QA": {
+      "tonnes_co2e_per_capita": 47.332,
+      "kg_co2e_per_capita": 47332.2
+    },
+    "RU": {
+      "tonnes_co2e_per_capita": 13.985,
+      "kg_co2e_per_capita": 13984.5
+    },
+    "SA": {
+      "tonnes_co2e_per_capita": 18.485,
+      "kg_co2e_per_capita": 18484.6
+    },
+    "SC": {
+      "tonnes_co2e_per_capita": 7.237,
+      "kg_co2e_per_capita": 7236.7
+    },
+    "SE": {
+      "tonnes_co2e_per_capita": 3.574,
+      "kg_co2e_per_capita": 3573.8
+    },
+    "SG": {
+      "tonnes_co2e_per_capita": 9.751,
+      "kg_co2e_per_capita": 9751.4
+    },
+    "SY": {
+      "tonnes_co2e_per_capita": 1.275,
+      "kg_co2e_per_capita": 1274.7
+    },
+    "TH": {
+      "tonnes_co2e_per_capita": 3.96,
+      "kg_co2e_per_capita": 3960.1
+    },
+    "TV": {
+      "tonnes_co2e_per_capita": 0,
+      "kg_co2e_per_capita": 0
+    },
+    "TZ": {
+      "tonnes_co2e_per_capita": 0.311,
+      "kg_co2e_per_capita": 311.2
+    },
+    "US": {
+      "tonnes_co2e_per_capita": 13.624,
+      "kg_co2e_per_capita": 13623.9
+    },
+    "VE": {
+      "tonnes_co2e_per_capita": 3.394,
+      "kg_co2e_per_capita": 3394.1
+    },
+    "VU": {
+      "tonnes_co2e_per_capita": 0.87,
+      "kg_co2e_per_capita": 869.8
+    },
+    "WS": {
+      "tonnes_co2e_per_capita": 1.604,
+      "kg_co2e_per_capita": 1604.4
+    },
+    "ZA": {
+      "tonnes_co2e_per_capita": 6.877,
+      "kg_co2e_per_capita": 6876.8
+    }
+  },
+  "meta": {
+    "indicator": "EN.GHG.CO2.PC.CE.AR5",
+    "source_label": "World Bank national CO₂ per capita (2024)",
+    "source_url": "https://data.worldbank.org/indicator/EN.GHG.CO2.PC.CE.AR5",
+    "unit": "metric tonnes CO2e per capita (excl. LULUCF)",
+    "year": 2024
+  }
+}
