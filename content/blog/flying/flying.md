@@ -1,19 +1,8 @@
 ---
-title: "cdo-toolkit"
-date: "2026-06-13T07:14:27.000Z"
-description: "CDO-based NetCDF regridding with weight caching and parallel workers."
-excerpt: "Taking the pain out of processing petabytes of Earth System Model datasets."
-category: "package"
-draft: false
+title: "The art of flight"
+date: "2026-07-12T07:33:39.000Z"
+description: "How should we think about taking a flight in this day and age?"
+excerpt: "There are many reasons to fly. Most do it without a second thought. But I believe we need a flynaissance."
+category: "general"
+draft: true
 ---
-
-**cdo-toolkit** is a small Python package for NetCDF regridding and level extraction: weight caching, time-chunked processing, parallel workers, Rich progress UI, and optional surface/seafloor extraction. CMIP6 filename helpers live in an optional submodule.
-
-- **PyPI:** [pypi.org/project/cdo-toolkit](https://pypi.org/project/cdo-toolkit/)
-- **Code:** [github.com/orlando-code/cdo-toolkit](https://github.com/orlando-code/cdo-toolkit)
-
-```bash
-pip install cdo-toolkit
-```
-
-*More to come.*
